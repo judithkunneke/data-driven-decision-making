@@ -1,6 +1,6 @@
 # Introduction {#sec-introduction}
 
-## Why have a data driven decision making course in a controlling track? 
+## Why have a data-driven decision-making course in a controlling track? 
 
 ### Data analytics to unlock the potential of data
 
@@ -11,20 +11,20 @@ To answer this question, consider, for example, the four common elements of any 
 3. Comparing Actual Performance to the Standards.
 4. Taking Corrective Action.
 
-In executing all these elements, decisions have to be made. Ideally, such decisions are based on data. Most firms these days collect data all the time. Valuable data, if used well. However, in its raw form data is useless. You cannot stare at a three terrabyte large table of customer data and expect to come up with better marketing strategies. Raw data needs to be structured and aggregated just the right way in order to yield insights. This is where data analytics comes in. Data analytics takes raw data and then structures and aggregates it to find meaningful data patterns. Those data patterns can be used to make better business decisions. 
+In executing all these elements, decisions have to be made. Ideally, such decisions are based on data. Most firms these days collect data all the time. Valuable data, if used well. However, in its raw form data is useless. You cannot stare at a three-terabyte large table of customer data and expect to come up with better marketing strategies. Raw data needs to be structured and aggregated just the right way in order to yield insights. This is where data analytics comes in. Data analytics takes raw data and then structures and aggregates it to find meaningful data patterns. Those data patterns can be used to make better business decisions. 
 
 
 ### From data analytics to better decisions
 
-However, data analytics is just one part of two. It is one thing to find regular patterns in the data. But it is a different skill set that helps you determine whether these are patterns that contain new insights---or how to make sensible decisions based on the patterns. For that you need expert knowledge in the domain that the decision problem arose. And this is why we have this course.
+However, data analytics is just one part of two. It is one thing to find regular patterns in the data. But it is a different skill set that helps you determine whether these are patterns that contain new insights---or how to make sensible decisions based on the patterns. For that, you need expert knowledge in the domain that the decision problem arose. And this is why we have this course.
 
-Our course is tailored to management accounting and related questions, for which you need a unique combination of analysis techniques and accounting expert knowledge in order to come up with good decisions. It is of course not the only area where data analytics is useful. In fact, most business analytics books use examples like analyzing marketing campaign effectiveness or supply chain efficiency. And this is another reason why we decided a course like this should be part of the curriculum. There are few good controlling related resources out there that are easily accessible. 
+Our course is tailored to management accounting and related questions, for which you need a unique combination of analysis techniques and accounting expert knowledge in order to come up with good decisions. It is of course not the only area where data analytics is useful. In fact, most business analytics books use examples like analyzing marketing campaign effectiveness or supply chain efficiency. And this is another reason why we decided a course like this should be part of the curriculum. There are a few good controlling-related resources out there that are easily accessible. 
 
     
 
 ## Types of decision problems and accompanying questions
 
-What are typical business decisions you'll encounter? Consider the following job posting of a data analyst. Many of the duties listed here are closely related to controlling questions. 
+What are typical business decisions you'll encounter? Consider the following job posting for a data analyst. Many of the duties listed here are closely related to controlling questions. 
 
 ![A data analyst job posting (April 5th, 2023)](pics/P1/ASML-job.png){#fig-asmljob width="600px"}
 
@@ -37,20 +37,21 @@ A controlling department actively involved in setting and monitoring a firm's st
 | Question                                                                                                 | Decision                                                                   |
 |------------------------------------|------------------------------------|
 | What would be the operating profitability of opening a typical store in France?                          | Whether to expand operations to France?                                    |
-| How would our revenues and costs be affected if Russia invades the Ukraine?                              | How much effort to allocate to contingency planing                         |
-| What are reasonable benchmarks for the cost allocation of overhead?                                      | How to best allocate costs for controlling purposes                        |
-| How would our most profitable customer segment react if we serve them exclusively via an online channel? | Whether to change a part of the business strategy                          |
-| What is the most "at risk" driver of the net margin of our block-buster product?                         | Whether profitability of the main product is "safe" enough or needs action |
+| How would our revenues and costs be affected if Russia invades Ukraine?                              | How much effort to allocate to contingency planning?                         |
+| What are reasonable benchmarks for the cost allocation of overhead?                                      | How to best allocate costs for controlling purposes?                        |
+| How would our most profitable customer segment react if we serve them exclusively via an online channel? | Whether to change a part of the business strategy?                          |
+| What is the most "at risk" driver of the net margin of our blockbuster product?                         | Whether profitability of the main product is "safe" enough or needs action? |
 
 : Questions and Decisions {#tbl-exampleqs}
 
 
-For many of the decisions listed in @tbl-exampleqs the question asked is just one of a collection of questions that is important for an overall decision to be made. In most cases, it is also not immediately obvious how you would use data to answer these questions. Exactly for that reason we recommend to start any analysis with carefully thinking about the question you need an answer to. Next, we will talk about a framework for decision making in the next section @sec-decmb. The opposite, starting from the data, is often not advisable. Often you can (and often should) look at many different sources of data to find answers to a question. If you start with the data at hand, you might get to bad conclusions, because you analyzed inadequate, but readily available, data. For those and many other reasons our framework starts with thinking carefully about the business question to be analyzed.
+For many of the decisions listed in @tbl-exampleqs, the question asked is just one of a collection of questions that is important for an overall decision to be made. In most cases, it is also not immediately obvious how you would use data to answer these questions. Exactly for that reason we recommend starting any analysis by carefully thinking about the question you need an answer to. Next, we will talk about a framework for decision-making in the next section @sec-decmb. The opposite, starting from the data, is often not advisable. Often you can (and often should) look at many different sources of data to find answers to a question. If you start with the data at hand, you might get misleading conclusions, because you analyzed inadequate, but readily available, data. For those and many other reasons, our framework starts with thinking carefully about the business question to be analyzed.
 
 
 ## Summary: What this course teaches you
 
-In today's economy, most firms collect large amounts of data that have the potential to greatly increase decision making quality inside firms. To properly digest and leverage data, a firm needs employees that are not only well versed in data analytics (being able to find meaningful patterns in the raw data) but also draw the right conclusions from the patterns and formulate adequate decisions. In this course we will cover both aspects. 
+In today's economy, most firms collect large amounts of data that have the potential to greatly increase decision-making quality inside firms. To properly digest and leverage data, a firm needs employees that are not only well 
+-versed in data analytics (being able to find meaningful patterns in the raw data) but also draw the right conclusions from the patterns and formulate adequate decisions, and report the conclusions and decisions adequately. In this course, we will cover all of these aspects. 
 <!-- project costing -->
 
 <!--     Prognose von zukünftigen Kostenentwicklungen bei Projekten -->
