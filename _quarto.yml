@@ -11,6 +11,7 @@ book:
     - intro.qmd
     - decision-making.qmd
     - datapatterns.qmd
+    - diagnostics.qmd
     - predictions.qmd
     - references.qmd
 

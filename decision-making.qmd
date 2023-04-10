@@ -46,7 +46,7 @@ We care about uncertainty, because whenever there is uncertainty, there is a cha
 
 Not always will we be able to quantify costs or probabilities of making mistakes though. That's fine, we will still need to come up with simple decision rules that will help us make sensible decisions. Think rules like: "if this course of action still performs best in the worst case, then let's do it" (called maximin rule).
 
-Ideally though, we'd like to reduce the chance of making (costly) mistakes and that implies we want to reduce uncertainty in our decision making. Data is the key input to reducing uncertainty. But data alone is not enough. We also need assumptions. Why? That will become apparent during the course. For now, let us discuss decision making process.
+Ideally though, we'd like to reduce the chance of making (costly) mistakes and that implies we want to reduce uncertainty in our decision making. Data is the key input to reducing uncertainty. But data alone is not enough. We also need assumptions. Why? That will become apparent during the course. For now, let us discuss the decision making process.
 
 ## A decision-making process framework
 
@@ -498,9 +498,10 @@ There are other rules, of course, but these two suffice illustrate the general p
 
 ## Types of analyses
 
-In the examples above we have already touched upon some types of analysis that are commonly distinguished. We will broadly distinguish three types of analysis.
+In the examples above we have already touched upon some types of analysis that are commonly distinguished. We will broadly distinguish four types of analysis.
 
 -   Descriptive: What happened in the past
+-   Diagnostic: Why did it happen?
 -   Predictive: What will happen?
 -   Prescriptive: What should we do?
 
@@ -508,13 +509,19 @@ In the examples above we have already touched upon some types of analysis that a
 
 Descriptive analytics examines what happened in the past. Our decision steps "detect the problem" and "identify the problem" are very much reliant on well executed descriptive analysis. Because descriptive analysis is where we examine data about past events to spot patterns and trends in the data. A good descriptive analysis takes the raw data and aggregates and summarizes it in just the right way to isolate the pattern that reveals the insight we are looking for. In practice, it is the core of most businesses' analytics, simply because it can already answer many of important questions like: "how much did orders grow from a region?" or "how has client satisfaction developed, and what might be reasons for the trend?"
 
-Descriptive analysis has its limitations. It is often exploratory, requiring creativity and business expertise. But even for more complex decisions, it is a helpful first step for decision makers and managers. You can go a long way analyzing data from past events. Still, once we spotted relevant patterns in the past, it's up to us to ask how or why those patterns arise and develop adequate responses to it. For example, in the supermarket example, we started building a mental model to *explain* the variation in revenues across supermarkets of different sizes. While we did so using simple descriptive statistics, we were also slowly starting to creep into predictive territory.
+Descriptive analysis is powerful. It is often *exploratory*, requiring creativity and business expertise. But even for more complex decisions, it is a helpful first step for decision makers and managers. You can go a long way analyzing data from past events. Still, once we spotted relevant patterns in the past, it's up to us to ask how or why those patterns arise and develop adequate responses to it. For example, in the supermarket example, we started building a mental model to *explain* the variation in revenues across supermarkets of different sizes. While we did so using simple descriptive statistics we also did some basic *diagnostic analysis*. We will cover descriptive analysis in @sec-datapat.
+
+
+### Diagnostic Analysis --- Explaining patterns
+
+Diagnostic analysis is more advanced and tries find answers to the question "Why did it happen?" This is the sort of question a lot of academics are trained to answer, using for example the hypothesis testing framework. We put causal analysis and experiments into this category too. But often, you can already get quite far and rule out some explanations by simple data mining and correlation analysis. We will cover diagnostic analysis in @sec-diag.
+
 
 ### Predictive Analysis --- Predicting the future
 
 Just as the name suggests, predictive analysis is about making forecasts (i.e., predicting likely outcomes). This is effectively done by comparisons and extrapolation. Even though the analysis methods become more complex (and can become very complex fast), any forecasting method still extrapolates from past data to make predictions. Based on past patterns, we predict what future data could look like (e.g., by computing probabilities, fitting trends, etc.).
 
-Statistical modeling or machine learning are commonly used to conduct predictive analyses. In our supermarket example we did not do so, but we actually used the basic logic behind some machine learning approaches: we looked at similar observations (supermarkets) to the one we try to predict future sales for and extrapolated from what we observed in the past.
+Statistical modeling or machine learning are commonly used to conduct predictive analyses. In our supermarket example we did not do so, but we actually used the basic logic behind some machine learning approaches: we looked at similar observations (supermarkets) to the one we try to predict future sales for and extrapolated from what we observed in the past. We will cover predicitve analysis in @sec-pred.
 
 ### Prescriptive Analysis --- Finding the best action
 
