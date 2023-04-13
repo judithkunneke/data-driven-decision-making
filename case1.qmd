@@ -1,0 +1,494 @@
+# Case 1: Decision Making {#sec-case1}
+
+In this chapter, we have two goals. First, we want to review the decision making process we introduced in @sec-decmb. 
+
+![A stylized rational decision process](pics/P1/dmdiag.svg){#fig-dmdiag height="300px"}
+
+Second, we want to introduce basic R data manipulation steps using a simple decision problem that is to be solved with a data analysis. 
+
+```{r, setup}
+#| message: false
+
+# Loading additional 'packages'
+library(tidyverse)
+library(palmerpenguins)
+library(ggdensity)
+```
+
+
+## Why R? 
+
+Because it is easy:
+
+
+```{r}
+#| eval: false
+# a good life motto
+if (sad == TRUE) {
+  stop(sad)
+  be_awesome()
+}
+# if you can read this, then you can R
+```
+
+
+## R Basics
+
+### Basic R components. 
+
+Basically there are only two things: functions or objects (variables, data.frame, matrix, text, etc.). 
+
+Functions "do things". So every time, you want to "do stuff", you need a function. Objects are glorified value stores. A function is code that takes inputs and produces output. The simplest version is something like the add function. It takes two inputs and produces the sum as output:
+
+```{r}
+1 + 3
+```
+
+```{r}
+x <- c(-3, 1, 35, 2, 5, 6, 23, 3, 5, 7)  # create some input (here, a vector object)
+y <- mean(x)  # do something with the input
+y  # let's look at the output
+```
+As we said before an object is a glorified value store.The most widely used one is a vector. It stores values of the same *type*. You can easily build vectors using the c() function (for "concat").
+
+```{r}
+x_nums <- c(1, 0.3, 200)
+x_mixed <- c(2, "test example")
+x_char <- c("a", "bw", "02")
+x_nums
+x_mixed
+x_char
+```
+
+```{r}
+typeof(x_mixed)
+```
+
+As you can see x_mixed has converted all its element the type "character". Vectors always contain the same type of elements. There are five basic types (Logical, integer, numeric, factor, and character. In addition, there are a few special ones like "date-time" types. These types are distinguished because of the difference in operations allowed on them. For example, Multiplying to integer numbers is a common operation. But what does 'multiplying two sentences' mean? Type distinctions thus help us (among other things) to check whether functions are executed with the right inputs. 
+
+An interesting case to highligh here are variables of type factor. Suppose you asked six people how they feel this morning and you get the responses
+
+```{r}
+mood <- factor(
+  x = c("good", "good", "great", "ok", "great", "don't ask"), 
+  levels = c("don't ask", "ok", "good", "great"),
+  ordered = TRUE 
+  )
+mood
+```
+With factors we can define what is called categorical variables. Here we did so and also told R that there is an order to the possible responses. Now, we might want to ask: What is the average mood this morning? Let is throw the mean() function at the data and see what happens.
+
+```{r}
+mean(mood)
+```
+That obviously did not work, nor should it. Categorical variables do not have "distance" between the responses, even though they are ordered. We do not know whether the step from 'ok' to 'good' is as big as from 'good' to 'great'. We could have also used integers to express the different responses and then computed a mean:
+
+```{r}
+mood_in_numbers <- as.integer(mood)
+mood_in_numbers
+```
+```{r}
+mean(mood_in_numbers)
+```
+Note, however that this is dangerous. Now we put an additional assumption in here. Namely that the steps between each category are equally long. Only then can we compute an average number. If we do not want to assume that, we should leave the variable as factor and then we are safe from accidentally doing operations that are not sensible for a categorical variable. 
+
+Often you want to store data of different types in one storage object (like a table in Excel). The go to object for that in R is a data.frame (or the tibble--for "tiny table" I think?--, which is a data.frame with less optionality. It is used in many tidyerse packages)
+
+```{r}
+df_example <- data.frame(SubjID = c(1,2,3),
+                         Gender = factor(c("male", "female", "female")),
+                         Treat = c(FALSE, TRUE, FALSE),
+                         Hospital = c("Idaho", "Oklahoma", "Los Angeles")
+                         )
+df_example
+```
+
+data.frames are opinionated. As you can see, it turned the hospital column into a factor automatically. That is partly why some people prefer tibbles which don't do that. 
+
+
+### Working with tables and the grammar of data manipulation
+
+R---and especially newer packages included in the tidyverse package ecosystem---have very expressive data verbs that make code readable. What people have realized is that most data manipulation steps that concerns data tables are really a combination of a few basic actions. The most common are listed below with their names as used in R's [dplyr](https://dplyr.tidyverse.org/) package:
+
+![The basic grammar of data manipulation. Image [source](http://perso.ens-lyon.fr/lise.vaudor/dplyr/)](pics/C1/dplyr_schema.png){#fig-dplyr height="300px"}
+
+- `select()` picks columns of a table based on their names.
+- `filter()` picks rows of a table based on their values.
+- `arrange()` changes the ordering of the rows.
+- `mutate()` adds new columns that are functions of existing columns
+- `summarise()` reduces/aggregates multiple rows down to a single summary.
+
+If you add `join` and `grouping` actions to this list, then 98% of everything you want to do is a combination of the above actions. 
+
+Let's work on actual data though. We'll use the palmer penguins data set for the basic introduction, because penguins are awesome. This is how the data looks like:
+
+```{r}
+head(penguins)  # head() shows the first 6 rows of a table
+```
+
+```{r}
+str(penguins)  # helpful function to give you a quick description of any R object
+```
+
+Back to data verbs and combing different verbs to arrive at any data manipulation you want. For example, *counting*:
+
+```{r}
+penguins |> 
+  count(species, name = "n_penguins") 
+```
+
+Under the hood, the count() function does something like:
+
+```{r}
+penguins |> 
+  group_by(species) |> 
+  summarize(n_penguins = n()) |> 
+  ungroup()
+```
+
+```{r}
+# In newer versions of dplyr, this more succinct version also works
+penguins |> 
+  summarize(n_penguins = n(), .by = species)
+```
+
+Once you understand these basic steps, you can translate them into any other language. They might use different verbs, but the steps are the same. For example, in SQL, the most common database query language, you would write the above as:
+
+```{sql}
+#| eval: false
+# SQL code, not R
+SELECT 
+    species, 
+    COUNT(*) AS n_penguins 
+    FROM penguins 
+        GROUP BY species;
+```
+
+**A note on pipes ( \|\> or %\>% ):**
+
+In our code you see a lot of \|\> (or %\>%). Both mean: "Take whatever is left of \|\> and put it as a first argument in what is right of \|\>". We think it makes for much more readable, chunked code.
+
+    function1(function2(function3(data)))
+
+becomes
+
+    data |> 
+      function3() |> 
+      function2() |> 
+      function1()
+
+which, to me, shows the order of execution and the separate steps in a more obvious fashion.
+
+The rest of the common data manipulation steps we will illustrate by example using the following case. 
+
+
+## Planning a festival
+
+### Case description
+
+The following case uses the well-known Chinook sql [database](https://www.sqlitetutorial.net/sqlite-sample-database/). It is inspired by an exercise of an [Udacity](https://www.udacity.com/course/business-analytics-nanodegree--nd098) course, which we modified and expanded to train and illustrate the decision-making process more clearly. Here is the case:
+
+You work for Chinook, an internet music store. Your boss has the idea to organize a promo music festival and asks you to come with a good location and line-up.
+
+
+### Identifying the problem and decision criteria
+
+The first step is always to clarify and clearly identify what the goal is. As we discussed before, a series of questions is usually helpful. What is the purpose of the festival: promotion. Of what? The music store. For what purpose? For the purpose of generating more revenues? Probably. So let us assume that is the goal. Organizing a festival with the goal of helping to generate future revenues.
+    
+The next step is the think about what criteria such as festival should fulfill.
+
+- Location should enable us to promote our store and generate revenues
+- Budget? Not specified. Can we decide on the location without? Maybe, not ideal, but at least for a first best scenario, we can do without.
+- Same for artists. Artist choice would probably very much depend on budget. Takeaway: all we do here is a perfect world festival with unlimited budget.
+   
+### Developing a plan and alternatives
+
+We have a goal (organizing a festival, which promotes the store and generates new revenues) and decided to not impose further restrictions for now. Location and line-up are obviously important parameters here. How should they be chosen? A few thoughts:
+
+- To maximize promotional effect, we ideally want to put the festival somewhere where we can reach
+  many customers. So put it where most existing customers are or none?
+  - We probably want an area with a lot of existing customers (we can target them and they are more likely
+    to come and we need to make sure the festival is not empty. Empty festivals are negative promotion! But we
+    also want potential new customers to come so that give them a favorable impression of the store.
+  - So, what is a good location? Where a lot of existing customers are + many potential new customers live in the area
+  - Any customers or where we do most revenues?
+- What is a good line-up?
+  - You probably have something like 10 hours of show potential 12:00 to 22:00. 4 * 1 +  4* 1.5 is 10 hours meaning 8 artist
+    slots.
+  - Do we want the most popular artists only? Probably not. We need some to draw a crowd. But those are expensive. And people own their songs already. If possible, we should also have promising, young artists or popular ones with new albums in there. Those will, if well-received, be bought and generate revenues.
+  - What is a good mix? Very much depends on budget which we do not know. Qualify, but for now, half and half is probably a good default. 
+  
+### Finding the location
+
+Now that we have a plan, let's look at the data and see whether we can execute on it. The following code loads the tidyverse package and a package to access an sqllite database. Then it connects to the chinook database and lists the tables inside the database. 
+
+```{r}
+library(tidyverse)
+library(RSQLite)
+
+conn <- DBI::dbConnect(SQLite(), "analysisgen/chinook.db")
+conn
+dbListTables(conn)
+```
+
+You can view the database diagram [here](https://www.sqlitetutorial.net/sqlite-sample-database/). In order to figure out where our customers are concentrated, we need to find data about which cities or regions they are from. Looking at the diagram, this data is most likely stored in the `invoices` table. Let's have a look:
+
+```{r}
+tbl(conn, "invoices") |> glimpse()
+```
+
+'BillingCity' looks like a variable we could use to decide on the location of our festival. Let us compute how much revenues we do by city. For that we need to group all the invoices by city and sum up the revenues (the 'Total' column). This is an aggregation operation. A standard data manipulation. Group then compute a summary measure. The dplyr package offers the summarise function to do just that. We need to call the `collect()` function in the end, because everything in code lines 2-7 is done inside the database. Line 8 then pulls the data from the database into R.  
+
+```{r}
+rev_by_city <-
+  tbl(conn, "invoices") |>
+  summarise(
+    total_billings = sum(Total, na.rm = TRUE),
+    .by = c(BillingCity, BillingCountry)
+  ) |>
+  arrange(-total_billings) |>
+  collect()
+
+head(rev_by_city)
+```
+
+As an aside, since dplyr operates on a table connection in this specific case, it actually transforms what typed into SQL code and sends that code to the SQL database. We can see that code by calling `show_query()`:
+
+```{r}
+tbl(conn, "invoices") |>
+summarise(
+  total_billings = sum(Total, na.rm = TRUE),
+  .by = BillingCity
+) |>
+arrange(-total_billings) |> 
+show_query()
+```
+
+Not terribly important to know, it just shows the flexibility of dplyr to work on many different data sources. Plus it shows the similarity to other programming languages.
+
+Back to the problem. Here is our result again in figure form. 
+
+```{r}
+#| fig-height: 6.5
+#| fig-width: 6
+rev_by_city |>
+  ggplot(aes(y = fct_reorder(BillingCity, total_billings), 
+             x = total_billings)) +
+  geom_col()
+```
+
+Or if you would put this into a presentation later, add an action title and make it pretty with a few more lines:
+
+```{r}
+#| fig-height: 6.5
+#| fig-width: 6
+rev_by_city |>
+  ggplot(aes(y = fct_reorder(BillingCity, total_billings), 
+             x = total_billings)) +
+  geom_col(fill = "darkorchid")+
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank()) +
+  labs(
+    title = "Locate the festival in Eastern Europe",
+    subtitle = "Comparison of total revenues by customer location",
+    caption = "source: company internal data",
+    y = "City",
+    x = "Total revenues ($)"
+  )
+```
+
+But let's stop here. Is Prague really where we want to put our festival? Is it the most densely populated city for example? Given our discussion above, we probably want to take density into account to also attract as many new customers as possible. (Again, we are ignoring costs ...). After a bit of googling, you find city data here at [simplemaps](https://simplemaps.com/data/world-cities):
+
+```{r}
+library(readxl)
+world_cities <- read_excel("analysisgen/worldcities.xlsx")
+world_cities <- 
+  world_cities |> 
+  mutate(
+    country = case_when(
+      country == "United States" ~ "USA", 
+      country == "Czechia" ~ "Czech Republic",
+      .default = country)
+  )
+head(world_cities)
+```
+We need to clean this one up a bit
+
+
+Let's merge this to our city data and compare
+
+```{r}
+city_data <- 
+  rev_by_city |> 
+  left_join(
+    world_cities |> select(city, country, population),
+    by = join_by(BillingCity == city, BillingCountry == country)
+    )
+head(city_data)
+```
+
+Now, how do we trade off our customer base in a location and the population there?
+
+```{r}
+city_data |> 
+  arrange(-population) |> 
+  head()
+```
+
+Just eye-balling, Sao Paulo seems a good candidate as it is the only one in the top 6 of both categories.
+
+
+
+### Finding the line-up
+
+To decide on the four popular artists and the four up-and-coming bands we want in our line-up, we need to analyze our sales. Looking at the diagram, the data is dispersed across various tables. That is often the case to reduce the size of the database. What do we need now:
+
+- We need to figure out which artists are popular in Sao Paulo
+- We need to figure out which music genres are popular in Sao Paulo
+- From the popular genres, we need to pick four artists
+
+Let's look at some of the other tables
+
+```{r}
+invoice_items <- tbl(conn, "invoice_items")
+glimpse(invoice_items)
+```
+
+```{r}
+tracks <- tbl(conn, "tracks")
+glimpse(tracks)
+```
+We need to merge the `TrackId` in `invoices_items`. We can match this to the invoices table via the `InvoiceId`. With the `TrackId` we can match the data in the tracks table to the invoices, which is what we are really after. First, we only need the São Paulo invoices and then we join `TrackId` from the `invoices_items` table to the data. The we join the `tracks` data using the `TrackId`:
+
+```{r}
+bought_tracks <-
+  tbl(conn, "invoices") |>
+  filter(BillingCity %in% c("São Paulo")) |>
+  inner_join(invoice_items, join_by(InvoiceId == InvoiceId)) |>
+  select(InvoiceId, TrackId) |>
+  inner_join(
+    tracks |> select(TrackId, AlbumId, GenreId), 
+    join_by(TrackId == TrackId))
+head(bought_tracks)
+```
+
+With the `AlbumID` we can get the artist from the albums data. 
+
+```{r}
+genres <- tbl(conn, "genres") |>
+  rename(Genre = Name)
+
+artists <- tbl(conn, "artists") |>
+  rename(Artist = Name)
+
+popular_tracks_data <-
+  bought_tracks |>
+  inner_join(tbl(conn, "albums"), join_by(AlbumId == AlbumId)) |>
+  inner_join(genres, join_by(GenreId == GenreId)) |>
+  inner_join(artists, join_by(ArtistId == ArtistId)) |>
+  collect()
+head(popular_tracks_data)
+```
+
+```{r}
+popular_artists <-
+  popular_tracks_data |>
+  summarise(
+    nr_tracks_bought = n(),
+    .by = Artist
+  ) |>
+  arrange(-nr_tracks_bought)
+
+# Now, what are the 4 most popular artists?
+head(popular_artists, 4)
+```
+
+Now let's try to find the up-and-coming artists in the popular genres. First we need to figure out which these are. 
+
+```{r}
+popular_genres <-
+  popular_tracks_data |>
+  summarise(
+    nr_tracks_bought = n(),
+    .by = c(Genre, GenreId)
+  ) |>
+  arrange(-nr_tracks_bought)
+head(popular_genres)
+```
+
+Looks like we want to focus on Rock and Latin. Now we need to think about how we can identify new but interesting Artists. What are the characteristics of such Artists?
+
+- Not popular yet
+- Few, but recent Albums
+- Should show signs of recent popularity. 
+
+Think about these characteristica for a second. Did you realize that these are essentially, filtering conditions? The first bullet point translates into: should not be in the upper part of our `popular_artists` data.frame. The second means, should have few but recently released Albums. Maybe we can filter for this using `InvoiceDate`. The third point we could translate as have most purchases in the last six months. 
+
+Once we have the relevant data collected from all tables, we only need to apply the correct filters that describe the characteristics above. 
+
+```{r}
+artists_tracks_link <- 
+  tracks |> 
+  filter(GenreId %in% c(1, 7)) |> 
+  select(TrackId, AlbumId) |> 
+  inner_join(tbl(conn, "albums"), join_by(AlbumId == AlbumId)) |>
+  inner_join(artists, join_by(ArtistId == ArtistId)) |> 
+  select(TrackId, Artist, ArtistId)
+
+head(artists_tracks_link)
+```
+
+```{r}
+young_artists <- 
+  tbl(conn, "albums") |> 
+  count(ArtistId) |> 
+  filter(n == 1) |> 
+  select(-n)
+head(young_artists)
+```
+
+
+
+```{r}
+young_artist_invoices <- 
+  tbl(conn, "invoices") |> 
+  select(InvoiceId, InvoiceDate) |> 
+  inner_join(invoice_items, join_by(InvoiceId == InvoiceId)) |> 
+  inner_join(artists_tracks_link, join_by(TrackId == TrackId)) |> 
+  inner_join(young_artists, join_by(ArtistId == ArtistId)) |> 
+  select(InvoiceId, InvoiceDate, TrackId, Artist) |> 
+  collect()
+
+head(young_artist_invoices)
+```
+
+```{r}
+young_artist_lineup <- 
+  young_artist_invoices |> 
+  mutate(InvoiceDate = ymd_hms(InvoiceDate),
+         year = year(InvoiceDate)) |> 
+  # filter to only look at most recent purchases
+  filter(year == max(year)) |> 
+  # counting purchases
+  summarise(
+    nr_buys = n(),
+    .by = Artist
+  ) |> 
+  # make sure to take out the top 6 popular artists:
+  filter(!(Artist %in% head(popular_artists$Artist, 6))) |> 
+  # now sort and show the top 4
+  arrange(-nr_buys) |> 
+  head(4)
+young_artist_lineup
+```
+
+### Wrapping up
+
+In summary:
+
+- We decide to propose Sao Paolo as a location because it is the only city in the top six by number of existing customers and population to draw new customers from.
+- We propose 8 artists based on time constraints
+- We propose the top 4 artists based on what is popular with existing customers in the Sao Paolo: 
+- We propose the top 4 newcomers (artists with only one album in our db) and most track purchases during the most recent year. 
+
+We could think of other alternatives, but we stop here and evaluate the current one. It fits our criteria established above. The big issue is that we weren't given any budget constraints. We could potentially also do a better job at identifying newcomers. Or we could also consider not only the city but define a radius of influence around a city when deciding on a location. We can still propose the current solution. We have solid arguments to justify our choices. But should keep these limitations in mind.  

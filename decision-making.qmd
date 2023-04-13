@@ -40,7 +40,7 @@ registerS3method(
 
 As stated in @sec-introduction, this course is about how to make sensible decisions with the help of data. Before we dive into doing data analysis though, we first want to discuss what "sensible decision-making" means. So we first need to talk about the building blocks of a decision problem. Some of the terms we'll discuss (e.g., minimax) may sound strange or complicated. But, all we are doing is laying down some simple arguments for how to best structure an analysis to draw conclusions from it.
 
-The first thing to note is that most important business decisions involve some degree of uncertainty. Think of uncertainty simply as *missing knowledge about past, present, or current events (Walkter et al. 2003).* The knowledge that you would need in order to choose the best action under various potential actions.
+The first thing to note is that most important business decisions involve some degree of uncertainty. Think of uncertainty simply as *missing knowledge about past, present, or future events (Walkter et al. 2003).* The knowledge that you would need in order to choose the best action under various potential actions.
 
 We care about uncertainty because whenever there is uncertainty, there is a chance to make a mistake or make a sub-optimal choice. Also, in lots of real-world cases, some mistakes are more costly than others. This implies that a useful decision rule suggests not only an expected best action out of a set of actions. It also accounts for the costs of different kinds of mistakes when deciding on a particular action.
 
@@ -159,7 +159,7 @@ The last example is thus also there to illustrate the power of asking the right 
 -   What is the reason for the suspected reason?
 -   What do we need to solve this problem?
 
-### Establish decision criteria.
+### Establish decision criteria
 
 To make good decisions, we need to have an idea of what goal we are working towards! Thus, once we have a better grip on what exactly the issue is, we need to set some criteria that define what a good solution should look like.
 
