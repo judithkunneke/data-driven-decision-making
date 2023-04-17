@@ -1,0 +1,242 @@
+# Loading additional 'packages'
+library(tidyverse)
+library(palmerpenguins)
+library(ggdensity)
+
+## # a good life motto
+## if (sad == TRUE) {
+##   stop(sad)
+##   be_awesome()
+## }
+## # if you can read this, then you can R
+
+1 + 3
+
+x <- c(-3, 1, 35, 2, 5, 6, 23, 3, 5, 7)  # create some input (here, a vector object)
+y <- mean(x)  # do something with the input
+y  # let's look at the output
+
+x_nums <- c(1, 0.3, 200)
+x_mixed <- c(2, "test example")
+x_char <- c("a", "bw", "02")
+x_nums
+x_mixed
+x_char
+
+typeof(x_mixed)
+
+mood <- factor(
+  x = c("good", "good", "great", "ok", "great", "don't ask"), 
+  levels = c("don't ask", "ok", "good", "great"),
+  ordered = TRUE 
+  )
+mood
+
+mean(mood)
+
+mood_in_numbers <- as.integer(mood)
+mood_in_numbers
+mean(mood_in_numbers)
+
+df_example <- data.frame(SubjID = c(1,2,3),
+                         Gender = factor(c("male", "female", "female")),
+                         Treat = c(FALSE, TRUE, FALSE),
+                         Hospital = c("Idaho", "Oklahoma", "Los Angeles")
+                         )
+df_example
+
+head(penguins)  # head() shows the first 6 rows of a table
+
+str(penguins)  # helpful function to give you a quick description of any R object
+
+penguins |> 
+  count(species, name = "n_penguins") 
+
+penguins |> 
+  group_by(species) |> 
+  summarize(n_penguins = n()) |> 
+  ungroup()
+
+# In newer versions of dplyr, this more succinct version also works
+penguins |> 
+  summarize(n_penguins = n(), .by = species)
+
+## # SQL code, not R
+
+## SELECT
+
+##     species,
+
+##     COUNT(*) AS n_penguins
+
+##     FROM penguins
+
+##         GROUP BY species;
+
+
+library(tidyverse)
+library(RSQLite)
+
+conn <- DBI::dbConnect(SQLite(), "analysisgen/chinook.db")
+conn
+dbListTables(conn)
+
+tbl(conn, "invoices") |> glimpse()
+
+rev_by_city <-
+  tbl(conn, "invoices") |>
+  summarise(
+    total_billings = sum(Total, na.rm = TRUE),
+    .by = c(BillingCity, BillingCountry)
+  ) |>
+  arrange(-total_billings) |>
+  collect()
+
+head(rev_by_city)
+
+tbl(conn, "invoices") |>
+summarise(
+  total_billings = sum(Total, na.rm = TRUE),
+  .by = BillingCity
+) |>
+arrange(-total_billings) |> 
+show_query()
+
+rev_by_city |>
+  ggplot(aes(y = fct_reorder(BillingCity, total_billings), 
+             x = total_billings)) +
+  geom_col()
+
+rev_by_city |>
+  ggplot(aes(y = fct_reorder(BillingCity, total_billings), 
+             x = total_billings)) +
+  geom_col(fill = "darkorchid")+
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank()) +
+  labs(
+    title = "Locate the festival in Eastern Europe",
+    subtitle = "Comparison of total revenues by customer location",
+    caption = "source: company internal data",
+    y = "City",
+    x = "Total revenues ($)"
+  )
+
+library(readxl)
+world_cities <- read_excel("analysisgen/worldcities.xlsx")
+world_cities <- 
+  world_cities |> 
+  mutate(
+    country = case_when(
+      country == "United States" ~ "USA", 
+      country == "Czechia" ~ "Czech Republic",
+      .default = country)
+  )
+head(world_cities)
+
+city_data <- 
+  rev_by_city |> 
+  left_join(
+    world_cities |> select(city, country, population),
+    by = join_by(BillingCity == city, BillingCountry == country)
+    )
+head(city_data)
+
+city_data |> 
+  arrange(-population) |> 
+  head()
+
+invoice_items <- tbl(conn, "invoice_items")
+glimpse(invoice_items)
+
+tracks <- tbl(conn, "tracks")
+glimpse(tracks)
+
+bought_tracks <-
+  tbl(conn, "invoices") |>
+  filter(BillingCity %in% c("São Paulo")) |>
+  inner_join(invoice_items, join_by(InvoiceId == InvoiceId)) |>
+  select(InvoiceId, TrackId) |>
+  inner_join(
+    tracks |> select(TrackId, AlbumId, GenreId), 
+    join_by(TrackId == TrackId))
+head(bought_tracks)
+
+genres <- tbl(conn, "genres") |>
+  rename(Genre = Name)
+
+artists <- tbl(conn, "artists") |>
+  rename(Artist = Name)
+
+popular_tracks_data <-
+  bought_tracks |>
+  inner_join(tbl(conn, "albums"), join_by(AlbumId == AlbumId)) |>
+  inner_join(genres, join_by(GenreId == GenreId)) |>
+  inner_join(artists, join_by(ArtistId == ArtistId)) |>
+  collect()
+head(popular_tracks_data)
+
+popular_artists <-
+  popular_tracks_data |>
+  summarise(
+    nr_tracks_bought = n(),
+    .by = Artist
+  ) |>
+  arrange(-nr_tracks_bought)
+
+# Now, what are the 4 most popular artists?
+head(popular_artists, 4)
+
+popular_genres <-
+  popular_tracks_data |>
+  summarise(
+    nr_tracks_bought = n(),
+    .by = c(Genre, GenreId)
+  ) |>
+  arrange(-nr_tracks_bought)
+head(popular_genres)
+
+artists_tracks_link <- 
+  tracks |> 
+  filter(GenreId %in% c(1, 7)) |> 
+  select(TrackId, AlbumId) |> 
+  inner_join(tbl(conn, "albums"), join_by(AlbumId == AlbumId)) |>
+  inner_join(artists, join_by(ArtistId == ArtistId)) |> 
+  select(TrackId, Artist, ArtistId)
+
+head(artists_tracks_link)
+
+young_artists <- 
+  tbl(conn, "albums") |> 
+  count(ArtistId) |> 
+  filter(n == 1) |> 
+  select(-n)
+head(young_artists)
+
+young_artist_invoices <- 
+  tbl(conn, "invoices") |> 
+  select(InvoiceId, InvoiceDate) |> 
+  inner_join(invoice_items, join_by(InvoiceId == InvoiceId)) |> 
+  inner_join(artists_tracks_link, join_by(TrackId == TrackId)) |> 
+  inner_join(young_artists, join_by(ArtistId == ArtistId)) |> 
+  select(InvoiceId, InvoiceDate, TrackId, Artist) |> 
+  collect()
+
+head(young_artist_invoices)
+
+young_artist_lineup <- 
+  young_artist_invoices |> 
+  mutate(InvoiceDate = ymd_hms(InvoiceDate),
+         year = year(InvoiceDate)) |> 
+  # filter to only look at most recent purchases
+  filter(year == max(year)) |> 
+  # counting purchases
+  summarise(
+    nr_buys = n(),
+    .by = Artist
+  ) |> 
+  # make sure to take out the top 6 popular artists:
+  filter(!(Artist %in% head(popular_artists$Artist, 6))) |> 
+  # now sort and show the top 4
+  arrange(-nr_buys) |> 
+  head(4)
+young_artist_lineup
