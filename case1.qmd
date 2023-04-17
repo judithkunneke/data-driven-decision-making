@@ -486,9 +486,92 @@ young_artist_lineup
 
 In summary:
 
-- We decide to propose Sao Paolo as a location because it is the only city in the top six by number of existing customers and population to draw new customers from.
+- We decide to propose Sao Paulo as a location because it is the only city in the top six by number of existing customers and population to draw new customers from.
 - We propose 8 artists based on time constraints
-- We propose the top 4 artists based on what is popular with existing customers in the Sao Paolo: 
+- We propose the top 4 artists based on what is popular with existing customers in the Sao Paulo: 
 - We propose the top 4 newcomers (artists with only one album in our db) and most track purchases during the most recent year. 
 
 We could think of other alternatives, but we stop here and evaluate the current one. It fits our criteria established above. The big issue is that we weren't given any budget constraints. We could potentially also do a better job at identifying newcomers. Or we could also consider not only the city but define a radius of influence around a city when deciding on a location. We can still propose the current solution. We have solid arguments to justify our choices. But should keep these limitations in mind.  
+
+## Merging and aggregating data in Excel
+
+Everything we have done here, we can do in Excel, as long as the data we are dealing with is not too big. In this section we want to give a short intro into tables, queries, and pivot tables in excel. These tools have become quite powerful, so we showcase them here for comparison. 
+
+With the right tools, you can query SQL databases directly from excel too. To keep things simple, we put the tables in the chinook database into separate excel sheets in one file (see @fig-excel1.)
+
+### Make use of the table feature
+
+The first thing we want to turn the data cells in these sheets into "tables" as these makes it easier to reference them later. Doing so is simple. Below we show how to do this for the invoices data sheet. Select any cell within the data range that constitutes your table (see @fig-excel1), then click on "Format as Table". Pick a format, then make sure the cell range is correct and "has headers is checked". 
+
+![Turn a cell range into a table](pics/C1/excel1.png){#fig-excel1 height="300px"}
+
+Finally, we click on the Table Design section in the Excel ribbon and choose a name for the table (see @fig-excel2).
+
+![Labeling tables](pics/C1/excel2.png){#fig-excel2 height="200px"}
+
+### Pivot tables as a powerful aggregation feature
+
+Everything we have done so far with grouping and summarizing using the `summarise()` function in R can be done with the help of excel pivot tables to. Let us repeat the exercise of finding the city where most of Chinook's revenues are originating from. 
+
+Click on the "Summarize with PivotTable" button you see in @fig-excel2. Choose to put the table into a new sheet. A new sheet will open and on the side you will see a Fields menu as shown in @fig-excel3. We want a similar output as we got from the `summarise()` function in R. We want the sum of the revenues grouped by billing city. So the rows of the output table should be billing cities. To get that, drag the BillingCity field into the Rows section (see @fig-excel3). The values in each row should be the sum of the "Total" field. So drag the "Total" field into the Values section. It usually defaults to "Sum of .." which is what we want in this case. If it is not click on the down arrow, then on "Value Field Settings" in that menu, you can choose what aggregation is performed (sum, count, mean, min, max, etc.)
+
+![Pivot table options](pics/C1/excel3.png){#fig-excel3 height="300px"}
+
+We almost got what we want. We just need to sort the resulting pivot table from city with highest total revenues to lowest. For whatever reason, that sorting feature is a bit hidden. Right-click on any cell in the Sum of Total column and there you find a sort option (see @fig-excel4).
+
+![Sorting pivot tables](pics/C1/excel4.png){#fig-excel4 height="200px"}
+
+This is the result:
+
+![Most important cities](pics/C1/excel5.png){#fig-excel5 height="300px"}
+
+
+### Joining data in Excel
+
+Joining data in Excel used to be a very error prone and cumbersome operation. It still is not as straightforward as with a programming language. But the current capabilities make it much much easier and clearer to debug. Here is one approach we like. We will illustrate merging using the question: "What are the genres of music that are bought by customers in Sao Paulo?" To figure this out, we need to merge three tables: invoices, invoice_items, and tracks. First we need to define a table for invoice_items and tracks---just as we did above for Invoices. Second, we need to create a query link for each table. This is because we will use power query to do the merging. Here is how we define a query for each table.
+
+Click on a cell for the table we want to link, then go to the Data section and click on "From Table/Range" (see @fig-excel6)
+
+![Pivot table options](pics/C1/excel6.png){#fig-excel6 height="300px"}
+
+This will open the power query editor. We are not going to do much there yet. Hit "close and load to"
+
+![Close and load to](pics/C1/excel7.png){#fig-excel7 height="150px"}
+
+and then click "Only Create Connection"
+
+![Connections option](pics/C1/excel8.png){#fig-excel8 height="200px"}
+
+Do this for all three tables we want to merge. You should then have three queries in your query sidebar:
+
+![Queries and Connections](pics/C1/excel9.png){#fig-excel9 height="300px"}
+
+Now we are ready to do the merging. We have to do this in two steps because we want to do two merges. Click again on the Data section, then click the "Get Data" drop-down menu and choose "Combine Queries".
+
+![Get data menu](pics/C1/excel10.png){#fig-excel10 height="350px"}
+
+A menu will open where we can select two queries to join. We choose Invoices and InvoiceItems. Then we click on the columns in each table we want to join by ("InvoiceID"). Finally, we select "inner join" under "Join Kind". Your selection should look like this (@fig-excel11): 
+
+![Join menu](pics/C1/excel11.png){#fig-excel11 height="400px"}
+
+Once you click "OK", you will enter the power query editor again. It will show a new query called Merge1. Rename that to something like "SaoPauloTracks" by right-clicking on "Merge1" and choosing rename. 
+
+![Name your queries so you know what they are for](pics/C1/excel12.png){#fig-excel12 height="200px"}
+
+We called it SaoPaulo tracks, because we are going to filter this query a bit now too. Click on the dropdown arrow right next to the column "BillingCity" and select only Sao Paulo. Then click on the Icon right next to the column header InvoiceItems (see @fig-excel13.)
+
+![Including join columns](pics/C1/excel13.png){#fig-excel13 height="200px"}
+
+This contains all the columns from the joint invoice_items table. When you click on it, it asks you what columns to keep. We only need "TrackId". We also do not need a lot of the other columns still in this query. Click on Choose columns and get rid of all but InvoiceId, BillingCity, and TrackId. You final query should look like this and list the following steps on the right (see @fig-excel14.)
+
+![A finished joint query](pics/C1/excel14.png){#fig-excel14 width="800px"}
+
+Click on "close and load to" again (see @fig-excel7) and again choose "Only Create Connection". This is only an intermediate join that we do not want to output into our excel worksheets. We do need still merge the third table onto this. Now we are essentially repeat the join steps again, starting from "Get Data" and "Combine Queries" (@fig-excel10). This time we merge the SaoPauloTracks query and the Tracks query. And we join them by TracksId and choose "inner join" again.
+
+![Join menu again](pics/C1/excel15.png){#fig-excel15 height="400px"}
+
+We click ok and click on expand right next to the header of the "Tracks" column and select only the GenreId and AlbumID columns. We rename the query to something like SaoPauloGenres. Now we again hit Close and load to. But this time we export to a new table and a new worksheet. The result should look like this (@fig-excel16): 
+
+![Final join output](pics/C1/excel16.png){#fig-excel16 height="400px"}
+
+From here now we can produce produce a pivot table that produces the most popular genreIds and so on. We leave the rest of the case as an excercise. 
