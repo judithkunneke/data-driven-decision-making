@@ -10,7 +10,6 @@ code-line-numbers: true
 book:
   title: "Data-Driven Decision-Making"
   author: "Judith Künneke, Harm Schütt"
-  downloads: [pdf]
   search: true
   date: today
   chapters:
@@ -29,8 +28,3 @@ format:
   html:
     theme: cosmo
     df-print: kable
-  pdf:
-    documentclass: scrreprt
-
-
-
