@@ -156,7 +156,7 @@ p1 <- d |>
   theme(panel.grid.minor = element_blank()) + 
   transition_states(id) +
   ease_aes('linear')
-anim_save("p1.gif", animation = p1, fps=5)
+# anim_save("p1.gif", animation = p1, fps=5)
 animate(p1, fps=5, height = 4, width = 4, units = "in", res = 90)
 ```
 
@@ -201,7 +201,7 @@ p2 <- d2 |>
   theme(panel.grid.minor = element_blank()) + 
   transition_states(id) +
   ease_aes('linear')
-anim_save("p2.gif", animation = p2, fps=6)
+# anim_save("p2.gif", animation = p2, fps=6)
 animate(p2, fps=6, height = 4, width = 4, units = "in", res = 90)
 ```
 
