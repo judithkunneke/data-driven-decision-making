@@ -36,6 +36,13 @@ registerS3method(
 
 ```
 
+## Learning goals
+
+1. Critically analyze identified data patterns
+2. Evaluate the association between important decision variables
+2. Evaluate business decisions and refine critical assumptions to improve decision-making by using advanced methods to analyze business data
+
+
 ## What is diagnostic analysis?
 
 Diagnostic analysis seeks to answer the question of why a particular event or outcome happened by uncovering the underlying factors, relationships, or determinants that led to the observed data pattern. This understanding can help decision-makers identify the root causes of issues, determine the key drivers of success, and thus guide future decision-making.
