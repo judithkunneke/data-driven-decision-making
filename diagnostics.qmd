@@ -544,9 +544,7 @@ ggplot(d6, aes(x, y)) +
 
 The only difficulty that the logistic transformation brings about is that it complicates the interpretation of coefficient magnitudes. That is because the S-curve now makes the relation between $y$ and the $x$s non-linear. In logistic regression, the coefficients are expressed in terms of the logarithm of the odds ratio, which describes the change in the odds of the event occurring for a one-unit change in the independent variable. 
 
-To facilitate interpretation, these coefficients can be exponentiated to obtain the odds ratios, which provide a more intuitive understanding of the relationship between the independent variables and the binary outcome. Let's consider a hypothetical example to illustrate logistic regression and its interpretation. Suppose we want to study the relationship between the number of hours studied per week (independent variable) and the probability of passing an exam (dependent variable, binary: pass or fail). Assume we have collected data from a sample of 50 students, and we fit a logistic regression model to predict the probability of passing the exam based on the number of hours studied. Our fitted logistic regression model provides the following coefficients:
-
-Assume we are a broker and send an offer around for a counseling on retirement saving. We  wanted to know whether older customers were more likely to respond to this campaign. Here is some simulated data and the result of throwing the data into a logistic regression:
+To facilitate interpretation, these coefficients can be exponentiated to obtain the odds ratios, which provide a more intuitive understanding of the relationship between the independent variables and the binary outcome. Let's consider a hypothetical example to illustrate logistic regression and its interpretation. Assume we are a broker and send an offer around for a counseling on retirement saving. We  wanted to know whether older customers were more likely to respond to this campaign. Here is some simulated data and the result of throwing the data into a logistic regression:
 
 ```{r}
 set.seed(0374)
