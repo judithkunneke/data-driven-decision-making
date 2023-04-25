@@ -303,13 +303,13 @@ We basically introduced half of what a regression analysis is about already in t
 
 In @sec-datapat, we touched upon correlations. A correlation coefficient only assesses the strength of an assumed linear relationship in a sample---*how linear* it is. It does not tell us anything about the *magnitude* of the relation. If we want to learn something about the magnitude of the linear relation---and maybe compare it to the magnitude in other settings or other variables, we need a regression model. 
 
-To illustrate, we use an example of a retail company that analyzes the performance of its employees at each branch. The company wants to understand if there is a correlation between average employee tenure at the branch level and the branch profit they generate.^[As we perform our investigation at the branch level, average employee tenure implies that the tenure of all employees at the respective branch is averaged. Technically, we need to be careful here. As the average tenure is itself estimated, there is additional noise in our x variable that we should account for. We ignore this in the example, for ease of exposition.] The company collected data on the number of years an employee works for a branch and the total profit of the respective branch. We start our analysis by calculating the correlation coefficient between these two variables. We are first interested in the strength and direction of a possible linear relationship. Similarly to earlier, we would have two competing hypotheses: 
+To illustrate, we use an example of a retail company that analyzes the performance of its employees at each branch. The company wants to understand if there is a correlation between average employee tenure at the branch level and the branch profit they generate.^[As we perform our investigation at the branch level, average employee tenure implies that the tenure of all employees at the respective branch is averaged. Technically, we need to be careful here. As the average tenure is itself estimated, there is additional noise in our x variable that we should account for. We ignore this in the example, for ease of exposition.] The company collected data on the number of months an employee works for a branch and the total profit of the respective branch. We start our analysis by calculating the correlation coefficient between these two variables. We are first interested in the strength and direction of a possible linear relationship. Similarly to earlier, we would have two competing hypotheses: 
 
 - H$_0$: There is no significant association between employee tenure and profit
 
 - H$_A$: There is a significant association between employee tenure and profit
 
-To determine whether this correlation is "not by chance," the company could perform a statistical test to determine if the observed correlation coefficient is statistically significant. 
+To determine whether this correlation is "not by chance," the company could perform a statistical test to determine if the observed correlation coefficient is statistically significant (using the `correlation::` R package). 
 
 ```{r}
 #| echo: false
@@ -319,6 +319,7 @@ d4 <- haven::read_dta("analysisgen/Store24_module3.dta")
 ```{r}
 correlation(d4[, c("profit", "employee_tenure")])
 ```
+
 This test would compare the observed correlation against what would be expected if there were no relationship between the two variables (i.e., the correlation is purely random). We can again use a t-test.^[Meaning the test statistic follows a t-distribution. It is computed a slightly differently than, for example, a differences-in-means t-test. The formula is: $t_r = r√(n-2) / (1-r2)$] The results present a correlation coefficient of 0.26 and a p-value of 0.06. This implies there is indeed a weak positive correlation (r = 0.26) which is significant (p-value of 0.026 is smaller than the conventional significance level (α) of 0.10 - in the accounting discipline). 
 
 All the correlation coefficient tells us, however, is that there is an indication of a linear relation, *not* the magnitude of the relation (see this [wikipedia graph](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient#/media/File:Correlation_examples2.svg)). If we are interested in that, we need to think about a regression model. 
@@ -356,7 +357,7 @@ ggplot(d4, aes(x = employee_tenure, y = profit)) +
   )
 ```
 
-Most data tools these days allow you estimate regressions. @fig-excelreg shows regression output, estimating the line above, for a random sample of branches using excel. Below you find R output.
+Most data tools these days allow you estimate regressions. @fig-excelreg shows regression output, estimating the line above, for a random sample of branches using excel. Below you find R output  (using the `jtools::` summ function because it creates cleaner summaries).
 
 ![Simple regression](pics/C4/simple_reg.png){#fig-excelreg height="200px"}
 
@@ -367,7 +368,7 @@ summ(m1, confint = TRUE)
 
 The row labeled `employee_tenure` contains the slope, the $b$ of the regression model above. It is the parameter of interest here. First, note that the t-value and p value in this row are the same as that of the correlation coefficient. That is true for a simple linear regression with just one variable. The coefficient itself has value of 1,301.7. It is a measure of *magnitude*. It means that one additional month of average employee tenure is *associated* with 1,301.7 euros more in branch profits. This is the slope of the line in @fig-emp1. Do not be too excited about the magnitude however. Looking at the confidence interval, we can see that there is a lot of uncertainty about the actual magnitude (The 95% range is from 163 to 2,440). 1,301 is the best guess, but not a great guess. 
 
-The intercept (also known as the constant or the y-intercept) is the value of the dependent variable when all independent variables are equal to zero. It simply represents the point where the line intercepts with the y axis and usually does not have an interesting interpretation. In this case for example, do we really care that of a branch with an average tenure of zero years, the average profits are 258K euros?  
+The intercept (also known as the constant or the y-intercept) is the value of the dependent variable when all independent variables are equal to zero. It simply represents the point where the line intercepts with the y axis and usually does not have an interesting interpretation. In this case for example, do we really care that of a branch with an average tenure of zero months, the average profits are 258K euros?  
 
 Another feature of fitted regressions is that one can use them for (linear) predictions. If you want to make a prediction about the change in branch profits for let's say a branch with an average employee tenure of 12 months, we simply use the regression formula and plug in the estimated coefficients: 1,301 * 12 + 258,178 = 273,790, i.e., the predicted incremental profit after 12 months is 15,612 Euros
 
@@ -430,7 +431,11 @@ ggdag_status(dag_sm, use_labels = "label", text = FALSE) +
   theme_dag()
 ```
 
+Your data (stored in a data.frame called d5) looks like this:
+
 ```{r}
+#| echo: false
+
 set.seed(48927)
 n_stores = 28
 avg_basket_size <- 70
@@ -444,10 +449,10 @@ d5 <- tibble(
   revenues = round(foot_traffic * avg_basket_size + 120 * staff + round(500 * rbeta(n_stores, 4, 4)))
 )
 d5$revenues <- d5$revenues * 3
-d5
+head(d5)
 ```
 
-You think that for your shops the amount of staff is important. But you also know that if a store is busier, you staff more sales personel. So there is a direct connection. Just looking at the relation between revenues and amount of staff will thus be contaminated by foot traffic. The coefficient might just pick up that stores with more staff are busier stores. You want to know what the importance of staff is, holding foot traffic (how busy the store is) fixed. Stated another way, foot traffic is a confounding variable for estimating the relation between number of staff and revenues. You can see that in @fig-dag-rs. According to your mental model, foot traffic has an arrow going into revenues and an arrow going into staff. It causally influences both you think. Thus you need to hold its influence constant to have a chance to estimate the direct arrow going from staff to revenues. Multiple regression is one approach to do so. 
+revenues is weekly revenues, foot traffic is the number of customers per week. sick calls is how many employees called in sick that week. staff is how much sales personnel was working (not sick) during the week. You think that for your shops the amount of staff is important. But you also know that if a store is busier, you staff more sales personnel. So there is a direct connection. Just looking at the relation between revenues and amount of staff will thus be contaminated by foot traffic. The coefficient might just pick up that stores with more staff are busier stores. You want to know what the importance of staff is, holding foot traffic (how busy the store is) fixed. Stated another way, foot traffic is a confounding variable for estimating the relation between number of staff and revenues. You can see that in @fig-dag-rs. According to your mental model, foot traffic has an arrow going into revenues and an arrow going into staff. It causally influences both you think. Thus you need to hold its influence constant to have a chance to estimate the direct arrow going from staff to revenues. Multiple regression is one approach to do so. 
 
 Here is what would happen if we would ignore the confounding influence of foot traffic. We first estimate a simple regression of store revenues on number of staff working. 
 
@@ -463,7 +468,7 @@ m3 <- lm(revenues ~ staff + foot_traffic, data = d5)
 summ(m3, confint = TRUE)
 ```
 
-All of a sudden the coefficient drops down dramatically to 352€ weekly revenues per staff member. This change is as expected if foot traffic is indeed a confounding influence for the staff variable.^[We simulated some data and the true coefficient on foot traffic is 210€ in weekly revenues per weekly customer and the true coefficient on staff is 360€ in weekly revenues per staff member.] 
+All of a sudden the coefficient drops down dramatically to 352€ weekly revenues per staff member. This change is as expected if foot traffic is indeed a confounding influence for the staff variable.^[We simulated this data and the true coefficient on foot traffic is 210€ in weekly revenues per weekly customer and the true coefficient on staff is 360€ in weekly revenues per staff member.] 
 
 The main takeaway here is: one big advantage of multiple regression is that it allows you to examine the role and magnitude of individual determinants while holding others fixed. As we saw in this example, it can really matter to do so. If we would not have included foot traffic, we might have gotten the impression that staff members are way more important to store performance than they really are. 
 
@@ -516,7 +521,7 @@ So, what is a good model. We believe it depends on the purpose of your analysis.
 
 Next to linear regressions, logistic regressions are the next most often used regression tool. It belongs to the family of generalized linear models (GLM). The main differences between these two types of regression lie in the nature of the dependent variable, the function used to model the relationship, and the interpretation of the results. Linear regression is used when the dependent variable is continuous, meaning it can take any real value within a certain range. Logistic regression is specifically designed for binary dependent variables, which have only two categories or outcomes, such as success/failure or yes/no. This is very useful for determinant analysis like: What determined whether a customer did respond to a campaign (a yes/no outcome).
 
-Because the outcome is binary(0, 1), using a normal linear regression could result in predictions that lie far away from the (0; 1) interval. A logistic regression thus needs to ensure that the outcome can never be below 0 and never above 1. It does so by taking a the linear part of the model (the $a + b_1*x_1 + u$ part) and pushes it through a function (the so-called logistic function) that pulls large values to 1 and too small values to 0. It gives a the predictions a S-shaped curve that maps any real-valued input to a value between 0 and 1. Very useful when modeling probabilities.
+Because the outcome is binary(0, 1), using a normal linear regression could result in predictions that lie far away from the (0; 1) interval. A logistic regression thus needs to ensure that the outcome can never be below 0 and never above 1. It does so by taking a the linear part of the model (the $a + b_1*x_1 + u$ part) and pushes it through a function (the so-called logistic function) that pulls large values to 1 and too small values to 0. It gives the relation a characteristic S-shaped curve that maps any real-valued input to a value between 0 and 1 (@fig-logreg). Very useful when modeling probabilities.
 
 ```{r}
 #| message: false
@@ -541,7 +546,7 @@ The only difficulty that the logistic transformation brings about is that it com
 
 To facilitate interpretation, these coefficients can be exponentiated to obtain the odds ratios, which provide a more intuitive understanding of the relationship between the independent variables and the binary outcome. Let's consider a hypothetical example to illustrate logistic regression and its interpretation. Suppose we want to study the relationship between the number of hours studied per week (independent variable) and the probability of passing an exam (dependent variable, binary: pass or fail). Assume we have collected data from a sample of 50 students, and we fit a logistic regression model to predict the probability of passing the exam based on the number of hours studied. Our fitted logistic regression model provides the following coefficients:
 
-Assume we are a broker and send an offer around for a counseling on retirement saving. We  wanted to know whether older customers were more likely to respond to this campaign. Here is some simulated data and the result of throwing the 
+Assume we are a broker and send an offer around for a counseling on retirement saving. We  wanted to know whether older customers were more likely to respond to this campaign. Here is some simulated data and the result of throwing the data into a logistic regression:
 
 ```{r}
 set.seed(0374)
@@ -596,7 +601,7 @@ probs <- 1 / (1 + exp(-log_odds))
 ggplot(
   tibble(x = age_range, y = probs),
   aes(x, y)) + 
-  geom_line() + 
+  geom_line(color = "cornflowerblue") + 
   labs(y = "Probability of getting counsel", 
        x = "Customer age")
 ```
@@ -604,4 +609,4 @@ ggplot(
 
 ## Conclusion
 
-The material we covered in this chapter is quite complex and deep. Rather than focussing on the mechanics we tried to focus on important intuition. We still think it is worth, as you get more and more familiar with the tools to dive deeper into it by practicing. Fully understanding these concepts takes practice. With the tools we introduced here, linear and logistic regressions, many applications will be served and if you will already make a large step forward to data-driven decision-making if you have a rudimentary grasp of them. Particularly to find explanations for **why** you observe certain patterns in your data. For the purpose of creating predictive models, we will continue to discuss regressions and more advanced models in Chapter 5.
+The material we covered in this chapter is quite complex and deep. Rather than focusing on the mechanics we tried to focus on important intuition. We still think it is worth, as you get more and more familiar with the tools to dive deeper into it by practicing. Fully understanding these concepts takes practice. With the tools we introduced here, linear and logistic regressions, many applications will be served and if you will already make a large step forward to data-driven decision-making if you have a rudimentary grasp of them. Particularly to find explanations for **why** you observe certain patterns in your data. For the purpose of creating predictive models, we will continue to discuss regressions and more advanced models in Chapter 5.
