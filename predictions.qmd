@@ -127,11 +127,17 @@ To illustrate the severity of the issue, we computed a common prediction error m
 #| message: false
 #| echo: false
 #| label: fig-overfit2
-#| fig-cap: "Using on sample fit to predict outcomes in the other samples"
+#| fig-cap: "Using sample 2 fit to predict outcomes in the other samples"
+#| fig-width: 7
+#| fig-asp: 0.66
+
+m2_fit <- \(x) 637.9145 + -29.2330 * x + 0.4338 * x^2
+range_y <- range(dta$y)
 sf_1 <- 
   filter(dta, Id == 2) |> 
   ggplot(aes(x, y)) + 
   geom_point() + 
+  scale_y_continuous(limits = range_y) + 
   geom_smooth(method = "lm", se = FALSE, formula = 'y ~ poly(x, 2)',
               color = "cornflowerblue") + 
   labs(subtitle = "Original sample (2)")
@@ -140,21 +146,29 @@ sf_2 <-
   filter(dta, Id == 1) |> 
   ggplot(aes(x, y)) + 
   geom_point() + 
+  scale_y_continuous(limits = range_y) + 
+  geom_function(fun = m2_fit, color = "cornflowerblue", alpha = 0.6) + 
   labs(subtitle = "New sample (1)")
 sf_3 <- 
   filter(dta, Id == 3) |> 
   ggplot(aes(x, y)) + 
   geom_point()  + 
+  scale_y_continuous(limits = range_y) +
+  geom_function(fun = m2_fit, color = "cornflowerblue", alpha = 0.6) + 
   labs(subtitle = "New sample (3)")
 sf_4 <- 
   filter(dta, Id == 4) |> 
   ggplot(aes(x, y)) + 
   geom_point()  + 
+  scale_y_continuous(limits = range_y) + 
+  geom_function(fun = m2_fit, color = "cornflowerblue", alpha = 0.6) +  
   labs(subtitle = "New sample (4)")
 sf_5 <- 
   filter(dta, Id == 5) |> 
   ggplot(aes(x, y)) + 
   geom_point()  + 
+  scale_y_continuous(limits = range_y) + 
+  geom_function(fun = m2_fit, color = "cornflowerblue", alpha = 0.6) +  
   labs(subtitle = "New sample (5)")
 
 layout <- "
