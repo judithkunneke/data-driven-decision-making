@@ -5,7 +5,6 @@
 #| warning: false
 library(tidyverse)
 library(gt)
-library(ggdag)
 library(gganimate)
 library(magick)
 library(knitr)
