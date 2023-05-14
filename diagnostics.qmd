@@ -40,7 +40,7 @@ registerS3method(
 
 1. Critically analyze identified data patterns
 2. Evaluate the association between important decision variables
-2. Evaluate business decisions and refine critical assumptions to improve decision-making by using advanced methods to analyze business data
+3. Evaluate business decisions and refine critical assumptions to improve decision-making by using advanced methods to analyze business data
 
 
 ## What is diagnostic analysis?

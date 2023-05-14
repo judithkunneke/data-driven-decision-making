@@ -19,6 +19,7 @@ book:
     - datapatterns.qmd
     - diagnostics.qmd
     - predictions.qmd
+    - reporting.qmd
     - case1.qmd
     - case4.qmd
     - references.qmd
