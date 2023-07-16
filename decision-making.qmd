@@ -10,7 +10,7 @@ library(gt)
 library(ggdag)
 library(knitr)
 box::use(collapse[descr])
-source("utils.R")
+source("hhs-ggtheme.R")
 
 knit_print.gt <- function(x, ...) {
   stringr::str_c(
@@ -137,12 +137,13 @@ d |>
   geom_text(aes(label = glue("{`Percent Answered`}%")), color = "white", size = 4) +
   coord_fixed() + 
   scale_fill_viridis_c(limits = c(0, 100)) + 
+  labs(x = NULL) + 
   theme(
     legend.position = "none",
+    panel.background = element_blank(),
     axis.line = element_blank(),
     axis.ticks = element_blank()
-  ) + 
-  labs(x = NULL)
+  )
 ```
 
 Stop for a moment and consider how you would have possibly spotted this pattern if you had not known it existed (an unknown unknown). How could you have found it? You had some expert knowledge (there are multiple service tiers) and you probably had a mental model of your customers. Both lead you to entertain the idea that mismatches might differ across tiers. We point this out to highlight the importance of models. Only if you combine the right inquisitive mindset with a modicum of background/expert knowledge, will you be able to properly identify problems.

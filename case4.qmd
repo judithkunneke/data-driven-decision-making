@@ -9,9 +9,7 @@ box::use(
   DiagrammeR[grViz],
   collapse[descr]
 )
-theme_set(theme_light())
-theme_update(panel.grid = element_blank())
-update_geom_defaults("rect", list(fill = "cornflowerblue", color = "black"))
+source("hhs-ggtheme.R")
 ```
 
 ## Your task: predicting renovation costs
@@ -84,7 +82,9 @@ A good first step is to examine the outcome variable of interest. A histogram to
 dta |> 
   ggplot(aes(x = n_renovations)) + 
   geom_histogram(binwidth = 5) + 
-  scale_x_continuous(n.breaks = 25)
+  scale_x_continuous(n.breaks = 25) +
+  scale_y_continuous(expand = expansion(c(0.01,0.05))) + 
+  theme(panel.grid.major.x = element_blank())
 ```
 
 ```{r}
@@ -225,7 +225,8 @@ chosen_wf_pred |>
   scale_x_continuous(limits = range(chosen_wf_pred$n_renovations)) + 
   geom_abline(intercept = 0, slope = 1, color = "coral1") + 
   geom_point(alpha = 0.9, shape = 21) +
-  labs(y = "predicted n_renovations")
+  labs(y = "predicted n_renovations") + 
+  theme(legend.position = "right")
 ```
 
 ## An alternative set of model with transformed outcomes
@@ -248,7 +249,9 @@ Let's see how the new outcome variable is distributed
 dta2 |> 
   ggplot(aes(x = prop_renov)) + 
   geom_histogram(binwidth = 0.025) + 
-  scale_x_continuous(n.breaks = 10)
+  scale_x_continuous(n.breaks = 10) +
+  scale_y_continuous(expand = expansion(c(0.01,0.05))) + 
+  theme(panel.grid.major.x = element_blank())
 ```
 
 ```{r}
@@ -375,7 +378,8 @@ chosen_wf_pred2 |>
   scale_x_continuous(limits = range(chosen_wf_pred$n_renovations)) + 
   geom_abline(intercept = 0, slope = 1, color = "coral1") + 
   geom_point(alpha = 0.9, shape = 21) +
-  labs(y = "predicted n_renovations")
+  labs(y = "predicted n_renovations") + 
+  theme(legend.position = "right")
 ```
 
 It looks like the transformed regression really helped us doing a better job at the outlying observations (That is also why the RMSE went down more than the MAE). We also seem to do a better job with the hotel-years with low number of observations. This is a common reason why we want to think about transformations in the first place. Whenever we see that we have trouble predicting a specific part of the distribution correctly, we might want to see whether we can transform the distribution to something easier to fit. 

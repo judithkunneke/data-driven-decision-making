@@ -13,6 +13,7 @@ Second, we want to introduce basic R data manipulation steps using a simple deci
 library(tidyverse)
 library(palmerpenguins)
 library(ggdensity)
+source("hhs-ggtheme.R")
 ```
 
 

@@ -10,7 +10,7 @@ library(gt)
 library(ggdag)
 library(knitr)
 box::use(collapse[descr])
-source("utils.R")
+source("hhs-ggtheme.R")
 
 knit_print.gt <- function(x, ...) {
   stringr::str_c(

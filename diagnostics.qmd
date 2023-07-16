@@ -17,7 +17,7 @@ box::use(
   )
 library(gganimate)
 library(patchwork)
-source("utils.R")
+source("hhs-ggtheme.R")
 
 knit_print.gt <- function(x, ...) {
   stringr::str_c(
@@ -159,7 +159,6 @@ p1 <- d |>
   scale_y_continuous(limits = range(d$y)) + 
   scale_x_continuous(limits = range(d$x)) + 
   # theme_minimal() + 
-  theme_fsa() + 
   theme(panel.grid.minor = element_blank()) + 
   transition_states(id) +
   ease_aes('linear')
@@ -203,8 +202,6 @@ p2 <- d2 |>
               color = "cornflowerblue", fill = "cornflowerblue", alpha = 0.2) + 
   scale_y_continuous(limits = range(d2$y)) + 
   scale_x_continuous(limits = range(d2$x)) + 
-  # theme_minimal() + 
-  theme_fsa() + 
   theme(panel.grid.minor = element_blank()) + 
   transition_states(id) +
   ease_aes('linear')
@@ -277,7 +274,8 @@ p4 <-
   labs(
     x = "Estimates of the slope",
     subtitle = "Actual Frequency of Occurence"
-  )
+  ) + 
+  theme(panel.grid.major = element_blank())
 p3 + p4
 ```
 
@@ -357,7 +355,11 @@ ggplot(d4, aes(x = employee_tenure, y = profit)) +
     geom_smooth(method = "lm", formula = 'y ~ x',
               color = "cornflowerblue", se = F, alpha = 0.2) + 
 
-  theme(axis.text = element_blank()) + 
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid.major = element_blank()
+  ) + 
   labs(
     y = "Branch profit",
     x = "Average employee tenure"

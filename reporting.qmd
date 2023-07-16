@@ -17,7 +17,7 @@ box::use(
   )
 library(gganimate)
 library(patchwork)
-source("utils.R")
+source("hhs-ggtheme.R")
 
 knit_print.gt <- function(x, ...) {
   stringr::str_c(

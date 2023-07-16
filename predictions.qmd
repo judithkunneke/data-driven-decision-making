@@ -13,7 +13,7 @@ box::use(
   collapse[descr],
   glue[glue]
   )
-source("utils.R")
+source("hhs-ggtheme.R")
 
 knit_print.gt <- function(x, ...) {
   stringr::str_c(
@@ -432,7 +432,8 @@ bind_rows(roc_data1, roc_data2) |>
   labs(
     y = 'True positive rate (True "Yes" rate)',
     x = 'False positive rate (1 - True "No" rate)'
-  )
+  ) +
+  theme(legend.position = "bottom")
 ```
 
 This is the ROC curve. To understand this graph, think about the corners of it. Say, we use as threshold .pred_Yes >= 0% (always predict "Yes"). That is the top right corner of the graph. Intuitively, when we always predict "Yes", then we will always get all truly positive observations classified correctly (true positive rate will be 1). But, we will always misclassify all true "No" cases (our true negative rate will be zero or, equivalently, our false positive rate will be 1) The other extreme case is the .pred_Yes >= 100% (always predict "No"). Again, intuitively, when we always predict "No" then we can never predict the true "Yes" cases correctly but we will always predict the true "No" cases correctly. That is the 0, 0 bottom left of the graph. 
@@ -546,9 +547,10 @@ You first look at the outcome variable: `time_to_repair_hrs`, which is the time 
 #| fig-width: 4
 repair_dta |> 
   ggplot(aes(x = time_to_repair_hrs)) + 
-  geom_histogram(binwidth = 5, fill = "cornflowerblue", color = "white") + 
-  scale_y_continuous(expand = expansion(c(0.01,0))) + 
-  scale_x_continuous(n.breaks = 20)
+  geom_histogram(binwidth = 5) + 
+  scale_y_continuous(expand = expansion(c(0.01,0.05))) + 
+  scale_x_continuous(n.breaks = 20) +
+  theme(panel.grid.major.x = element_blank())
 ```
 
 We can see substantial variation. Most repairs take less than 20 hours, but there are a rare few that seem to take forever. Let us see whether we can predict repair time with a model. We start by building a tidymodels workflow. First, we prepare the data. First, we will put 20% of the sample away for later.
@@ -834,10 +836,11 @@ Visualizing the results, we get @fig-sumerr:
 
 boot_res |> 
   ggplot(aes(pct_abs_diff)) + 
-  geom_histogram(fill = "cornflowerblue", color = "white") + 
-  scale_y_continuous(expand = expansion(c(0.01,0))) + 
-  scale_x_continuous(n.breaks = 10) + 
-  labs(x = NULL)
+  geom_histogram(binwidth = 0.01) + 
+  labs(x = NULL) +
+  scale_y_continuous(expand = expansion(c(0.01,0.05))) + 
+  scale_x_continuous(n.breaks = 10) +
+  theme(panel.grid.major.x = element_blank())
 ```
 
 We see that there is quite a bit of variation, but if we want to be conservative (we seem to mostly overestimate the sum of hours needed anyway), then something like an 8% markup might make sense. What you actually do here will mostly depend on your other decision criteria (remember, @sec-decmb). But you have all the information now to make an informed decision.
