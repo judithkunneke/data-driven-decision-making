@@ -257,20 +257,21 @@ p3 <-
   geom_histogram(fill = "cornflowerblue") + 
   geom_vline(xintercept = 0, col = "red") + 
   annotate("rect", xmin = -8, xmax = siglvs[1], ymin = 0, ymax = 120,
-           alpha = .1,fill = "red") + 
+           alpha = .1 ,fill = "red", color = NA) + 
   annotate("rect", xmin = siglvs[2], xmax = 8, ymin = 0, ymax = 120,
-           alpha = .1,fill = "red") +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.01)), limits = c(0,120)) +
+           alpha = .1,fill = "red", color = NA) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.0)), limits = c(0,120)) +
   labs(
     x = "Estimates of the slope",
     subtitle = "Frequency of Occurence under the Null"
-  )
+  ) + 
+  theme(panel.grid.major = element_blank())
 
 p4 <- 
   ggplot(d3, aes(x = s)) + 
   geom_histogram(fill = "cornflowerblue") + 
   geom_vline(xintercept = 0, col = "red") + 
-  scale_y_continuous(expand = expansion(mult = c(0, 0.01)), limits = c(0,120)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.0)), limits = c(0,120)) +
   labs(
     x = "Estimates of the slope",
     subtitle = "Actual Frequency of Occurence"

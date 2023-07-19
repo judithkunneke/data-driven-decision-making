@@ -281,14 +281,16 @@ rev_by_city |>
 Or if you would put this into a presentation later, add an action title and make it pretty with a few more lines:
 
 ```{r}
-#| fig-height: 6.5
+#| fig-height: 8
 #| fig-width: 6
 rev_by_city |>
   ggplot(aes(y = fct_reorder(BillingCity, total_billings), 
              x = total_billings)) +
   geom_col(fill = "darkorchid")+
   theme_minimal() +
-  theme(panel.grid.major.y = element_blank()) +
+  theme(panel.grid.major.y = element_blank(),
+        axis.ticks.y = element_line()) +
+  scale_x_continuous(expand = expansion(0.01)) + 
   labs(
     title = "Locate the festival in Eastern Europe",
     subtitle = "Comparison of total revenues by customer location",

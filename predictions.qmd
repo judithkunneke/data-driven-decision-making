@@ -431,9 +431,15 @@ bind_rows(roc_data1, roc_data2) |>
   geom_line() + 
   labs(
     y = 'True positive rate (True "Yes" rate)',
-    x = 'False positive rate (1 - True "No" rate)'
+    x = 'False positive rate (1 - True "No" rate)',
+    color = NULL
   ) +
-  theme(legend.position = "bottom")
+  theme(
+    legend.position = "bottom",
+    legend.text.align = 0,
+    legend.margin = margin(l = 0, unit = "in"),
+    plot.margin = margin(t = 0.1, r = .12, unit = "in")
+  )
 ```
 
 This is the ROC curve. To understand this graph, think about the corners of it. Say, we use as threshold .pred_Yes >= 0% (always predict "Yes"). That is the top right corner of the graph. Intuitively, when we always predict "Yes", then we will always get all truly positive observations classified correctly (true positive rate will be 1). But, we will always misclassify all true "No" cases (our true negative rate will be zero or, equivalently, our false positive rate will be 1) The other extreme case is the .pred_Yes >= 100% (always predict "No"). Again, intuitively, when we always predict "No" then we can never predict the true "Yes" cases correctly but we will always predict the true "No" cases correctly. That is the 0, 0 bottom left of the graph. 
@@ -544,7 +550,9 @@ You first look at the outcome variable: `time_to_repair_hrs`, which is the time 
 
 ```{r}
 #| fig-height: 4
-#| fig-width: 4
+#| fig-width: 6
+#| label: fig-repairtime
+#| fig-cap: "Always check how your outcome variable is distributed"
 repair_dta |> 
   ggplot(aes(x = time_to_repair_hrs)) + 
   geom_histogram(binwidth = 5) + 
@@ -688,14 +696,17 @@ mae(chosen_wf_pred, truth = time_to_repair_hrs, estimate = .pred)
 
 ```{r}
 #| fig-height: 4
-#| fig-width: 4
+#| fig-width: 5
+#| label: fig-fitchecking
+#| fig-cap: "Comparing actual outcomes to predicted outcomes (1)"
 chosen_wf_pred |> 
   ggplot(aes(y = .pred, x = time_to_repair_hrs, color = item_type)) + 
   scale_y_continuous(limits = range(chosen_wf_pred$time_to_repair_hrs)) + 
   scale_x_continuous(limits = range(chosen_wf_pred$time_to_repair_hrs)) + 
   geom_abline(intercept = 0, slope = 1, color = "cornflowerblue") + 
   geom_point(alpha = 0.9, shape = 21) +
-  labs(y = "predicted time_to_repair_hrs")
+  guides(color = guide_legend(nrow=3, byrow=TRUE)) + 
+  labs(y = "predicted time_to_repair_hrs", color = NULL)
 ```
 
 RMSE, MAE, and the plot all show us that this is a bad model. RMSE of 16 hours and MAE of 10 hours is probably too much (we will later do a cost analysis). The graph also tells us that we a doing a bad job at getting the really long jobs correct (A perfect prediction model would have all points lined up on the blue line). And we also see that our dummy variables does not capture the variance in the data well. 
@@ -749,14 +760,17 @@ mae(wf2_pred, truth = time_to_repair_hrs, estimate = .pred)
 
 ```{r}
 #| fig-height: 4
-#| fig-width: 4
+#| fig-width: 5
+#| label: fig-fitchecking2
+#| fig-cap: "Comparing actual outcomes to predicted outcomes (2)"
 wf2_pred |> 
   ggplot(aes(y = .pred, x = time_to_repair_hrs, color = item_type)) + 
   scale_y_continuous(limits = range(chosen_wf_pred$time_to_repair_hrs)) + 
   scale_x_continuous(limits = range(chosen_wf_pred$time_to_repair_hrs)) + 
   geom_abline(intercept = 0, slope = 1, color = "cornflowerblue") + 
   geom_point(alpha = 0.9, shape = 21) +
-  labs(y = "predicted time_to_repair_hrs")
+  guides(color = guide_legend(nrow=3, byrow=TRUE)) + 
+  labs(y = "predicted time_to_repair_hrs", color = NULL)
 ```
 
 That is a drastically better model. We still don't get the large times fully right, maybe we need a model that accounts for a bigger tails than a poisson regression allows. But we are down to a MAE of 4 hours. And the plot looks much much cleaner. 
@@ -832,7 +846,7 @@ Visualizing the results, we get @fig-sumerr:
 #| label: fig-sumerr
 #| fig-cap: "Absolute error of predicting the sum of time to repair as percent of true sum of time to repair"
 #| fig-height: 4
-#| fig-width: 4
+#| fig-width: 6
 
 boot_res |> 
   ggplot(aes(pct_abs_diff)) + 
