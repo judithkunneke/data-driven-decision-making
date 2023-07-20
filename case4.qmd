@@ -5,8 +5,8 @@
 #| message: false
 library(tidymodels)
 library(poissonreg)
+library(ggdag)
 box::use(
-  DiagrammeR[grViz],
   collapse[descr]
 )
 source("hhs-ggtheme.R")
@@ -22,41 +22,35 @@ You know that you can collect some data from the hotel chain's systems, so you f
 
 <!-- https://www.erikigelstrom.com/articles/causal-graphs-in-r-with-diagrammer/ -->
 
-```{r hoteldag}
+```{r}
 #| message: false
 #| echo: false
 #| label: fig-hoteldag
 #| fig-cap: "DAG of possible determinants of the N of hotelroom renovations"
-grViz("
-digraph {
-  graph [ranksep = 0.2]
-  node [shape = plaintext]
-    A [label = 'N Renovations' fontcolor = 'brown2']
-    Y [label = 'N Rooms']
-    B [label = 'N Guests']
-    C [label = 'Furniture Quality']
-    D [label = 'Location']
-    E [label = 'Type Guests']
-    F [label = 'Hotel Characteristics ?']
-  edge [minlen = 2 color = 'cornflowerblue']
-    Y -> A
-    B -> A
-    Y -> B
-    E -> A
-    E -> B
-    C -> A
-    D -> A
-    D -> E
-    D -> C
-    D -> Y
-    F -> A
-  { rank = min; D ;  C}
-  { rank = same; B; Y; }
-  { rank = same; E; A }
-  { rank = max; F }
-}
-")
+dag_sm <- dagify(
+  y ~ a + b + c + d + e + f,
+  a ~ d,
+  b ~ a + e,
+  e ~ d,
+  c ~ d,
+  outcome = "y",
+  labels = c(y = "N Renovations", 
+             a = "N Rooms", 
+             b = "N Guests",
+             c = 'Furniture Quality',
+             d = 'Location',
+             e = 'Type Guests', 
+             f = 'Hotel Characteristics ?'),
+  coords = list(
+    x = c(c = 3, d = 2, a = 1, b = 2, y = 3, e = 2, f = 3),
+    y = c(c = 1, d = 1, a = -1, b = -1, y = 0, e = 0, f = -1)
+    )
+)
+ggdag_status(dag_sm, use_labels = "label", text = FALSE) +
+  guides(fill = "none", color = "none") +  # Disable the legend
+  theme_dag()
 ```
+
 
 ## The data
 
