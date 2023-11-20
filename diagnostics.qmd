@@ -151,6 +151,9 @@ We then we draw some other influences at random, pack them into an error term $u
 #| fig-cap: "Imprecisely estimated relations as a function of unmeasured influences"
 #| fig-height: 3
 #| fig-width: 3
+#| fig-show: animate
+#| interval: 0.1
+
 p1 <- d |> 
   ggplot(aes(x = x, y = y)) + 
   geom_point()  + 
@@ -163,8 +166,9 @@ p1 <- d |>
   transition_states(id) +
   ease_aes('linear')
 # anim_save("p1.gif", animation = p1, fps=5)
-animate(p1, fps=5, height = 4, width = 4, units = "in", res = 90)
+animate(p1, fps=5, height = 4, width = 4, units = "in", res = 90, device = "ragg_png")
 ```
+
 
 Remember the slope underlying the relation between x and y in all 20 samples is 2! All the variation you see here in slope (some are even negative!) is due to the unmeasured influences in $u$. Remember we always used the same x values. If you pay careful attention, you can see that the dots in the plot only move up and down. The $x$ values are fixed. It is thus the changing amounts of $u$ that are added to x to arrive a $y$ that camouflage the true relation. This is what people mean when they say a relation can be due to chance. 
 
@@ -177,6 +181,8 @@ The "chance" of chance patterns is thus higher when there is a lot of unexplaine
 #| fig-cap: "Increasing sample size reduces noise"
 #| fig-height: 3
 #| fig-width: 3
+#| fig-show: animate
+#| interval: 0.1
 
 set.seed(1397)
 n_obs <- 500
@@ -206,8 +212,10 @@ p2 <- d2 |>
   transition_states(id) +
   ease_aes('linear')
 # anim_save("p2.gif", animation = p2, fps=6)
-animate(p2, fps=6, height = 4, width = 4, units = "in", res = 90)
+animate(p2, fps=5, height = 4, width = 4, units = "in", res = 90, device = "ragg_png")
+# p2
 ```
+
 
 Note how the regression line becomes more and more certain what the relation could be (it slowly converges to 2).
 

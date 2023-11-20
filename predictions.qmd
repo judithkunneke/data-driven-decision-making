@@ -57,6 +57,7 @@ In the previous section we argued that models for diagnostic analysis and predic
 
 By adding more variables, a model becomes more complex, and will often explain variation in the sample that the model is fitted on better. But the reason might not be that the model actually predicts (new data) better. Instead, the more variables (parameters) a model has, the more likely it is that a newly included variable was chosen in error and accidentally fits noise. This issue is called **overfitting**. It is a very important concept, and we will try to explain it with some illustrations. 
 
+
 ```{r}
 #| message: false
 #| echo: false
@@ -102,8 +103,8 @@ p2 <-
        )
 
 
-p1_gif <- animate(p1, width = 300, height = 300)
-p2_gif <- animate(p2, width = 300, height = 300)
+p1_gif <- animate(p1, width = 3.5, height = 3.5, units = "in", device = "ragg_png", res = 90)
+p2_gif <- animate(p2, width = 3.5, height = 3.5, units = "in", device = "ragg_png", res = 90)
 
 p1_mgif <- image_read(p1_gif)
 p2_mgif <- image_read(p2_gif)
