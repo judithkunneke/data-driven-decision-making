@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; Diagnostic Analytics – Data-Driven Decision-Making</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./predictions.html" rel="next">
+<link href="./datapatterns.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-137c985508dec40e6d94f851f5c8fa1e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7d1895762165437aad1b77e24d4ac7eb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./diagnostics.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnostic Analytics</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Data-Driven Decision-Making</a> 
+        <div class="sidebar-tools-main">
+    <a href="./Data-Driven-Decision-Making.docx" title="Download Docx" class="quarto-navigation-tool px-1" aria-label="Download Docx"><i class="bi bi-file-word"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./decision-making.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decision-Making Basics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./datapatterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Identifying Data Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./diagnostics.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnostic Analytics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./predictions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Predictive Analytics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reporting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Reporting Design</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./case1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Case 1: Decision Making</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./case4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Case 4: Predictive Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-goals" id="toc-learning-goals" class="nav-link active" data-scroll-target="#learning-goals"><span class="header-section-number">4.1</span> Learning goals</a></li>
+  <li><a href="#what-is-diagnostic-analysis" id="toc-what-is-diagnostic-analysis" class="nav-link" data-scroll-target="#what-is-diagnostic-analysis"><span class="header-section-number">4.2</span> What is diagnostic analysis?</a></li>
+  <li><a href="#diagnostic-analysis-requires-a-bit-of-causal-reasoning" id="toc-diagnostic-analysis-requires-a-bit-of-causal-reasoning" class="nav-link" data-scroll-target="#diagnostic-analysis-requires-a-bit-of-causal-reasoning"><span class="header-section-number">4.3</span> Diagnostic analysis requires a bit of causal reasoning</a>
+  <ul class="collapse">
+  <li><a href="#the-importance-of-assumptions-in-causal-reasoning" id="toc-the-importance-of-assumptions-in-causal-reasoning" class="nav-link" data-scroll-target="#the-importance-of-assumptions-in-causal-reasoning"><span class="header-section-number">4.3.1</span> The importance of assumptions in causal reasoning</a></li>
+  </ul></li>
+  <li><a href="#developing-a-mental-model" id="toc-developing-a-mental-model" class="nav-link" data-scroll-target="#developing-a-mental-model"><span class="header-section-number">4.4</span> Developing a mental model</a></li>
+  <li><a href="#there-is-no-such-thing-as-chance" id="toc-there-is-no-such-thing-as-chance" class="nav-link" data-scroll-target="#there-is-no-such-thing-as-chance"><span class="header-section-number">4.5</span> There is no such thing as chance</a></li>
+  <li><a href="#hypothesis-testing" id="toc-hypothesis-testing" class="nav-link" data-scroll-target="#hypothesis-testing"><span class="header-section-number">4.6</span> Hypothesis testing</a></li>
+  <li><a href="#the-regression-framework" id="toc-the-regression-framework" class="nav-link" data-scroll-target="#the-regression-framework"><span class="header-section-number">4.7</span> The Regression framework</a>
+  <ul class="collapse">
+  <li><a href="#revisiting-correlations" id="toc-revisiting-correlations" class="nav-link" data-scroll-target="#revisiting-correlations"><span class="header-section-number">4.7.1</span> Revisiting correlations</a></li>
+  <li><a href="#regression-coefficients" id="toc-regression-coefficients" class="nav-link" data-scroll-target="#regression-coefficients"><span class="header-section-number">4.7.2</span> Regression coefficients</a></li>
+  <li><a href="#isolating-associations-via-multiple-regressions" id="toc-isolating-associations-via-multiple-regressions" class="nav-link" data-scroll-target="#isolating-associations-via-multiple-regressions"><span class="header-section-number">4.7.3</span> Isolating associations via multiple regressions</a></li>
+  <li><a href="#some-terms-to-know" id="toc-some-terms-to-know" class="nav-link" data-scroll-target="#some-terms-to-know"><span class="header-section-number">4.7.4</span> Some terms to know</a></li>
+  <li><a href="#relative-importance-of-variables" id="toc-relative-importance-of-variables" class="nav-link" data-scroll-target="#relative-importance-of-variables"><span class="header-section-number">4.7.5</span> Relative importance of variables</a></li>
+  </ul></li>
+  <li><a href="#what-is-a-good-regression-model" id="toc-what-is-a-good-regression-model" class="nav-link" data-scroll-target="#what-is-a-good-regression-model"><span class="header-section-number">4.8</span> What is a “good” (regression) model?</a></li>
+  <li><a href="#logistic-regression" id="toc-logistic-regression" class="nav-link" data-scroll-target="#logistic-regression"><span class="header-section-number">4.9</span> Logistic regression</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">4.10</span> Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-diag" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnostic Analytics</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learning-goals" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="learning-goals"><span class="header-section-number">4.1</span> Learning goals</h2>
+<ol type="1">
+<li>Critically analyze identified data patterns</li>
+<li>Evaluate the association between important decision variables</li>
+<li>Evaluate business decisions and refine critical assumptions to improve decision-making by using advanced methods to analyze business data</li>
+</ol>
+</section>
+<section id="what-is-diagnostic-analysis" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="what-is-diagnostic-analysis"><span class="header-section-number">4.2</span> What is diagnostic analysis?</h2>
+<p>Diagnostic analysis seeks to answer the question of why a particular event or outcome happened by uncovering the underlying factors, relationships, or determinants that led to the observed data pattern. This understanding can help decision-makers identify the root causes of issues, determine the key drivers of success, and thus guide future decision-making.</p>
+<p>Diagnostic analysis is a natural extension of exploratory analysis—the identification of data patterns (<a href="datapatterns.html" class="quarto-xref"><span>Chapter 3</span></a>). While exploratory analysis focuses on discovering trends, patterns, and relationships in the data, diagnostic analysis goes a step further by investigating the reasons behind those patterns. Consider the following question: <em>Why are some business units more productive than others?</em> By conducting diagnostic analysis, analysts can investigate the factors contributing to productivity differences among business units. Some potential reasons could be unit-specific competitive advantages, management styles, resource allocation, employee skills, company culture, or even measurement issues. In this case, diagnostic analysis techniques provide a principled way to disentangle many potential reasons and better understand the reasons for productivity differences. And of course, the insights gained from the analysis could in turn be employed to develop targeted strategies to improve overall firm performance.</p>
+<p>Another example of a question lending itself for diagnostic analysis is: <em>What customers reacted well to a marketing campaign?</em> Analyzing differences in customer responses to marketing campaigns allows analysts to identify which customer segments reacted positively and why. This information can be used to tailor future marketing efforts, improve targeting, and increase the return on investment for marketing initiatives. Understanding the drivers of customer behavior can also inform product development, pricing strategies, and customer relationship management efforts.</p>
+</section>
+<section id="diagnostic-analysis-requires-a-bit-of-causal-reasoning" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="diagnostic-analysis-requires-a-bit-of-causal-reasoning"><span class="header-section-number">4.3</span> Diagnostic analysis requires a bit of causal reasoning</h2>
+<p>A diagnostic analysis often requires more advanced statistical techniques than those used in exploratory analysis. Even more importantly, it requires an even stronger reliance on mental models. This is because mental models are required to design and interpret analyses able to speak to “why” questions. As a simple example, suppose we stumble upon a survey that finds a positive relation between respondents being married and respondents self-reported happiness score. What drives this relation? Is it that marriage makes people happy? Or that happier people are more likely to get married? Or is there even a third explanation (both variables are correlated with age). Analyzing data with the goal of answering “Why?” and “What drives…?” questions requires even more recourse to models that represent the relationships between variables and potential causal factors. The same holds for the development of the analysis itself. We need a model to guide the selection of relevant variables, the choice of appropriate statistical techniques, etc.</p>
+<section id="the-importance-of-assumptions-in-causal-reasoning" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="the-importance-of-assumptions-in-causal-reasoning"><span class="header-section-number">4.3.1</span> The importance of assumptions in causal reasoning</h3>
+<p>Before proceeding, we want to offer a word of caution. “Establishing causality” is often considered the gold standard in decision-making, as it allows for a better understanding of cause-and-effect relationships, which can lead to more effective policies and interventions. It is also impossible because every analysis rests on untestable assumptions. Even in a randomized experiment, analysts have to make assumptions about proper measurement of often difficult to define and measure constructs.</p>
+<p>When data is not arising from a randomized experiment (i.e., all real world data), decision-makers face even more challenges when trying to infer the causes of patterns from data. Confounding, endogenous selection issues, and disagreement about the correct mental model are all issues that make it difficult to distinguish between correlation and causation. Especially in a complex and dynamic business environment we face the issue of multiple correlated factors that influence the outcomes of interest. Disentangling these factors to isolate relations is challenging.</p>
+<p>The role of theory and hypothesis development thus becomes even more crucial. Theory and hypotheses serve as the foundation for reasoning about the underlying mechanisms and relationships between variables. Developing a well-thought through mental model allows decision-makers to make more informed assumptions and predictions about the potential outcomes of their policies. A good model makes it easier to develop useful hypotheses. Likewise, mental models guide the collection and analysis of data by specifying the expected relations between variables. Finally models help to identify potential confounders and biases.</p>
+<p>In sum, it is crucial for any decision-maker to be very clear about what the mental model and the in-built assumptions are that guide any diagnostic analysis. Only with such an understanding can the analysis be directed and results be analyzed.</p>
+</section>
+</section>
+<section id="developing-a-mental-model" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="developing-a-mental-model"><span class="header-section-number">4.4</span> Developing a mental model</h2>
+<p>A mental model is a conceptual framework that represents the relationships between variables and potential causal factors. A mental model represents how different elements in a system are interconnected and how they influence each other. In the context of business relationships, mental models can help decision-makers better understand complex dynamics and make more informed decisions.</p>
+<p>Consider the example of customer churn in a subscription-based business. The first step in developing a mental model involves identifying the key variables that are relevant to customer churn. These variables might include factors such as product quality, quality of customer support, pricing, and competitor offerings. This step of first identifying key determinants is essential, because it helps you focus the analysis on the most relevant factors.</p>
+<p>After identifying the key variables related to customer churn, the next step is to reason about the relations between these variables. This involves reasoning about how changes in one variable might affect other variables in the system. For example, how does an increase in prices impact the likelihood of a customer churning? Or how does the quality of customer support influence the likelihood of churn? By modelling these relations, we develop the underlying structure of the problem. We need this structure for diagnostic analysis. As we will see in examples later, without it we would basically interpret correlations blindly and at great peril.</p>
+<p>The more expert knowledge we have in an area, the more we can already resort to our experience to build mental models. Still, do not forget to reason about variables and patterns uncovered via the preceeding exploratory analysis. Often new insights were generated at that step. Now, for a more systematic approach, we recommend trying to take each step one at a time to not get off track, and evaluate after each step whether you believe you completed the respective step. First, list all variables that you believe may be connected with your variable of interest that you want to explain and that popped up as interesting during the exploratory stage. Then describe the nature of the relations between the variables. We actually encourage you to draw a diagram. A visual representation of your mental model is often a great help for organizing your thoughts, critically analyzing then, and communicating them to others. The example below illustrates the point that text only may not be enough:</p>
+<div id="fig-MM1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-MM1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="pics/C4/causal mental model.png" height="400" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-MM1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.1: Mental model
+</figcaption>
+</figure>
+</div>
+<p><font size="0.6">Source: <span class="citation" data-cites="schaffernicht2017causal">Schaffernicht (<a href="references.html#ref-schaffernicht2017causal" role="doc-biblioref">2017</a>)</span> </font></p>
+<p>Let’s go back to our customer churn example. With regard to our key variable of interest, customer churn, we <strong>hypothesize</strong> the following:</p>
+<ol type="1">
+<li><p>Quality of customer support is negatively associated with customer churn (because better customer support quality makes customers happy, and they are less likely to leave).</p></li>
+<li><p>Product quality is negatively associated with customer churn (because higher product quality makes customers happy, and they are less likely to leave).</p></li>
+<li><p>Competitor offerings are positively associated with customer churn (because interesting offers from competitors might trigger our customers to switch to our competitors).</p></li>
+<li><p>Price is positively associated with customer churn (because customers do not like to pay more, and they are more likely to leave).</p></li>
+<li><p>Product quality is positively associated with price (because higher quality is usually costly, sales prices need to be higher as well).</p></li>
+<li><p>Competitor offerings are negatively associated with price (because of the pressure in the market and the offer by our competitors, we might need to reduce our prices).</p></li>
+</ol>
+<p>It is easy to loose the bigger picture and a quick sketch makes our reasoning much more transparent:</p>
+<div id="fig-MM2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-MM2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="pics/C4/mental model.png" height="350" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-MM2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.2: Mental model
+</figcaption>
+</figure>
+</div>
+<p>And now you are ready to test your mental model against real-world data and observations to ensure its accuracy and relevance. The sketch (as we will explain later) also already tells you that you cannot analyze the relation between churn and price without holding the influence of product quality and competitor offerings fixed! Something that your analysis of a price effect will need to do, if your theory is correct. The example thus highlights, why having a mental model is essential as basis for any decisions you want to make. Without a clear idea of <strong>why</strong> certain variables are associated, you will not be able to interpret any results that your analyses will provide you. It needs sound theoretical reasoning to give meaning to your results.</p>
+<p>Developing a mental model is an iterative process, where the model is continuously refined based on the insights gained from the analysis. As new relations and factors are identified, the mental model can be updated to better represent the true underlying structure of the data. As new information emerges or the business environment changes, update your mental model to reflect these developments. This iterative process allows for a deeper understanding of the factors influencing, for example, customer churn and more effective decision-making regarding this issue.</p>
+</section>
+<section id="there-is-no-such-thing-as-chance" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="there-is-no-such-thing-as-chance"><span class="header-section-number">4.5</span> There is no such thing as chance</h2>
+<p>Before diving into the details of analyzing why questions, we need to clarify some basics. You might have heard phrases like: “This relation between x and y is unlikely due to chance”. What this means, is that the analyst believes the pattern observed in the data between x and y would also be present in general and not just in this particular data set. That it is generalizable. But how could “chance” (or “noise”) even create a pattern? What does this mean?</p>
+<p>To understand what is actually meant by randomness or chance in our context, think of a coin flip. We usually assume the chance of a coin landing heads or tails to be even (50% it lands heads and 50% it lands tails). We often say: the chance of a coin landing heads or tails is purely <em>random</em>. Notice though, that randomness here is a statement about our <em>ignorance</em>, not a property of the universe. We know the physics of a coin flip quite well. If we could measure the angle of the coin flip, the wind around the coin, the distance to ground, etc. We could combine our knowledge with the measure to built a prediction model and estimate the probability of the coin landing heads. We would very likely do much better than 50%. Randomness is thus simple due to the fact that either, we have not measured all determinants of the outcome (e.g., coin lands heads), or we do not even know enough about the problem to specify the determinants with certainty (a mental model question). In regression models, all the unmeasured and unmodelled influence are packed into what is called an error term. The following is a typical regression equation, specifying a linear relation between <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span>:</p>
+<p><span class="math display">\[y = 1 + 2 * x + u\]</span> The <span class="math inline">\(u\)</span> is the error term. It captures all the other things that also influence <span class="math inline">\(y\)</span> and which we didn’t care to model and measure explicitly. The fact that there will be always an error term—we can never hope to name and measure all influences of even simple problems—is the source of “chance” patterns.</p>
+<p>The following simulation tries to illustrate the issue. We draw 50 x variables at random. Its values are:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  -6.81405021   0.29080315 -16.64506129 -16.93622258 -19.55388221
+ [6]  27.82578770  -2.12722250  -4.42818912   6.06723243  -4.86329299
+[11] -12.99773334   3.66039111 -15.46757532   0.15252543  -0.47744402
+[16]  -3.97635456  -5.01853836 -21.89194429  -4.70215525   5.51044371
+[21]  -1.93933150   4.45463912  -0.39409296  18.12015075 -20.29820415
+[26]  -5.13356070  -5.03222157   2.08585323  -9.37122698 -12.85983170
+[31]  -4.86984684   3.48049542  -0.02823887   7.00464237 -17.87917138
+[36]  -4.87859963  -7.17129903  10.38264712 -18.20612595  17.46602851
+[41]   8.98895014  13.38321090 -16.12558303  -1.94650403   4.71490692
+[46]   3.92105297  -7.14457750  -7.37191957 -18.61520235 -14.39777436</code></pre>
+</div>
+</div>
+<p>We then we draw some other influences at random, pack them into an error term <span class="math inline">\(u\)</span> and compute a <span class="math inline">\(y\)</span> variable according to the equation above <span class="math inline">\(y = 1 + 2 * x + u\)</span>. We do this 20 times, but we always use the same <span class="math inline">\(x\)</span> values above. Importantly, this means that the true slope for all 20 samples is 2. If you need an example, think of 20 surveys where each time 50 people were surveyed about how happy they are (<span class="math inline">\(y\)</span> = happiness). The survey firm tried very hard to always get the same <span class="math inline">\(x\)</span> distribution (say x is age of the respondents), but it can obviously never find exactly the same type of people. Because people of the same age are still very different, the error term <span class="math inline">\(u\)</span> will always differ quite a bit among these 20 surveys. <a href="#fig-rand1" class="quarto-xref">Figure&nbsp;<span>4.3</span></a> shows how much the <em>sample</em> relation (the slope) between x and y varies between the 20 surveys:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-rand1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rand1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="diagnostics_files/figure-html/fig-rand1-1.gif" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rand1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.3: Imprecisely estimated relations as a function of unmeasured influences
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Remember the slope underlying the relation between x and y for all 20 samples is 2! All the variation you see here in slope (some are even negative!) is due to the unmeasured influences in <span class="math inline">\(u\)</span>. Remember we always used the same x values. If you pay careful attention, you can see that the dots in the plot only move up and down. The <span class="math inline">\(x\)</span> values are fixed. It is thus the changing amounts of <span class="math inline">\(u\)</span> that are added to x to arrive a <span class="math inline">\(y\)</span> that camouflage the true relation. This is what people mean when they say a relation can be due to chance.</p>
+<p>The “chance” of chance patterns is thus higher when there is a lot of unexplained variation of the outcome of interest left. The best remedy against this is: more data. In <a href="#fig-rand2" class="quarto-xref">Figure&nbsp;<span>4.4</span></a>, we start with a sample of 50 observations and increase it step by step by 10 observations up to a maximum of 500 observations.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-rand2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rand2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="diagnostics_files/figure-html/fig-rand2-1.gif" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rand2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.4: Increasing sample size reduces noise
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Note how the regression line becomes more and more certain what the relation could be (it slowly converges to 2).</p>
+<p>Let’s consider an example from the business world to illustrate again what to look out for. Suppose you are a sales manager at a retail company and you want to determine if sales performance varies significantly between two groups of sales representatives: those who work weekdays (Group A) and those who work weekends (Group B). After analyzing the data, you find that Group B had, on average, 20% higher sales than Group A. However, you need to determine if this difference is due to the different work schedules or if it could have occurred by chance. Given all the other influences that might determine sales, it is probably not unreasonable to be skeptical that this pattern might be related just to differences in people. We thus need some protocol or workflow to decide how to interpret this pattern. One such workflow are classical statistical <strong>hypothesis tests</strong>, which we discuss next.</p>
+</section>
+<section id="hypothesis-testing" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="hypothesis-testing"><span class="header-section-number">4.6</span> Hypothesis testing</h2>
+<p>Hypothesis testing is an extension of the logic we used above to provide intuition for chance patterns in the data. More formally, it is a statistical procedure used to make inferences about a <em>population parameter</em> based on a <em>sample</em> drawn from a <em>population</em>. Population just means: all relevant units of interest. The sample is then those units we have data on. A population parameter is then an unknown parameter describing a relation of interest, derived from our mental model. In <a href="#fig-rand1" class="quarto-xref">Figure&nbsp;<span>4.3</span></a> the population parameter (technically unknown) was a slope parameter between y and x of 2. The sample estimates (the blue line that keeps jumping around) is our sample estimate of that population parameter. And as <a href="#fig-rand1" class="quarto-xref">Figure&nbsp;<span>4.3</span></a> shows, it can be quite off sometimes.</p>
+<p>The problem that hypothesis testing tries to deal with is this: suppose that our sample estimate of the slope parameter is 0.3, what can we learn about the population parameter (in our example: 2, but again, we wouldn’t know that normally). It’s main component is a hypothesis concerning what the population parameter is, often called the null hypothesis. For example, we could pose a null hypothesis (H<span class="math inline">\(_0\)</span>) of no-relation (the slope is hypothesized to be zero). However, a null hypothesis could also be: the slope is 15. We decide what hypothesis to test. Let us stick with H<span class="math inline">\(_0\)</span>: the slope is zero. The “testing” then involves whether the data is more or less consistent with our chosen null hypothesis. Intuitively, if there is a lot of unmeasured influences in <span class="math inline">\(u\)</span>, then a slope of 0.3 is probably not unrealistic to occur by chance (again, see <a href="#fig-rand1" class="quarto-xref">Figure&nbsp;<span>4.3</span></a> for how much a parameter can change from sample to sample). Classical hypothesis testing formalizes this intuition and condenses it into two numbers, a chosen significance level and a derived p-value (or equivalently a confidence interval). Here is the thought experiment behind it.</p>
+<p>Suppose we would run 1,000 experiments and each time record the slope. Then we count how often we see certain magnitudes. Given our null hypothesis of the slope being 0 and an estimate of the amount of unexplained influence that lead to variation around 0, we would expect a histogram like the left one in <a href="#fig-rand3" class="quarto-xref">Figure&nbsp;<span>4.5</span></a>:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-rand3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rand3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="diagnostics_files/figure-html/fig-rand3-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rand3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.5: Hypothesis testing: how likely is it to see certain slopes, given the null hypothesis?
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>If you look at the left plot, the chance of observing a slope of +/- 0.3 is quite high. We would observe a lot of counts in this range, if H<span class="math inline">\(_0\)</span> would be true. When seeing a 0.3 slope, we would thus <em>not</em> be able to rule out H<span class="math inline">\(_0\)</span>, would not be able to rule out that a slope value of 0.3 is due to chance, and thus not be able to rule out that the pattern is due to chance. But, because we simulated the date, we know that it would be mistake to conclude that the pattern is due to chance. The true slope is different from 0; it is 2. As shown on the right plot of <a href="#fig-rand3" class="quarto-xref">Figure&nbsp;<span>4.5</span></a>, we are less likely to draw a slope value of 0.3 when we get a sample from the true distribution (but it is not unlikely!).</p>
+<p>A p-value and significance level quantify this reasoning. We need to find a cut-off after which we say, “Now, slope values higher than that are too unlikely to be due to a population with H<span class="math inline">\(_0\)</span> as its parameter”. When choosing such a cut-off, we need to also consider the chance of making a mistake. As we can see in <a href="#fig-rand3" class="quarto-xref">Figure&nbsp;<span>4.5</span></a>, there are some unlikely values. E.g., the slope value of 5 is rare under H<span class="math inline">\(_0\)</span>: the slope is zero. But it is not impossible. Still, the chance of making an error is small when we see a value of 5 and say, “ok, the population parameter is probably not zero”. The amount of error we are willing to consider is called the significance value. You can see it in the figure. It is the shaded region in the left plot. The shaded region shows the 97.5 and 2.5 percentile—the most extreme values occurring with 2.5% or less of a chance on both sides. If we get a sample whose slope value lies in the shaded region, we would only expect to see such a value with 5% chance (the chosen significance value). So we would make an error in 5% of the cases when deciding to reject H<span class="math inline">\(_0\)</span>. Similarly, the p-value is the chance of seeing a slope value as the one observed in the sample if H<span class="math inline">\(_0\)</span> is true (and the regression model is correct). If it is below our chosen significance level (our chosen maximum error level), we reject H<span class="math inline">\(_0\)</span> in favor of the alternative.</p>
+<p>The actual mathematics of computing p-values, test statistics, and so on are very important. However, these are covered in detail in any standard regression textbook and we do not see a lot of value in repeating them here. Instead we focused on the intuition. We hope it has become clear that <em>hypothesis testing is in fact a decision making framework</em>. One that tries to control a certain error rate with the significance level: The chance of incorrectly rejecting a hypothesis.</p>
+<p>In summary, the general steps involved in hypothesis testing thus are:</p>
+<ol type="1">
+<li><p>Formulate the null and alternative hypotheses: Clearly state the null hypothesis (H<span class="math inline">\(_0\)</span>). The alternative H<span class="math inline">\(_A\)</span> is usually that that the population parameter is not equal to the population parameter. For example, H<span class="math inline">\(_0\)</span>: There is no difference in sales performance of weekday- and weekend-workers. H<span class="math inline">\(_A\)</span>: There is a difference in sales performance of weekday- and weekend-workers. There are also of course, directional hypotheses, such as the population parameter is greater than 0. The same logic applies to them.</p></li>
+<li><p>Choose an appropriate significance level (<span class="math inline">\(α\)</span>): It is the error level we allow ourselves; the point at which we say, values that occur with a probability of <span class="math inline">\(a\)</span> or less we consider to not arise from H<span class="math inline">\(_0\)</span>. A common choice for <span class="math inline">\(α\)</span> is 0.05, indicating a 5%. But that number is to some extent ad-hoc. Think carefully about what it should be in your application.</p></li>
+<li><p>Select a suitable statistical test: Depending on the research question, data type, and assumptions, choose a statistical test (e.g., t-test, chi-square test, ANOVA) to analyze the data. We have not talked much about this yet. We will talk more about it in the exercises.</p></li>
+<li><p>Calculate the test statistic and p-value: Apply the selected statistical test to the sample data and calculate the test statistic and corresponding p-value. Let’s say we find a p-value of 0.02. This means that there is only a 2% probability of observing a difference as large as the one we found (or larger) if the null hypothesis were true (i.e., if there was no real relation between the work schedule and sales performance).</p></li>
+<li><p>Compare the p-value to the chosen significance level (<span class="math inline">\(α\)</span>): If the p-value is less than or equal to <span class="math inline">\(α\)</span>, reject the null hypothesis in favor of the alternative hypothesis. If the p-value is greater than <span class="math inline">\(α\)</span>, fail to reject the null hypothesis, meaning there is not enough evidence in the data to rule out H<span class="math inline">\(_0\)</span>. Note: When you cannot reject H<span class="math inline">\(_0\)</span> it does <strong>not</strong> mean that H<span class="math inline">\(_0\)</span> is true! It simply means, we cannot rule it out. Absence of evidence is not the same as evidence of absence.</p></li>
+</ol>
+</section>
+<section id="the-regression-framework" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="the-regression-framework"><span class="header-section-number">4.7</span> The Regression framework</h2>
+<p>We basically introduced half of what a regression analysis is about already in the preceding two sections. Regression analysis is a statistical method used to model the relationship between a dependent (response) variable and one or more independent (predictor) variables. It is an incredibly powerful tool in any data analysts toolbox. In addition, it provides a great teaching aid where we can introduce may important concepts that generalize to all other analysis settings. To do so we start with the difference between correlation coefficients and coefficients in a regression model.</p>
+<section id="revisiting-correlations" class="level3" data-number="4.7.1">
+<h3 data-number="4.7.1" class="anchored" data-anchor-id="revisiting-correlations"><span class="header-section-number">4.7.1</span> Revisiting correlations</h3>
+<p>In <a href="datapatterns.html" class="quarto-xref"><span>Chapter 3</span></a>, we touched upon correlations. A correlation coefficient only assesses the strength of an assumed linear relationship in a sample—<em>how linear</em> it is. It does not tell us anything about the <em>magnitude</em> of the relation. If we want to learn something about the magnitude of the linear relation—and maybe compare it to the magnitude in other settings or other variables, we need a regression model.</p>
+<p>To illustrate, we use an example of a retail company that analyzes the performance of its employees at each branch. The company wants to understand if there is a correlation between average employee tenure at the branch level and the branch profit they generate.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> The company collected data on the number of months an employee works for a branch and the total profit of the respective branch. We start our analysis by calculating the correlation coefficient between these two variables. We are first interested in the strength and direction of a possible linear relationship. Similarly to earlier, we would have two competing hypotheses:</p>
+<ul>
+<li><p>H<span class="math inline">\(_0\)</span>: There is no significant association between employee tenure and profit</p></li>
+<li><p>H<span class="math inline">\(_A\)</span>: There is a significant association between employee tenure and profit</p></li>
+</ul>
+<p>To determine whether this correlation is “not by chance,” the company could perform a statistical test to determine if the observed correlation coefficient is statistically significant (using the <code>correlation::</code> R package).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">correlation</span>(d4[, <span class="fu">c</span>(<span class="st">"profit"</span>, <span class="st">"employee_tenure"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 8%">
+<col style="width: 4%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 17%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Parameter1</th>
+<th style="text-align: left;">Parameter2</th>
+<th style="text-align: right;">r</th>
+<th style="text-align: right;">CI</th>
+<th style="text-align: right;">CI_low</th>
+<th style="text-align: right;">CI_high</th>
+<th style="text-align: right;">t</th>
+<th style="text-align: right;">df_error</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: left;">Method</th>
+<th style="text-align: right;">n_Obs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">profit</td>
+<td style="text-align: left;">employee_tenure</td>
+<td style="text-align: right;">0.2576789</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.0326251</td>
+<td style="text-align: right;">0.4578634</td>
+<td style="text-align: right;">2.278555</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">0.0256203</td>
+<td style="text-align: left;">Pearson correlation</td>
+<td style="text-align: right;">75</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>This test would compare the observed correlation against what would be expected if there were no relationship between the two variables (i.e., the correlation is purely random). We can again use a t-test.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> The results present a correlation coefficient of 0.26 and a p-value of 0.026. This implies there is indeed a weak positive correlation (r = 0.26) which is significant (p-value of 0.026 is smaller than the conventional significance level (α) of 0.10 - in the accounting discipline).</p>
+<p>All the correlation coefficient tells us, however, is that there is an indication of a linear relation, <em>not</em> the magnitude of the relation (see this <a href="https://en.wikipedia.org/wiki/Pearson_correlation_coefficient#/media/File:Correlation_examples2.svg">wikipedia graph</a>). If we are interested in that, we need to think about a regression model.</p>
+</section>
+<section id="regression-coefficients" class="level3" data-number="4.7.2">
+<h3 data-number="4.7.2" class="anchored" data-anchor-id="regression-coefficients"><span class="header-section-number">4.7.2</span> Regression coefficients</h3>
+<p>A regression expresses relations between an outcome <span class="math inline">\(y\)</span> (also sometimes called response or dependent variable) and one or more predictor variables <span class="math inline">\(x\)</span> (also sometimes called independent variable).</p>
+<p><span class="math display">\[y = a + b * x + u\]</span></p>
+<p>A regression coefficient <span class="math inline">\(b\)</span> represents the estimated change in the dependent variable <span class="math inline">\(y\)</span> associated with a one-unit change in an independent variable, holding all other independent variables constant. In other words, it quantifies not the direction of the relationship between the independent variable and the dependent variable, but also its magnitude in unit-changes. For example, a positive coefficient indicates a positive relationship, whereas a negative coefficient suggests an negative relationship.</p>
+<p><a href="#fig-emp1" class="quarto-xref">Figure&nbsp;<span>4.6</span></a> plots a regression line. It shows the slope of the following linear equation:</p>
+<p><span class="math display">\[Profit = a + b * employee\_tenure + u\]</span></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-emp1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-emp1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="diagnostics_files/figure-html/fig-emp1-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-emp1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.6: A regression line
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Most data tools these days allow you to estimate regressions. <a href="#fig-excelreg" class="quarto-xref">Figure&nbsp;<span>4.7</span></a> shows regression output, estimating the line above, for a random sample of branches using excel. Below you find R output (using the <code>jtools::</code> summ function because it creates cleaner summaries).</p>
+<div id="fig-excelreg" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-excelreg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="pics/C4/simple_reg.png" height="200" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-excelreg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.7: Simple regression
+</figcaption>
+</figure>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(profit <span class="sc">~</span> employee_tenure, <span class="at">data =</span> d4)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m1, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MODEL INFO:
+Observations: 75
+Dependent Variable: profit
+Type: OLS linear regression 
+
+MODEL FIT:
+F(1,73) = 5.19, p = 0.03
+R² = 0.07
+Adj. R² = 0.05 
+
+Standard errors:OLS
+-------------------------------------------------------------------------
+                             Est.        2.5%       97.5%   t val.      p
+--------------------- ----------- ----------- ----------- -------- ------
+(Intercept)             258178.44   232639.45   283717.43    20.15   0.00
+employee_tenure           1301.74      163.14     2440.34     2.28   0.03
+-------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+<p>The row labeled <code>employee_tenure</code> contains the slope, the <span class="math inline">\(b\)</span> of the regression model above. It is the parameter of interest here. First, note that the t-value and p value in this row are the same as that of the correlation coefficient. That is true for a simple linear regression with just one variable. The coefficient itself has value of 1,301.7. It is a measure of <em>magnitude</em>. It means that one additional month of average employee tenure is <em>associated</em> with 1,301.7 euros more in branch profits. This is the slope of the line in <a href="#fig-emp1" class="quarto-xref">Figure&nbsp;<span>4.6</span></a>. Do not be too excited about the magnitude however. Looking at the confidence interval, we can see that there is a lot of uncertainty about the actual magnitude (The 95% range is from 163 to 2,440). 1,301 is the best guess, but not a great guess.</p>
+<p>The intercept (also known as the constant or the y-intercept) is the value of the dependent variable when all independent variables are equal to zero. It simply represents the point where the line intercepts with the y axis and usually does not have an interesting interpretation. In this case for example, do we really care that of a branch with an average tenure of zero months, the average profits are 258K euros?</p>
+<p>Another feature of fitted regressions is that one can use them for (linear) predictions. If you want to make a prediction about the change in branch profits for let’s say a branch with an average employee tenure of 12 months, we simply use the regression formula and plug in the estimated coefficients: 1,301 * 12 + 258,178 = 273,790, i.e., the predicted incremental profit after 12 months is 15,612 Euros</p>
+</section>
+<section id="isolating-associations-via-multiple-regressions" class="level3" data-number="4.7.3">
+<h3 data-number="4.7.3" class="anchored" data-anchor-id="isolating-associations-via-multiple-regressions"><span class="header-section-number">4.7.3</span> Isolating associations via multiple regressions</h3>
+<p>The real use case for linear regression models is not assessing the magnitude of one single variable. It usually is either of two things: For diagnostic analysis it is the ability to estimate a linear association between the outcome <span class="math inline">\(y\)</span> and a variable of interest <span class="math inline">\(x\)</span> while holding the influence of other variables (sometimes called covariates) fixed. For prediction tasks it is the ability to make make predictions taking a multitude of variables into account. This is the domain of multiple linear regression analysis. It is a straight-forward expansion of the one-variable case.</p>
+<p><span class="math display">\[y = a + b_1 * x_1 + b_2*x_2 + b_3 * x_3 + ... + u\]</span></p>
+<p>We will focus on the reasons for including multiple <span class="math inline">\(x\)</span> variables into regression for diagnostic purposes and cover the prediction case in the next <a href="predictions.html" class="quarto-xref"><span>Chapter 5</span></a>. Generally, there are two reasons for why we would want to include a variable into a regression for diagnostic purposes:</p>
+<ol type="1">
+<li><p>If two variables <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> are related and we want to isolate the association of one with <span class="math inline">\(y\)</span> while holding the other one fixed.</p></li>
+<li><p>To take out unmeasured influences out of the error term and thus improve the precision of our coefficient estimates. Remember from <a href="#fig-rand1" class="quarto-xref">Figure&nbsp;<span>4.3</span></a> that regression slopes bounce around more from sample to sample (are less precisely estimated), if there is a lot of unmeasured influences left in the error term. Including big determinants of <span class="math inline">\(y\)</span> into the regression takes them out of <span class="math inline">\(u\)</span> and thus helps against this.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p></li>
+</ol>
+<p>Why would one do either of these two steps for diagnostic purposes is best explained by example. Put yourself into the shoes of a business controller at a retail store chain and doing some exploratory analysis you notice that there is considerable variation in retail store performance in a certain region. You want to figure out the reason for that (diagnostic analysis).</p>
+<p>Before you start throwing data at a regression, you do the smart thing and first come up with a first mental model of what should drive store revenues. It looks like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-dag-rs" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dag-rs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="diagnostics_files/figure-html/fig-dag-rs-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dag-rs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.8: DAG of a simple model of store revenues
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Your data (stored in a data.frame called d5) looks like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">StoreID</th>
+<th style="text-align: right;">foot_traffic</th>
+<th style="text-align: right;">sick_calls</th>
+<th style="text-align: right;">staff</th>
+<th style="text-align: right;">revenues</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">143</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">31839</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">216</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">48804</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">17631</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">184</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">41208</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">214</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">48516</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">214</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">48747</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>revenues is weekly revenues, foot traffic is the number of customers per week. sick calls is how many employees called in sick that week. staff is how much sales personnel was working (not sick) during the week. You think that for your shops the amount of staff is important. But you also know that if a store is busier, you staff more sales personnel. So there is a direct connection. Just looking at the relation between revenues and amount of staff will thus be contaminated by foot traffic. The coefficient might just pick up that stores with more staff are busier stores. You want to know what the importance of staff is, holding foot traffic (how busy the store is) fixed. Stated another way, foot traffic is a confounding variable for estimating the relation between number of staff and revenues. You can see that in <a href="#fig-dag-rs" class="quarto-xref">Figure&nbsp;<span>4.8</span></a>. According to your mental model, foot traffic has an arrow going into revenues and an arrow going into staff. It causally influences both you think. Thus you need to hold its influence constant to have a chance to estimate the direct arrow going from staff to revenues. Multiple regression is one approach to do so.</p>
+<p>Here is what would happen if we would ignore the confounding influence of foot traffic. We first estimate a simple regression of store revenues on number of staff working.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(revenues <span class="sc">~</span> staff, <span class="at">data =</span> d5)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m2, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MODEL INFO:
+Observations: 28
+Dependent Variable: revenues
+Type: OLS linear regression 
+
+MODEL FIT:
+F(1,26) = 13.79, p = 0.00
+R² = 0.35
+Adj. R² = 0.32 
+
+Standard errors:OLS
+-----------------------------------------------------------------
+                        Est.      2.5%      97.5%   t val.      p
+----------------- ---------- --------- ---------- -------- ------
+(Intercept)         19774.52   9653.48   29895.56     4.02   0.00
+staff                2604.77   1163.11    4046.44     3.71   0.00
+-----------------------------------------------------------------</code></pre>
+</div>
+</div>
+<p>We see a large and significant coefficient on staff working. One more staff working in that week is associated with 2.605 weekly revenues on average. However, your mental model in <a href="#fig-dag-rs" class="quarto-xref">Figure&nbsp;<span>4.8</span></a> suggests that this number is incorrect. The number of staff is itself determined by foot traffic, so the 2,605 is likely partially driven by stores with higher foot traffic. We put foot traffic itself into the regression now.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(revenues <span class="sc">~</span> staff <span class="sc">+</span> foot_traffic, <span class="at">data =</span> d5)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m3, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MODEL INFO:
+Observations: 28
+Dependent Variable: revenues
+Type: OLS linear regression 
+
+MODEL FIT:
+F(2,25) = 17526.33, p = 0.00
+R² = 1.00
+Adj. R² = 1.00 
+
+Standard errors:OLS
+--------------------------------------------------------------
+                       Est.     2.5%     97.5%   t val.      p
+------------------ -------- -------- --------- -------- ------
+(Intercept)          761.44   332.92   1189.97     3.66   0.00
+staff                352.95   295.45    410.45    12.64   0.00
+foot_traffic         209.98   207.12    212.84   151.31   0.00
+--------------------------------------------------------------</code></pre>
+</div>
+</div>
+<p>All of a sudden the coefficient drops down dramatically to €352 weekly revenues per staff member. This change is as expected if foot traffic is indeed a confounding influence for the staff variable.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<p>The main takeaway here is: one big advantage of multiple regression is that it allows you to examine the role and magnitude of individual determinants while holding others fixed. As we saw in this example, it can really matter to do so. If we would not have included foot traffic, we might have gotten the impression that staff members are way more important to store performance than they really are.</p>
+<p>But notice, we made the judgment call to include foot traffic based on a mental model. Repeating our call from above, we need mental models to know which variables to include and when not. Notice for example that we have a variable called sick_calls in our dataset. what happens if we include this variable into the our regression model:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(revenues <span class="sc">~</span> staff <span class="sc">+</span> foot_traffic <span class="sc">+</span> sick_calls, <span class="at">data =</span> d5)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m4, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MODEL INFO:
+Observations: 28
+Dependent Variable: revenues
+Type: OLS linear regression 
+
+MODEL FIT:
+F(3,24) = 11217.80, p = 0.00
+R² = 1.00
+Adj. R² = 1.00 
+
+Standard errors:OLS
+---------------------------------------------------------------
+                       Est.      2.5%     97.5%   t val.      p
+------------------ -------- --------- --------- -------- ------
+(Intercept)          755.95    250.81   1261.08     3.09   0.01
+staff                353.42    290.76    416.09    11.64   0.00
+foot_traffic         209.97    206.98    212.95   145.11   0.00
+sick_calls             2.58   -115.25    120.41     0.05   0.96
+---------------------------------------------------------------</code></pre>
+</div>
+</div>
+<p>Things barely change. But that doesn’t mean that sick calls do not have an influence. They do! they reduce the number of staff working in that week and thus affect revenues. But, controlling for staff working, sick calls cannot affect revenues anymore! Your mental model tells you that including this variable into the regression does not add anything. This is a benign example, in some cases adding a variable can distort all the other variables’ coefficients. All of this is to say that we need strong theory and mental models to analyse determinants.</p>
+</section>
+<section id="some-terms-to-know" class="level3" data-number="4.7.4">
+<h3 data-number="4.7.4" class="anchored" data-anchor-id="some-terms-to-know"><span class="header-section-number">4.7.4</span> Some terms to know</h3>
+<p>Let’s now also take a closer look at some other information in typical regression tables.</p>
+<ul>
+<li><p><strong>Standard errors</strong> measure the variability or dispersion of the estimated coefficients (remember <a href="#fig-rand1" class="quarto-xref">Figure&nbsp;<span>4.3</span></a>). They provide an indication of how precise the estimated coefficients are. Smaller standard errors imply that the coefficients are estimated with greater precision and are more reliable, whereas larger standard errors suggest less precise estimates and more uncertainty. And uncertainty is something we need to live with as we are only estimating the coefficient of a sample.</p></li>
+<li><p>The <strong>T statistics</strong> (t) are calculated by dividing the estimated coefficient by its standard error and help you determine the statistical significance of the coefficients. They are test statistics for a default hypothesis test H<span class="math inline">\(_0\)</span>: the coefficient is zero in the population. In essence, the t statistic here measures how many standard errors the coefficient estimate is away from zero. A large t statistic indicates that the coefficient is unlikely to have occurred by chance, suggesting that the independent variable has a significant association with the dependent variable. (see <a href="#fig-rand3" class="quarto-xref">Figure&nbsp;<span>4.5</span></a>).</p></li>
+<li><p>We explained <strong>p-values</strong> above, but for completeness: P-values are associated with t statistics and are used to test the null hypothesis that the true population coefficient is zero (i.e., no relationship between the independent and dependent variables). A small p-value (typically less than 0.10) indicates that you can reject the null hypothesis, suggesting that the independent variable has a significant association with the dependent variable. On the other hand, a large p-value implies that there is insufficient evidence to reject the null hypothesis, meaning that the relationship between the independent and dependent variables may not be statistically significant (and therefore “by chance”).</p></li>
+<li><p>The <strong>confidence intervals</strong> provide a range within which the true population coefficient is likely to lie with a certain level of confidence, often 95%. If the confidence interval does not include zero, it suggests that the coefficient is statistically significant at the specified confidence level. Conversely, if the confidence interval includes zero, the coefficient is not considered statistically significant. The chosen significance level matches the confidence interval: if you decide to use a significance level of 5%, then the corresponding confidence interval is 95% (see regression output). You usually have to specify this explicitly in your statistical package.</p></li>
+<li><p>R<span class="math inline">\(^2\)</span>. The r-squared is a measure of variation in the outcome <span class="math inline">\(y\)</span> explained by the estimated linear combination of the <span class="math inline">\(x\)</span> variables. It is sometimes used as a measure of model fit or quality. But that is dangerous interpretation. We will say more about the r-squared later.</p></li>
+</ul>
+</section>
+<section id="relative-importance-of-variables" class="level3" data-number="4.7.5">
+<h3 data-number="4.7.5" class="anchored" data-anchor-id="relative-importance-of-variables"><span class="header-section-number">4.7.5</span> Relative importance of variables</h3>
+<p>It is tempting to base the relative importance of variables on the coefficients obtained from the regression analysis. And one can do so, but only with extreme caution.</p>
+<p>First, as our example with staff and foot traffic shows. Any interpretation first and foremost rests on the regression model capturing confounding effects. This also requires that our mental model is not too far off reality and that we can approximate relations in a linear way (e.g., after transformations)</p>
+<p>Second, often, the units of measurement usually vary between the variables, making it very hard to to directly compare them. For example, the meaning of a one-unit change in distance is different from a one-unit change in weight. There are ways around this, but in complicated situations the whole idea of comparing coefficients in a table is dangerous and often a big mistake. Be very careful when trying to do this. The reason is the same as with the foot traffic and staff example. In complicated situations a complicated regression equation with many variables is often required to isolate the association between <span class="math inline">\(y\)</span> and just one <span class="math inline">\(x\)</span>! All the other variables (called control variables) are in there just to unbias the coefficient on that one <span class="math inline">\(x\)</span>. Thus the coefficients on the control variables are not guaranteed to be unconfounded or easily interpretable.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> If you are sure (based on your mental model) that both coefficients can indeed be interpreted properly, one approach to assess the relative importance of variables is to compare the <strong>standardized coefficients</strong> in a multiple regression model. Standardized coefficients are the estimates obtained when all the variables are standardized to have a mean of zero and a standard deviation of one. By standardizing, the coefficients are expressed in units of standard deviations, which allows for a direct comparison of the effect of each predictor on the dependent variable. As mentioned in <a href="datapatterns.html" class="quarto-xref"><span>Chapter 3</span></a>, if you standardize the original data, this can lead to complications. Instead, you can simply take the regression output and multiply the unstandardized coefficient with the standard deviation of the respective variable.</p>
+<p>Another common approach to assess the relative contribution of each variable to the R-squared (more on the R-squared below) is calculating the <strong>incremental R-squared</strong>. To achieve this, you first run the regression with all independent variables and note down the R-squared (0.4962 in our multiple regression above). To determine the incremental contribution of employee tenure, you exclude this variable from the regression, run it again and note down the new R-squared, which is 0.4247. The difference is the incremental R-squared of employee tenure, that is, 0.4962 - 0.4247 = 0.0715. Repeating this for service quality would yield an incremental R-squared of 0.1316, again ranking the relative importance of service quality higher than employee tenure. We like this approach even less though. Again, the issue is complicated interdependence between variables that make it very difficult to judge whether an lower increase in R-squared is meaningful or not. Often the order of variables matters a lot as a result of that. Also remember the example with revenues being explained by foot traffic, staff working, and sick calls. If you would want to estimate the impact of sick calls, you would have to throw out the staff variable in order to unblock the path between sick calls and store revenues. That will drastically lower the R-squared because staff working in our simulation explains revenues quite well. It explains y much better than sick calls. Sick calls has no incremental R-squared to staff working. But for our question of interest, that is irrelevant. Again, the main message is, when comparing R-squared contributions, carefully examine your mental model if the comparisons are apples to apples or even sensible.</p>
+</section>
+</section>
+<section id="what-is-a-good-regression-model" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="what-is-a-good-regression-model"><span class="header-section-number">4.8</span> What is a “good” (regression) model?</h2>
+<p>This is almost a philosophical, but nevertheless a very important question. When building a model to answer a business question, you need some criteria to say: “This model is good enough, let’s run with it”. Some often used criteria for this purpose are dangerous. We recommend to let yourself be guided by theory first and out-of-sample prediction accuracy second. Only have a cautious look at measures like the in-sample R-squared.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<p>The <strong>R-squared</strong>, also known as the coefficient of determination, is a measure that represents the proportion of the variance in the dependent variable that can be explained by the independent variables in a regression model. It “quantifies the goodness-of-fit” of the model <em>to the sample</em> by comparing the explained variation to the total variation in the sample. We emphasized <em>fit to the sample</em> to already highlight one trap when interpreting an R-squared. It is usually an in-sample measure. One can easily build a bad model with lots and lots of variables fitting noise, which will have a high R-Squared (R<span class="math inline">\(^2\)</span> ranges from 0 to 1). Models that are <em>overfit</em> (see <a href="predictions.html" class="quarto-xref"><span>Chapter 5</span></a>) have high R<span class="math inline">\(^2\)</span> that are not indicative of their fit to new samples. The standard R<span class="math inline">\(^2\)</span> increases with the addition of more variables, regardless of their relevance. Therefore, we typically look at the <strong>adjusted R-squared</strong>. The adjusted R-squared is a modified version of the R-squared that takes into account the number of independent variables and the sample size. It can help to penalize overly complex models, making it a more reliable measure of goodness of fit, but even the adjusted R-squared suffers from the in-sample problem.</p>
+<p>R<span class="math inline">\(^2\)</span> is also not a good measure of model quality when the goal is to identify a relation of interest. In that case, we do not need to explain a lot of variation necessarily. On the contrary, if we find a proxy for a determinant of interest that does not explain much of <span class="math inline">\(y\)</span>, but which is unconfounded by other things, then we will get a cleaner estimate of the coefficient and a low R<span class="math inline">\(^2\)</span>. That is fine, in this case, we care more about the clean estimate of the coefficient.</p>
+<p>So, what is a good model. We believe it depends on the purpose of your analysis. If it is diagnostic analysis, a good model can again only be assessed via theory: your mental models. If the model manages to isolate the variables your care about, blocks confounding influences, etc. it is a good model. If the purpose is prediction, then <em>out-of-sample</em> prediction accuracy is the relevant criteria. A model that fits well on data it hasn’t seen is a much more believable model. We will spend quite some time in <a href="predictions.html" class="quarto-xref"><span>Chapter 5</span></a> on discussing how to assess this.</p>
+</section>
+<section id="logistic-regression" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="logistic-regression"><span class="header-section-number">4.9</span> Logistic regression</h2>
+<p>Next to linear regressions, logistic regressions are the next most often used regression tool. It belongs to the family of generalized linear models (GLM). The main differences between these two types of regression lie in the nature of the dependent variable, the function used to model the relationship, and the interpretation of the results. Linear regression is used when the dependent variable is continuous, meaning it can take any real value within a certain range. Logistic regression is specifically designed for binary dependent variables, which have only two categories or outcomes, such as success/failure or yes/no. This is very useful for determinant analysis like: What determined whether a customer did respond to a campaign (a yes/no outcome).</p>
+<p>Because the outcome is binary(0, 1), using a normal linear regression could result in predictions that lie far away from the (0; 1) interval. A logistic regression thus needs to ensure that the outcome can never be below 0 and never above 1. It does so by taking a the linear part of the model (the <span class="math inline">\(a + b_1*x_1 + u\)</span> part) and pushes it through a function (the so-called logistic function) that pulls large values to 1 and too small values to 0. It gives the relation a characteristic S-shaped curve that maps any real-valued input to a value between 0 and 1 (<a href="#fig-logreg" class="quarto-xref">Figure&nbsp;<span>4.9</span></a>). Very useful when modeling probabilities.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-logreg" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-logreg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="diagnostics_files/figure-html/fig-logreg-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-logreg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.9: The form of the logistic function sqaushing the linear model into the 0-1 range
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The only difficulty that the logistic transformation brings about is that it complicates the interpretation of coefficient magnitudes. That is because the S-curve now makes the relation between <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span> non-linear. In logistic regression, the coefficients are expressed in terms of the logarithm of the odds ratio, which describes the change in the odds of the event occurring for a one-unit change in the independent variable.</p>
+<p>To facilitate interpretation, these coefficients can be exponentiated to obtain the odds ratios, which provide a more intuitive understanding of the relationship between the independent variables and the binary outcome. Let’s consider a hypothetical example to illustrate logistic regression and its interpretation. Assume we are a broker and send an offer around for a counseling on retirement saving. We wanted to know whether older customers were more likely to respond to this campaign. Here is some simulated data and the result of throwing the data into a logistic regression:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">0374</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># simulating an x variable with 100 random obs ofage between 24 and 58</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">24</span><span class="sc">:</span><span class="dv">58</span>, <span class="at">size =</span> <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># simulating some probabilities</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">inv_logit</span>(<span class="sc">-</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="fl">1.3</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># turning probabilities into a binary 1, 0 variable</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">ifelse</span>(y <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># estimating a model</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>m5 <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MODEL INFO:
+Observations: 100
+Dependent Variable: y
+Type: Generalized linear model
+  Family: binomial 
+  Link function: logit 
+
+MODEL FIT:
+χ²(1) = 86.39, p = 0.00
+Pseudo-R² (Cragg-Uhler) = 0.79
+Pseudo-R² (McFadden) = 0.66
+AIC = 49.40, BIC = 54.61 
+
+Standard errors:MLE
+-------------------------------------------------
+                      Est.   S.E.   z val.      p
+----------------- -------- ------ -------- ------
+(Intercept)         -18.85   4.42    -4.27   0.00
+x                     0.41   0.09     4.33   0.00
+-------------------------------------------------</code></pre>
+</div>
+</div>
+<p><span class="math display">\[log(odds) = log(p / (1 - p)) = β_0 + β_1 * age\]</span></p>
+<p>where p is the probability of of coming to the counsel meeting, and odds represent the ratio p / (1 - p).</p>
+<p>Plugging in the values from our fitted model, we get:</p>
+<p><span class="math display">\[log(odds) = -18.85 + 0.41 * age\]</span></p>
+<p>Now, let’s suppose we want to predict the probability of getting counsel for a 40 year old person. We can use the logistic regression equation to calculate the log odds of passing:</p>
+<p><span class="math display">\[log(odds) = -18.85 + 0.41 * 40 = -2.45\]</span></p>
+<p>To convert the log odds to a probability, we apply the logistic function:</p>
+<p><span class="math display">\[p = 1 / (1 + exp(-log(odds))) = 1 / (1 + exp(2.45)) \sim 0.08\]</span></p>
+<p>So, the probability of passing of a 40 year old responding to the campaign was approximately 8%.</p>
+<p>To interpret the coefficients, we can calculate the odds ratio for the independent variable (age) by exponentiating <span class="math inline">\(\beta_1\)</span>:</p>
+<p><span class="math display">\[Odds ratio = exp(β1) = exp(0.41) \sim 1.51\]</span></p>
+<p>The odds ratio of 1.51 indicates that for each year of age, the odds of showing up to the counselling increase by a factor of 1.51, holding all other variables constant. You can use the respective functions in your statistical packages to get at these more intuitive numbers.</p>
+<p>For presentations it is often easier though to set all variables <span class="math inline">\(x_2\)</span>, <span class="math inline">\(x_3\)</span> etc to their average values, plug in relevant values for the variable of interest and plot the change in probabilities. We often found this to be the most intuitive way of presenting the non-linear nature of the <span class="math inline">\(y\)</span> - <span class="math inline">\(x\)</span> relations in logisitic regressions. As you can see, after a certain age their is a steep increase in the probability of showing up that you would not have expected based on the coefficients.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-logreg2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-logreg2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="diagnostics_files/figure-html/fig-logreg2-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-logreg2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.10: Presenting logisitic regression outcomes
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level2" data-number="4.10">
+<h2 data-number="4.10" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">4.10</span> Conclusion</h2>
+<p>The material we covered in this chapter is quite complex and deep. Rather than focusing on the mechanics we tried to focus on important intuition. We still think it is worth, as you get more and more familiar with the tools to dive deeper into it by practicing. Fully understanding these concepts takes practice. With the tools we introduced here, linear and logistic regressions, many applications will be served and if you will already make a large step forward to data-driven decision-making if you have a rudimentary grasp of them. Particularly to find explanations for <strong>why</strong> you observe certain patterns in your data. For the purpose of creating predictive models, we will continue to discuss regressions and more advanced models in Chapter 5.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-schaffernicht2017causal" class="csl-entry" role="listitem">
+Schaffernicht, Martin FG. 2017. <span>“Causal Attributions of Vineyard Executives–a Mental Model Study of Vineyard Management☆.”</span> <em>Wine Economics and Policy</em> 6 (2): 107–35.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>As we perform our investigation at the branch level, average employee tenure implies that the tenure of all employees at the respective branch is averaged. Technically, we need to be careful here. As the average tenure is itself estimated, there is additional noise in our x variable that we should account for. We ignore this in the example, for ease of exposition.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Meaning the test statistic follows a t-distribution. It is computed a slightly differently than, for example, a differences-in-means t-test. The formula is: <span class="math inline">\(t_r = r√(n-2) / (1-r2)\)</span><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>There is sometimes a trade-off however. If the variables we take out of the error term are highly correlated with our variables of interest, we create a new problem called colinearity.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>We simulated this data and the true coefficient on foot traffic is 210€ in weekly revenues per weekly customer and the true coefficient on staff is 360€ in weekly revenues per staff member.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Some call this the “table 1 fallacy”.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>There is also a model F-test, but we ignore that. It is rarely useful for model selection.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./datapatterns.html" class="pagination-link" aria-label="Identifying Data Patterns">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Identifying Data Patterns</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./predictions.html" class="pagination-link" aria-label="Predictive Analytics">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Predictive Analytics</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

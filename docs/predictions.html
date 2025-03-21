@@ -1,0 +1,2750 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>5&nbsp; Predictive Analytics – Data-Driven Decision-Making</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./reporting.html" rel="next">
+<link href="./diagnostics.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-137c985508dec40e6d94f851f5c8fa1e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7d1895762165437aad1b77e24d4ac7eb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./predictions.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Predictive Analytics</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Data-Driven Decision-Making</a> 
+        <div class="sidebar-tools-main">
+    <a href="./Data-Driven-Decision-Making.docx" title="Download Docx" class="quarto-navigation-tool px-1" aria-label="Download Docx"><i class="bi bi-file-word"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./decision-making.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decision-Making Basics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./datapatterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Identifying Data Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnostic Analytics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./predictions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Predictive Analytics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reporting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Reporting Design</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./case1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Case 1: Decision Making</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./case4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Case 4: Predictive Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-goals" id="toc-learning-goals" class="nav-link active" data-scroll-target="#learning-goals"><span class="header-section-number">5.1</span> Learning goals</a></li>
+  <li><a href="#scope-of-this-chapter" id="toc-scope-of-this-chapter" class="nav-link" data-scroll-target="#scope-of-this-chapter"><span class="header-section-number">5.2</span> Scope of this chapter</a></li>
+  <li><a href="#what-is-predictive-analysis" id="toc-what-is-predictive-analysis" class="nav-link" data-scroll-target="#what-is-predictive-analysis"><span class="header-section-number">5.3</span> What is predictive analysis?</a></li>
+  <li><a href="#the-source-of-prediction-errors" id="toc-the-source-of-prediction-errors" class="nav-link" data-scroll-target="#the-source-of-prediction-errors"><span class="header-section-number">5.4</span> The source of prediction errors</a>
+  <ul class="collapse">
+  <li><a href="#overfitting-vs-underfitting" id="toc-overfitting-vs-underfitting" class="nav-link" data-scroll-target="#overfitting-vs-underfitting"><span class="header-section-number">5.4.1</span> Overfitting vs underfitting</a></li>
+  <li><a href="#determinants-of-overfitting-risk" id="toc-determinants-of-overfitting-risk" class="nav-link" data-scroll-target="#determinants-of-overfitting-risk"><span class="header-section-number">5.4.2</span> Determinants of overfitting risk</a></li>
+  <li><a href="#the-bias-variance-trade-off" id="toc-the-bias-variance-trade-off" class="nav-link" data-scroll-target="#the-bias-variance-trade-off"><span class="header-section-number">5.4.3</span> The bias variance trade-off</a></li>
+  </ul></li>
+  <li><a href="#assessing-prediction-performance" id="toc-assessing-prediction-performance" class="nav-link" data-scroll-target="#assessing-prediction-performance"><span class="header-section-number">5.5</span> Assessing prediction performance</a>
+  <ul class="collapse">
+  <li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation"><span class="header-section-number">5.5.1</span> Cross-validation</a></li>
+  <li><a href="#common-error-metrics" id="toc-common-error-metrics" class="nav-link" data-scroll-target="#common-error-metrics"><span class="header-section-number">5.5.2</span> Common error metrics</a></li>
+  <li><a href="#the-connection-between-error-metrics-loss-functions-and-models" id="toc-the-connection-between-error-metrics-loss-functions-and-models" class="nav-link" data-scroll-target="#the-connection-between-error-metrics-loss-functions-and-models"><span class="header-section-number">5.5.3</span> The connection between error metrics, loss functions, and models</a></li>
+  </ul></li>
+  <li><a href="#a-full-prediction-example" id="toc-a-full-prediction-example" class="nav-link" data-scroll-target="#a-full-prediction-example"><span class="header-section-number">5.6</span> A full prediction example</a>
+  <ul class="collapse">
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data"><span class="header-section-number">5.6.1</span> The data</a></li>
+  <li><a href="#building-a-model-testing-pipeline" id="toc-building-a-model-testing-pipeline" class="nav-link" data-scroll-target="#building-a-model-testing-pipeline"><span class="header-section-number">5.6.2</span> Building a model testing pipeline</a></li>
+  <li><a href="#testing-the-model-candidates" id="toc-testing-the-model-candidates" class="nav-link" data-scroll-target="#testing-the-model-candidates"><span class="header-section-number">5.6.3</span> Testing the model candidates</a></li>
+  <li><a href="#fitting-the-chosen-model" id="toc-fitting-the-chosen-model" class="nav-link" data-scroll-target="#fitting-the-chosen-model"><span class="header-section-number">5.6.4</span> Fitting the chosen model</a></li>
+  <li><a href="#a-better-model-with-a-problem" id="toc-a-better-model-with-a-problem" class="nav-link" data-scroll-target="#a-better-model-with-a-problem"><span class="header-section-number">5.6.5</span> A better model with a problem</a></li>
+  <li><a href="#making-a-decision" id="toc-making-a-decision" class="nav-link" data-scroll-target="#making-a-decision"><span class="header-section-number">5.6.6</span> Making a decision</a></li>
+  </ul></li>
+  <li><a href="#advanced-stuff-shrinkage" id="toc-advanced-stuff-shrinkage" class="nav-link" data-scroll-target="#advanced-stuff-shrinkage"><span class="header-section-number">5.7</span> Advanced stuff: shrinkage</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-pred" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Predictive Analytics</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learning-goals" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="learning-goals"><span class="header-section-number">5.1</span> Learning goals</h2>
+<ol type="1">
+<li>Learn how to do principled data-based forecasting for decision making</li>
+<li>Evaluate a prediction models quality based on standard metrics and theory</li>
+</ol>
+</section>
+<section id="scope-of-this-chapter" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="scope-of-this-chapter"><span class="header-section-number">5.2</span> Scope of this chapter</h2>
+<p>In the language of machine learning, this chapter is about supervised learning.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Supervised learning is what we mostly think of as prediction models, where we have inputs (called independent variables, features, or predictors) and have one or more outputs (often called, responses, dependent variables, or outcome variables). Depending on the type of the outcome variable, two types of prediction (or learning) problems are distinguished: regression problems (predicting a continuous response) and classification problems (predicting a binary or categorical response). Both categories feature an ever expanding set of models and algorithms. We do not have the time to cover this expanding model space in any way that does it justice. That would be a course (or two) by itself. Instead, our goal for this chapter is to provide you with the foundation of predictive analysis and some practice with generalized linear regression models. Even given the plethora of more advanced algorithms, these are incredibly useful model families for most applications. You will be surprised how far the standard approaches will carry you.</p>
+<p>After introducing the basic concepts about the sources of prediction errors, we will discuss how to assess whether a particular model predicts well. The trend towards machine learning and AI has brought with it a rich body of knowledge on how to assess the prediction quality of even complex models and we will draw on more recent advances in this field. Once you know how to assess model performance, we will showcase a full prediction pipeline and close with an extension: a brief treatment of the powerful toolkit enabled by penalized regression models.</p>
+</section>
+<section id="what-is-predictive-analysis" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="what-is-predictive-analysis"><span class="header-section-number">5.3</span> What is predictive analysis?</h2>
+<p>Predictive analysis is asking questions, such as “What will happen?”, “What is the most likely response, given a set of conditions?”, etc. It encompasses a huge and growing field of prediction and forecasting models—from classic time-series models to the most complex large language models. In this chapter we will focus mostly on the core concepts behind data-driven predictions. We will explain what exactly the issues are that make extrapolating from a historical sample to (yet) unseen data so difficult. These issues are quite broad and but provide a good foundation not only for designing useful predictive analyses, but also for a basic understanding of modern AI models behind driverless cars, generative Art, or generative text models, such as ChatGPT. At their heart, all of these applications are prediction models.</p>
+<p>It is important to understand that predictive analysis has a different goal than diagnostic analysis. Thus it also has different criteria to assess model quality. In <a href="diagnostics.html" class="quarto-xref"><span>Chapter 4</span></a>, we stressed that diagnostic model quality can ultimately only be assessed via theory (your mental model). That is because diagnostic analysis asks “Why?” questions. Predictive analysis is less strict. You can easily have a prediction model that provides quite accurate forecasts without being even close to modelling causal relations. For example, the developers of the by now infamous early “Google Flu Trends” model, which predicted flu outbreaks using Google search terms, reported weeding out highly predictive but unrelated search terms related to basketball <span class="citation" data-cites="ginsberg2009detecting">(<a href="references.html#ref-ginsberg2009detecting" role="doc-biblioref">Ginsberg et al. 2009</a>)</span>. Basketball terms were highly predictive of flu outbreaks, because the main US basketball season is March, which is also the main flu season. So basketball search terms were just predicting season, not causally related to flu outbreaks itself. <span class="citation" data-cites="lazer2014parable">(See also the <a href="references.html#ref-lazer2014parable" role="doc-biblioref">Lazer et al. 2014</a> discussion of GFT as a parable for traps utilizing big data.)</span>. Still, while weeding out search terms to basketball helps making the model more robust, a predictive model does not need to isolate causal relations. Consider a somewhat trivial example similar to the one used in <a href="diagnostics.html" class="quarto-xref"><span>Chapter 4</span></a> (<a href="diagnostics.html#fig-dag-rs" class="quarto-xref">Figure&nbsp;<span>4.8</span></a>). Imagine we are interest in predicting next week’s retail store sales and have as inputs the number of staff and number of purchases in the previous week. If more store staff is associated with more purchases, including both number of purchases and number of staff is fine for prediction purposes. But you would not include number of purchases into your model if you would run a diagnostic analysis of the importance of the number of staff for sales. That is because part of the expected effect of staff on sales is via more purchases. Again, the point here is that models for predictive purposes and diagnostic purposes have different but equally important goals. Thus, they need to be designed based on different criteria.</p>
+</section>
+<section id="the-source-of-prediction-errors" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="the-source-of-prediction-errors"><span class="header-section-number">5.4</span> The source of prediction errors</h2>
+<section id="overfitting-vs-underfitting" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="overfitting-vs-underfitting"><span class="header-section-number">5.4.1</span> Overfitting vs underfitting</h3>
+<p>In the previous section we argued that models for diagnostic analysis and predictive analysis are not constructed using the same criteria. In <a href="diagnostics.html" class="quarto-xref"><span>Chapter 4</span></a>, we argued that just adding variables is a bad idea, as adding a variable to your model can sometimes bias the coefficient that you are after. But in predictive analysis we do not care so much about the coefficients–about understanding how the determinants of our outcome of interest <span class="math inline">\(y\)</span> relate–only that they are determinants of the outcome. So, is it okay to just throw all of the hypothesized determinants into a model? The answer is still no. Here is why.</p>
+<p>By adding more variables, a model becomes more complex, and will often better explain variation in the sample that the model is fitted on. But the reason might not be that the model actually predicts (new data) better. Instead, the more variables (parameters) a model has, the more likely it is that a newly included variable was chosen in error and accidentally fits noise. This issue is called <strong>overfitting</strong>. It is a very important concept, and we will try to explain it with some illustrations.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-overfit" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-overfit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="predictions_files/figure-html/fig-overfit-1.gif" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-overfit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.1: Overfitting of data with more complex models
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>For <a href="#fig-overfit" class="quarto-xref">Figure&nbsp;<span>5.1</span></a>, we simulated five samples of the form <span class="math inline">\(y = -200 + 10 * x + u\)</span> with the same x variables and <span class="math inline">\(u\)</span> drawn from a <span class="math inline">\(N(0, (x + 30)^2)\)</span> distribution. Each model we fit with two types of models. A classic linear one <span class="math inline">\(y = a + b *x\)</span> and a polynomial one <span class="math inline">\(y = a + b *x + c * x^2\)</span>. Since we know the true relation, we know that the polynomial version has an unnecessary variable in there <span class="math inline">\(x^2\)</span>. Usually, we do not know that, however. We never know for sure what the real world dynamics look like. That is why we used simulations here; to make the following points: Notice how the (wrong) polynomial regression always has the same or better <span class="math inline">\(R^2\)</span> than the (correct) linear model. This is overfitting. Even though the polynomial version is wrong. It fits the sample it got trained on better. Why does overfitting arise? This is because the additional variable starts fitting the noise part of the sample. The x values are always the same in each sample, the only thing that changes, and that gets picked up by <span class="math inline">\(x^2\)</span> to a bigger or smaller extend is the unmeasured influences in the error term <span class="math inline">\(u\)</span>. And since these change from sample to simple, <span class="math inline">\(x^2\)</span> picking up the sample <span class="math inline">\(u\)</span> is bad news for out-of-sample predictions!</p>
+<p>Overfitting is a serious issue (also for diagnostic models, btw). Notice how especially the fitted lines from the really curved samples with high <span class="math inline">\(R^2\)</span> are off. These will very likely be a terrible fit for the other samples. <em>Overfitted models will likely fit the sample they got trained on better than less overfit models, but they will predict new data worse</em>. And, since the theme is prediction, we really only care about how good a model fits new data.</p>
+<p>To illustrate the severity of the issue, we computed a common prediction error metric, the mean squared error (MSE) for each of the five samples. The MSE is simply the average of all aquared prediction errors: <span class="math inline">\((y-y_{predicted})^2\)</span>. In the <a href="#tbl-mse1" class="quarto-xref">Table&nbsp;<span>5.1</span></a>, you see the difference in in-sample MSE between the polynomial model and linear model. In the last column, we also report the average difference in <em>out-of-sample MSE</em> for the other samples. The logic behind these out-of-sample averages is illustrated in <a href="#fig-overfit2" class="quarto-xref">Figure&nbsp;<span>5.2</span></a>. For each of the five samples and each model (poly or linear), we fitted to model to a sample (say sample 2 in row 2). We then used the fitted model to make predictions for each observation in the other four samples (for row 2, samples 1, 3, 4, and 5).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-overfit2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-overfit2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="predictions_files/figure-html/fig-overfit2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-overfit2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.2: Using sample 2 fit to predict outcomes in the other samples
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>From those predictions, we computed the out-of-sample MSE for each of the four samples for each model. We then computed the difference in MSE between the polynomial and the linear model. Finally we averaged the difference in out-of-sample MSEs for all samples not used to fit the models (again, for row 2, the average of the differences for samples 1, 3, 4, and 5).</p>
+<div class="cell">
+<div id="tbl-mse1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mse1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.1: Differences in prediction errors (polynomial model MSE - linear model MSE)
+</figcaption>
+<div aria-describedby="tbl-mse1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="sjngseexkx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#sjngseexkx table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#sjngseexkx thead, #sjngseexkx tbody, #sjngseexkx tfoot, #sjngseexkx tr, #sjngseexkx td, #sjngseexkx th {
+  border-style: none;
+}
+
+#sjngseexkx p {
+  margin: 0;
+  padding: 0;
+}
+
+#sjngseexkx .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#sjngseexkx .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#sjngseexkx .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#sjngseexkx .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#sjngseexkx .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#sjngseexkx .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+}
+
+#sjngseexkx .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#sjngseexkx .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#sjngseexkx .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#sjngseexkx .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#sjngseexkx .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#sjngseexkx .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#sjngseexkx .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#sjngseexkx .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#sjngseexkx .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  vertical-align: middle;
+}
+
+#sjngseexkx .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#sjngseexkx .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#sjngseexkx .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: none;
+  border-top-width: 1px;
+  border-top-color: #D5D5D5;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D5D5D5;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D5D5D5;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#sjngseexkx .gt_stub {
+  color: #FFFFFF;
+  background-color: #5F5F5F;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #5F5F5F;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sjngseexkx .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#sjngseexkx .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#sjngseexkx .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#sjngseexkx .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sjngseexkx .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #5F5F5F;
+}
+
+#sjngseexkx .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#sjngseexkx .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+}
+
+#sjngseexkx .gt_grand_summary_row {
+  color: #333333;
+  background-color: #D5D5D5;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sjngseexkx .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #5F5F5F;
+}
+
+#sjngseexkx .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #5F5F5F;
+}
+
+#sjngseexkx .gt_striped {
+  background-color: #F4F4F4;
+}
+
+#sjngseexkx .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+}
+
+#sjngseexkx .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#sjngseexkx .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sjngseexkx .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#sjngseexkx .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sjngseexkx .gt_left {
+  text-align: left;
+}
+
+#sjngseexkx .gt_center {
+  text-align: center;
+}
+
+#sjngseexkx .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#sjngseexkx .gt_font_normal {
+  font-weight: normal;
+}
+
+#sjngseexkx .gt_font_bold {
+  font-weight: bold;
+}
+
+#sjngseexkx .gt_font_italic {
+  font-style: italic;
+}
+
+#sjngseexkx .gt_super {
+  font-size: 65%;
+}
+
+#sjngseexkx .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#sjngseexkx .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#sjngseexkx .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#sjngseexkx .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#sjngseexkx .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#sjngseexkx .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#sjngseexkx .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#sjngseexkx .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#sjngseexkx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Sample" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Sample</th>
+<th id="In-Sample-MSE-Difference" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">In-Sample MSE Difference</th>
+<th id="Avg.-Out-of-Sample-MSE-Difference" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Avg. Out-of-Sample MSE Difference</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="Sample">1</td>
+<td class="gt_row gt_right" headers="In-Sample MSE Difference">-8.5</td>
+<td class="gt_row gt_right" headers="Avg. Out-of-Sample MSE Difference">-15.1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right gt_striped" headers="Sample">2</td>
+<td class="gt_row gt_right gt_striped" headers="In-Sample MSE Difference">-1419.8</td>
+<td class="gt_row gt_right gt_striped" headers="Avg. Out-of-Sample MSE Difference">1770.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Sample">3</td>
+<td class="gt_row gt_right" headers="In-Sample MSE Difference">-778.7</td>
+<td class="gt_row gt_right" headers="Avg. Out-of-Sample MSE Difference">901.7</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right gt_striped" headers="Sample">4</td>
+<td class="gt_row gt_right gt_striped" headers="In-Sample MSE Difference">-2735.2</td>
+<td class="gt_row gt_right gt_striped" headers="Avg. Out-of-Sample MSE Difference">4602.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Sample">5</td>
+<td class="gt_row gt_right" headers="In-Sample MSE Difference">-8.4</td>
+<td class="gt_row gt_right" headers="Avg. Out-of-Sample MSE Difference">-15.1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The important thing to note here is that for all samples where the polynomial model fits better (has much lower mean squared error as shown by a negative in-sample MSE difference), it fits worse out-of-sample to the same degree! If we would average over the out of sample MSE difference we find that the polynomial model is on average worse by 1448.7 in terms of MSE difference.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>In <a href="diagnostics.html" class="quarto-xref"><span>Chapter 4</span></a> we discussed that one should not use in-sample measures of goodness-of-fit such as <span class="math inline">\(R^2\)</span> to judge the quality of a model for diagnostic analysis purposes. You can only judge a diagnostic model using theory. In-sample overfitting is another reason why you do not want to trust in-sample <span class="math inline">\(R^2\)</span>s to judge model quality—for diagnostic or predictive analysis purposes.</p>
+</section>
+<section id="determinants-of-overfitting-risk" class="level3" data-number="5.4.2">
+<h3 data-number="5.4.2" class="anchored" data-anchor-id="determinants-of-overfitting-risk"><span class="header-section-number">5.4.2</span> Determinants of overfitting risk</h3>
+<p>The above simulation shows that model complexity increases the chance of overfitting. This is always also relative to the amount of data. It is difficult to give concrete guidelines here. But if you have a lot of data, then you can get away with more complex models too. At the same time, complex data, with lots of complicated interactions and where a lot of the variation in the data is left unexplained (relegated to the error term) are also data where it is also easier to accidentally fit in-sample noise. We thus need a way to judge overfitting risk by a model, which is what we discuss next.</p>
+</section>
+<section id="the-bias-variance-trade-off" class="level3" data-number="5.4.3">
+<h3 data-number="5.4.3" class="anchored" data-anchor-id="the-bias-variance-trade-off"><span class="header-section-number">5.4.3</span> The bias variance trade-off</h3>
+<p>A nice feature of MSE as an error metric is that it can be easily decomposed into two components that tell us more about the reasons for prediction errors. Imagine we have some prediction model <span class="math inline">\(\hat m (x, D)\)</span> with inputs <span class="math inline">\(x\)</span> and trained on some data <span class="math inline">\(D\)</span>. Then the mean squared error of such a model is:</p>
+<p><span class="math display">\[MSE = \mathbb{E}\left[(y -\hat m (x, D))^2\right] = Var(y - \hat m (x, D)) + \left(\mathbb{E}\left[y - \hat m (x, D)\right]\right)^2\]</span> <span class="math display">\[MSE = \mathbb{E}\left[(y -  \hat m (x, D))^2\right]  = Var(\hat m (x, D)) + Bias(\hat m (x, D))^2\]</span></p>
+<p>There are two sources of errors according to this formula. One is variance, and this is the term that is affected by overfitting. Variance reflects errors arising from sensitivity to small fluctuations in the sample used to fit the modes. The second term, Bias, reflects systematic errors, such as those arising from an <em>underfitted</em> model (one that misses a systematic determinant and thus makes a systematic error). If it helps, you can think of the bias variance trade-off as an overfitting/underfitting trade-off. Sometimes it is better to have simpler models that are likely to underfit or make a systematic mistake (a bit of Bias), than complex models that might be prone to large overfitting (high variance).</p>
+<p>This trade-off is quite general, irrespective of the error metric. And there often is no clear ex-ante guideline when to expect that a certain model will have a better trade-off than another. For that reason, we often have to evaluate different models and simply choose the one that seems to have the better bias variance trade-off in our particular setting. To do so, we need to discuss how to assess prediction performance in a principled way next.</p>
+</section>
+</section>
+<section id="assessing-prediction-performance" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="assessing-prediction-performance"><span class="header-section-number">5.5</span> Assessing prediction performance</h2>
+<section id="cross-validation" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="cross-validation"><span class="header-section-number">5.5.1</span> Cross-validation</h3>
+<p>One can find two approaches to judge the quality of prediction models for their out-of-sample prediction quality. One is cross-validation, the other is looking at information criteria, such as the Akaike Information Criterion (<a href="https://en.wikipedia.org/wiki/Akaike_information_criterion">AIC</a>). In this course, we will focus on cross-validation, since it is the most widely used approach in machine-learning.</p>
+<p>The idea behind cross-validation is similar in spirit to what we did to generate the results reported in <a href="#tbl-mse1" class="quarto-xref">Table&nbsp;<span>5.1</span></a>. And this is the method we will focus on in the remainder of this course for evaluating prediction model quality.</p>
+<p>Cross-validation is a resampling method. We take a sample of data and randomly partition it into k parts. We then fit the model on one part (consisting of k-1 parts, called the training set) and fit the model to the left-out part k. We do this for all k parts, compute MSE (or another suitable error metric) on the left-out part each time, and finally compute the average of all k error metrics.</p>
+<p>Of course, by randomly partitioning the data into training and testing sets and then averaging across partitions, we do not really evaluate completely new data. Instead, the purpose of cross-validation is to <em>estimate</em> how accurate the model would be if it were to be thrown at truly new data. The cross-validated average out-of-sample MSE (or other error metrics) is thus only an estimate. But a very useful one. Let’s illustrate this with another simulated example. We will use the <a href="https://www.tidymodels.org/">tidymodels</a> packages for our prediction exercises from now on:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you want to learn more about using tidymodels for machine learnings, the open <a href="https://www.tmwr.org/">webook</a> by Max Kuhn and Julia Silge is a great start.</p>
+<p>We will use a simulated data set used by IBM to illustate a Watson data science pipline (<a href="https://github.com/IBM/employee-attrition-aif360">source here</a>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(attrition)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(attrition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,470
+Columns: 31
+$ Age                      &lt;int&gt; 41, 49, 37, 33, 27, 32, 59, 30, 38, 36, 35, 2…
+$ Attrition                &lt;fct&gt; Yes, No, Yes, No, No, No, No, No, No, No, No,…
+$ BusinessTravel           &lt;fct&gt; Travel_Rarely, Travel_Frequently, Travel_Rare…
+$ DailyRate                &lt;int&gt; 1102, 279, 1373, 1392, 591, 1005, 1324, 1358,…
+$ Department               &lt;fct&gt; Sales, Research_Development, Research_Develop…
+$ DistanceFromHome         &lt;int&gt; 1, 8, 2, 3, 2, 2, 3, 24, 23, 27, 16, 15, 26, …
+$ Education                &lt;ord&gt; College, Below_College, College, Master, Belo…
+$ EducationField           &lt;fct&gt; Life_Sciences, Life_Sciences, Other, Life_Sci…
+$ EnvironmentSatisfaction  &lt;ord&gt; Medium, High, Very_High, Very_High, Low, Very…
+$ Gender                   &lt;fct&gt; Female, Male, Male, Female, Male, Male, Femal…
+$ HourlyRate               &lt;int&gt; 94, 61, 92, 56, 40, 79, 81, 67, 44, 94, 84, 4…
+$ JobInvolvement           &lt;ord&gt; High, Medium, Medium, High, High, High, Very_…
+$ JobLevel                 &lt;int&gt; 2, 2, 1, 1, 1, 1, 1, 1, 3, 2, 1, 2, 1, 1, 1, …
+$ JobRole                  &lt;fct&gt; Sales_Executive, Research_Scientist, Laborato…
+$ JobSatisfaction          &lt;ord&gt; Very_High, Medium, High, High, Medium, Very_H…
+$ MaritalStatus            &lt;fct&gt; Single, Married, Single, Married, Married, Si…
+$ MonthlyIncome            &lt;int&gt; 5993, 5130, 2090, 2909, 3468, 3068, 2670, 269…
+$ MonthlyRate              &lt;int&gt; 19479, 24907, 2396, 23159, 16632, 11864, 9964…
+$ NumCompaniesWorked       &lt;int&gt; 8, 1, 6, 1, 9, 0, 4, 1, 0, 6, 0, 0, 1, 0, 5, …
+$ OverTime                 &lt;fct&gt; Yes, No, Yes, Yes, No, No, Yes, No, No, No, N…
+$ PercentSalaryHike        &lt;int&gt; 11, 23, 15, 11, 12, 13, 20, 22, 21, 13, 13, 1…
+$ PerformanceRating        &lt;ord&gt; Excellent, Outstanding, Excellent, Excellent,…
+$ RelationshipSatisfaction &lt;ord&gt; Low, Very_High, Medium, High, Very_High, High…
+$ StockOptionLevel         &lt;int&gt; 0, 1, 0, 0, 1, 0, 3, 1, 0, 2, 1, 0, 1, 1, 0, …
+$ TotalWorkingYears        &lt;int&gt; 8, 10, 7, 8, 6, 8, 12, 1, 10, 17, 6, 10, 5, 3…
+$ TrainingTimesLastYear    &lt;int&gt; 0, 3, 3, 3, 3, 2, 3, 2, 2, 3, 5, 3, 1, 2, 4, …
+$ WorkLifeBalance          &lt;ord&gt; Bad, Better, Better, Better, Better, Good, Go…
+$ YearsAtCompany           &lt;int&gt; 6, 10, 0, 8, 2, 7, 1, 1, 9, 7, 5, 9, 5, 2, 4,…
+$ YearsInCurrentRole       &lt;int&gt; 4, 7, 0, 7, 2, 7, 0, 0, 7, 7, 4, 5, 2, 2, 2, …
+$ YearsSinceLastPromotion  &lt;int&gt; 0, 1, 0, 3, 2, 3, 0, 0, 1, 7, 0, 0, 4, 1, 0, …
+$ YearsWithCurrManager     &lt;int&gt; 5, 7, 0, 0, 2, 6, 0, 0, 8, 7, 3, 8, 3, 2, 3, …</code></pre>
+</div>
+</div>
+<p>This is a fictional dataset used to examine the question of what possible determinants of employee attrition are. Note, this is usually a diagnostic question. Instead, we turn to the purely predictive question: Can we predict who left the organization, irrespective of the reason?</p>
+<p>The models we are about to fit, are not so much the focus right now. Here we only want to illustrate the use of cross-validation. First, we use the <code>vfold_cv()</code> function out of the tidymodels’s <code>rsample</code> package to partition the sample five times. Again, we do this so that we can come up with an estimate of which model will likely do better if used to predict actual dropouts of future employees.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(attrition, <span class="at">v =</span> <span class="dv">5</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(folds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#  5-fold cross-validation 
+# A tibble: 5 × 2
+  splits             id   
+  &lt;list&gt;             &lt;chr&gt;
+1 &lt;split [1176/294]&gt; Fold1
+2 &lt;split [1176/294]&gt; Fold2
+3 &lt;split [1176/294]&gt; Fold3
+4 &lt;split [1176/294]&gt; Fold4
+5 &lt;split [1176/294]&gt; Fold5</code></pre>
+</div>
+</div>
+<p>As you can see, each cut has cut the 1,470 data points into 1,176 observations for training and 294 observations for evaluating model performance. Five times 294 yields you the full sample of 1,470 data points again.</p>
+<p>We now fit a few ad-hoc models to each fold. The tidymodels package has a nice pipeline structure that allows us to fit a list of different model types and preprocess steps. For what we are doing right now, it is a bit overkill, but we will still start introducing it already. Our outcome variable is binary (Attrition: “left organization” yes / no), so we start with a simple logistic regression. We start with WorkLifeBalance and MonthlyIncome as predictors for the outcome variable Attrition.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define the model type and a workflow including the predictors and the outcome</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>log_model <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>(<span class="at">mode =</span> <span class="st">"classification"</span>, <span class="at">engine =</span> <span class="st">"glm"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>logistic_1 <span class="ot">&lt;-</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(log_model) <span class="sc">|&gt;</span> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(Attrition <span class="sc">~</span> WorkLifeBalance <span class="sc">+</span> MonthlyIncome)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>fit_rs_1 <span class="ot">&lt;-</span> </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  logistic_1 <span class="sc">|&gt;</span> </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_resamples</span>(folds)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(fit_rs_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 4%">
+<col style="width: 14%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">std_err</th>
+<th style="text-align: left;">.config</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.8387755</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0098932</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">brier_class</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.1308832</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0066465</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.6470988</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0134729</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We get outputs for three metrics: accuracy, brier_class, and roc_auc (ROC area under the curve). These are default error metrics to judge the performance of classification problems (We will discuss what that means in the next section). Tidymodels automatically chose to report those because we told it we are fitting a classification model.</p>
+<p>The mean column shows the average of both metrics across the five 294-observation folds, we generated with cross-validation. The average accuracy is 83.8%, which means we got 84% of labels correct. That is not as great as it sounds though. Accuracy is a tricky error metric whenever you have a disbalance in labels. We do have much</p>
+<p>The std_err column shows you the standard error across the five folds. It is an indication of the variation of both metrics across the five folds, which is going to be important when comparing different models. In fact, the distribution of our outcome variable in the full dataset is like this</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>attrition <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">percent_label =</span> <span class="fu">n</span>() <span class="sc">/</span> <span class="fu">nrow</span>(attrition),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> Attrition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Attrition</th>
+<th style="text-align: right;">percent_label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">0.1612245</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">0.8387755</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>So, if we would just use “no”-model, just predict every employer to stay in the organization, we would also get 83,8% of our predictions correct! Our first model is really is not better than an obviously lazy model.</p>
+<p>We will discuss how to interpret roc_auc in a minute. First, we also fit another model for comparison. In this one we add two more predictors: DistanceFromHome and BusinessTravel, assuming that both might affect the desirability of a job.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>logistic_1 <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_formula</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    Attrition <span class="sc">~</span> WorkLifeBalance <span class="sc">+</span> MonthlyIncome <span class="sc">+</span> DistanceFromHome <span class="sc">+</span> BusinessTravel</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_resamples</span>(folds) <span class="sc">|&gt;</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 4%">
+<col style="width: 14%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">std_err</th>
+<th style="text-align: left;">.config</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.8380952</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0093522</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">brier_class</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.1275946</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0062058</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.6734979</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0136274</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We get a very similar accuracy score and a slightly higher roc_auc. Now, does this mean the second model is better or not that different? What do these metrics tell us?</p>
+</section>
+<section id="common-error-metrics" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="common-error-metrics"><span class="header-section-number">5.5.2</span> Common error metrics</h3>
+<p>Mean squared error, accuracy, roc_auc, are all different error metrics. Which on to use depends on the learning problem and the data. In machine learning lingua, the type of analysis we just did is called a <em>classification</em> problem. We tried to classify observations into one of two groups, those the left the organization and those that did not. When your have an outcome variable that is binary or categorical (e.g, “delayed”, “on-time”, “cancelled”) you usually have a classification problem. For those, measures like accuracy and roc_auc are commonly used. Learning problems involving continuous outcomes are often called <em>regression</em> problems. For those error metrics like MSE or mean absolue error (MAE) are often appropriate.</p>
+<p><strong>Accuracy</strong>. We already discussed accuracy as a classification error metric and some of its issues. Another one is that often, not all classification errors are equal. Is it worse for us to label people who left the firm as staying or people who stayed as leaving? Often it makes sense to decompose accuracy based on the type of misclassification.</p>
+<p><strong>ROC AUC (Receiver Operator Characteristic Area Under The Curve)</strong>. Generally, an roc_auc value is between 0.5 and 1, with 1 being a perfect prediction model. To explain what roc_auc measure takes a bit of time, but it is worth it as it highlights some of the unique issues with classification predictions. For simplicity, let us fit our first model to the whole data and look at the in-sample predictions (normally you would again examine predictions out-of-sample). We can see what the true classification label is (“Yes” or “No”) and what probabilities our logistic regression assigns to each class:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Attrition</th>
+<th style="text-align: right;">.pred_No</th>
+<th style="text-align: right;">.pred_Yes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">0.7026551</td>
+<td style="text-align: right;">0.2973449</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">0.8493398</td>
+<td style="text-align: right;">0.1506602</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">0.7933363</td>
+<td style="text-align: right;">0.2066637</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">0.8097954</td>
+<td style="text-align: right;">0.1902046</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">0.8204417</td>
+<td style="text-align: right;">0.1795583</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">8</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">0.7810288</td>
+<td style="text-align: right;">0.2189712</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We could then pick a probability threshold to assign an observation a prediction. Say, if .pred_Yes is greater or equal 25% we classify the observation as of the class “Yes”</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Attrition</th>
+<th style="text-align: right;">.pred_No</th>
+<th style="text-align: right;">.pred_Yes</th>
+<th style="text-align: left;">.pred</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">0.7026551</td>
+<td style="text-align: right;">0.2973449</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">0.8493398</td>
+<td style="text-align: right;">0.1506602</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">0.7933363</td>
+<td style="text-align: right;">0.2066637</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">0.8097954</td>
+<td style="text-align: right;">0.1902046</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">0.8204417</td>
+<td style="text-align: right;">0.1795583</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">8</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">0.7810288</td>
+<td style="text-align: right;">0.2189712</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>With this threshold (“Yes” if .pred_Yes &gt;= 25%), we would get the following classification result.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Attrition</th>
+<th style="text-align: left;">.pred</th>
+<th style="text-align: right;">N</th>
+<th style="text-align: left;">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: left;">True positive</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">1179</td>
+<td style="text-align: left;">True negative</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: left;">False negative</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: left;">False positive</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The terms true positive, true negative and so on are important. In a binary classification, you define one class as the “positive” class and we assigned the “Yes, has left the organization” condition to it. As you can see, the simple model does not do a good job of classifying the “Yes” condition correctly. we have 201 false negatives (people who have left that we incorrectly labeled as stayed). Out of all “Yes” cases we only labeled <span class="math inline">\(36 / (36 + 201) = 15.2%\)</span> correctly. This is called the <em>true positive rate</em> (another common name is: <em>recall</em>). You can also think of such rates and tables as further digging into the accuracy statistic.</p>
+<p>What a ROC curve does is it plots the true positive rate and false positive rate for a range of classification thresholds between 0 and 1. In our example, we picked one threshold: .pred_Yes &gt;= 25%. If we computed true positive and false positive rates for a range of probabilities between .pred_Yes &gt;= 0% (Always assume “Yes”) and .pred_Yes &gt;= 100% (bascially always say “No”), then we can plot the true positive and false positive rates in a graph that usually looks like a curve:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-roccurve" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-roccurve-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="predictions_files/figure-html/fig-roccurve-1.png" class="img-fluid figure-img" width="384">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-roccurve-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.3: Comparing ROC curves for two models
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This is the ROC curve. To understand this graph, think about the corners of it. Say, we use as threshold .pred_Yes &gt;= 0% (always predict “Yes”). That is the top right corner of the graph. Intuitively, when we always predict “Yes”, then we will always get all truly positive observations classified correctly (true positive rate will be 1). But, we will always misclassify all true “No” cases (our true negative rate will be zero or, equivalently, our false positive rate will be 1) The other extreme case is the .pred_Yes &gt; 100% (always predict “No”). Again, intuitively, when we always predict “No” then we can never predict the true “Yes” cases correctly but we will always predict the true “No” cases correctly. That is the 0, 0 bottom left of the graph.</p>
+<p>A good prediction model thus has a curve that is as high as possible. Compare for example, the red line, the logistic regression model with DistanceHome and BusinessTravel as additional variables. For almost each level of false positives (i.e., for the same level of getting “Yes” wrong) it gets more “Yes” correctly classified. This is what the higher sitting curve implies and it is a good sign.</p>
+<p>The roc_auc is simply a summary measure of ROC curve graphs. It measures the area under the curve. Since the graph is usually plotted on the x and y axis from 0 to 1, the maximum area under the graph can also only be 1. The higher the curve is, the closer the area under the curve will be to 1. So higher values are better. When we compare the cross-validated average roc_auc of the simple model (0.647, SE: 0.0135) and the model including DistanceHome and BusinessTravel (0.673, SE: 0.0136) then the expanded model seems to do a better job out-of-sample too. Is this difference (<span class="math inline">\(0.673 - 0.647 = 0.026\)</span>) meaningful though? Looking at the standard errors of both cross-validation tables (0.0135 and 0.0136), it is borderline, as it is not too implausible to get such a difference also from sampling variation (rather than a true difference in predictive ability).</p>
+<p>We spend quite some time on ROC because it also allowed us to introduce some important terms and thinking related to classification problems. Turning to regression problems that deal with continuous outcomes, things become about easier.</p>
+<p><strong>Mean squared error (MSE)</strong>. MSE is a standard error metric for continuous outcomes that—because of squaring the errors—penalizes large errors more severely than small ones.</p>
+<p><span class="math display">\[MSE = \frac{1}{n}\sum^n_{i=1}(y_i - y^{pred}_i)^2\]</span></p>
+<p>MSE is the most common error metric, probably also because it is mathematically very convenient to work with. For example, as we have seen above, it is easy to decompose the MSE into a component due to a bias in the model and a component that is due to the variance of the model. The mean squared error is obviously appropriate, if we have at a prediction problem with a squared loss function (it is the risk function corresponding to the expectation with a squared loss function). But we are not always in such situations. For example, MSE weighs outliers very strongly, which is not often desirable. In such cases, metrics like the mean absolute error, or versions based on the median, are commonly used. A final note regarding MSE is that it is often easier to take the square root of it and interpret the root mean squared error RMSE, because it the RMSE is in the original unit scale of <span class="math inline">\(y\)</span>.</p>
+<p><strong>Mean absolute error (MAE)</strong></p>
+<p>The median absolute error is another common error metric, and defined very similarly to MSE. In contrast to MSE, it does not penalize large error more severely, which is why it is less affected by outliers.</p>
+<p><span class="math display">\[MAE = \frac{1}{n}\sum^n_{i=1}|y_i - y^{pred}_i|\]</span></p>
+</section>
+<section id="the-connection-between-error-metrics-loss-functions-and-models" class="level3" data-number="5.5.3">
+<h3 data-number="5.5.3" class="anchored" data-anchor-id="the-connection-between-error-metrics-loss-functions-and-models"><span class="header-section-number">5.5.3</span> The connection between error metrics, loss functions, and models</h3>
+<p>So far, we only discussed the most common default error metrics. There is a large list of alternatives that we have no chance to give credit to in the course. That does not mean they are not important, but they are usually tied to specific loss functions and prediction problems. We believe you will encounter them naturally in those settings. What you should be aware of is that your choice should be partly informed by what loss function you think you are operating with. In fact, loss functions not only dictate what error metric to choose but also which models to choose. Every algorithm behind a model is a combination of an algorithm that can fit certain functional forms to data and a loss function that dictates what criteria the best fitting function should satisfy. For example, it is quite easy to show that if a) you care about squared losses, b) you want to fit linear models, and c) you want the <em>best unbiased</em> linear predictor, then math tells you to use a classic linear regression model.</p>
+<p>The point here is to highlight how these different concepts tie together from a decision making angle (after all, the course is called data-driven decision making). Loss functions, quantifying what errors are more or less costly to a decision, are an important driver of the data analysis methods used to make decisions.</p>
+</section>
+</section>
+<section id="a-full-prediction-example" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="a-full-prediction-example"><span class="header-section-number">5.6</span> A full prediction example</h2>
+<section id="the-data" class="level3" data-number="5.6.1">
+<h3 data-number="5.6.1" class="anchored" data-anchor-id="the-data"><span class="header-section-number">5.6.1</span> The data</h3>
+<p>We covered a lot of ground in this chapter. We will now put it all together in an example. Imagine you are working for a large European electronics market chain. In recent years, inspired by Apple’s genius bar, the chain has started to install and offer a counter that offers laptop and mobile phone repair services for items bought in its shops. These repair counters have been rolled out to a few stores during the last years and you are tasked with predicting the amount of FTEs needed to staff repair counters in those stores that do not have them yet. A crucial factor for staffing is the amount of time a repair service needs, which varies widely. Your firm’s service software tracked the self-reported time of repair services and some other information regarding the service job. You want to test whether you can build an accurate prediction model that would help you predict service hours and thus FTEs needed. This would greatly help you calculate the cost estimates for these new repair counters. You look at the data from last month:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(poissonreg)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(repair_dta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 4,072
+Columns: 7
+$ months_since_purchase &lt;dbl&gt; 18, 11, 5, 12, 18, 18, 4, 22, 7, 19, 15, 16, 10,…
+$ month                 &lt;int&gt; 12, 12, 1, 9, 9, 12, 1, 1, 1, 3, 10, 11, 8, 2, 1…
+$ has_ext_warranty      &lt;dbl&gt; 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, …
+$ item_type             &lt;chr&gt; "appliances", "laptop_premium", "mobile_mp", "la…
+$ employee_id           &lt;chr&gt; "53", "34", "4", "7", "29", "9", "49", "7", "11"…
+$ purchase_price        &lt;dbl&gt; 794, 1598, 471, 1131, 165, 568, 932, 643, 278, 5…
+$ time_to_repair_hrs    &lt;dbl&gt; 14, 14, 1, 28, 18, 1, 7, 23, 0, 14, 4, 4, 3, 8, …</code></pre>
+</div>
+</div>
+<p>You first look at the outcome variable: <code>time_to_repair_hrs</code>, which is the time it takes to repair the item (in hours).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>repair_dta <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> time_to_repair_hrs)) <span class="sc">+</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>) <span class="sc">+</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="fu">c</span>(<span class="fl">0.01</span>,<span class="fl">0.05</span>))) <span class="sc">+</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">n.breaks =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-repairtime" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-repairtime-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="predictions_files/figure-html/fig-repairtime-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-repairtime-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.4: Always check how your outcome variable is distributed
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see substantial variation. Most repairs take less than 20 hours, but there are a rare few that seem to take forever. Let us see whether we can predict repair time with a model. We start by building a tidymodels workflow. First, we prepare the data. First, we will put 20% of the sample away for later.</p>
+</section>
+<section id="building-a-model-testing-pipeline" class="level3" data-number="5.6.2">
+<h3 data-number="5.6.2" class="anchored" data-anchor-id="building-a-model-testing-pipeline"><span class="header-section-number">5.6.2</span> Building a model testing pipeline</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>splits  <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(repair_dta, <span class="at">prop =</span> <span class="fl">0.8</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>repair_test  <span class="ot">&lt;-</span> <span class="fu">testing</span>(splits)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>repair_other <span class="ot">&lt;-</span> <span class="fu">training</span>(splits)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>splits</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;Training/Testing/Total&gt;
+&lt;3257/815/4072&gt;</code></pre>
+</div>
+</div>
+<p>It is good practice to keep a part of your sample away for a final evaluation at the end. Imagine fitting and examining multiple models and specifications on a training set. Even using cross-validation to estimate out-of-sample performance of the models, decide on preprocessing steps, and so on. Even then, you still want hold part of the data back. So that when you are done, you have a fresh out-of-sample comparison that you did not use for model tuning and selection. This is most important when you have more advance models that require you to tune model parameters, like a penalty parameter.</p>
+<p>Next we prepare our cross validation folds.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(repair_other, <span class="at">v =</span> <span class="dv">5</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(folds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#  5-fold cross-validation 
+# A tibble: 5 × 2
+  splits             id   
+  &lt;list&gt;             &lt;chr&gt;
+1 &lt;split [2605/652]&gt; Fold1
+2 &lt;split [2605/652]&gt; Fold2
+3 &lt;split [2606/651]&gt; Fold3
+4 &lt;split [2606/651]&gt; Fold4
+5 &lt;split [2606/651]&gt; Fold5</code></pre>
+</div>
+</div>
+<p>Now we define preprocessing steps and a model type. The code below is quite a bit different to how we normally write code for linear regressions. This is the tidymodels way of setting up a model fitting pipeline, consisting of data pre-processing steps, model definitions, and then assessment, fitting, and prediction. While it is definitely a bit verbose and more lines of code, writing pipelines such as this, helps a lot in evaluating and testing a larger number of more involved models without making copy/paste mistakes. We thus want to introduce you to this type of coding as well.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Recipe</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># A recipe is a description of the steps to be applied to a data set in order </span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># to prepare it for data analysis.</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we just standardize all numeric predictors to have zero mean and standard</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># deviation one.</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>base_processing <span class="ot">&lt;-</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="co"># define the outcome and denote all other variables as predictors</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    time_to_repair_hrs <span class="sc">~</span> .,  </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> repair_other</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>())  <span class="sc">|&gt;</span> </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(item_type)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>base_processing</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Recipe ──────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Inputs </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Number of variables by role</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>outcome:   1
+predictor: 6</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Operations </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Centering and scaling for: all_numeric_predictors()</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Dummy variables from: item_type</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(base_processing)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 42%">
+<col style="width: 14%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">variable</th>
+<th style="text-align: left;">type</th>
+<th style="text-align: left;">role</th>
+<th style="text-align: left;">source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">months_since_purchase</td>
+<td style="text-align: left;">double , numeric</td>
+<td style="text-align: left;">predictor</td>
+<td style="text-align: left;">original</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">month</td>
+<td style="text-align: left;">integer, numeric</td>
+<td style="text-align: left;">predictor</td>
+<td style="text-align: left;">original</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">has_ext_warranty</td>
+<td style="text-align: left;">double , numeric</td>
+<td style="text-align: left;">predictor</td>
+<td style="text-align: left;">original</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">item_type</td>
+<td style="text-align: left;">string , unordered, nominal</td>
+<td style="text-align: left;">predictor</td>
+<td style="text-align: left;">original</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">employee_id</td>
+<td style="text-align: left;">string , unordered, nominal</td>
+<td style="text-align: left;">predictor</td>
+<td style="text-align: left;">original</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">purchase_price</td>
+<td style="text-align: left;">double , numeric</td>
+<td style="text-align: left;">predictor</td>
+<td style="text-align: left;">original</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">time_to_repair_hrs</td>
+<td style="text-align: left;">double , numeric</td>
+<td style="text-align: left;">outcome</td>
+<td style="text-align: left;">original</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Building on the base processing, we define six different model specifications. The six models are a compbination of three different regression equations and two model types</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We want to fit classic regressions for now:</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>lin_model <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">engine =</span> <span class="st">"lm"</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>pois_model <span class="ot">&lt;-</span> <span class="fu">poisson_reg</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">engine =</span> <span class="st">"glm"</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># By selecting different predictors we define different specifications</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>regspec1 <span class="ot">&lt;-</span> </span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  base_processing <span class="sc">|&gt;</span> </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_select</span>(time_to_repair_hrs, has_ext_warranty, purchase_price, <span class="at">skip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>regspec2 <span class="ot">&lt;-</span> </span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  base_processing <span class="sc">|&gt;</span> </span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_select</span>(time_to_repair_hrs, has_ext_warranty, purchase_price, </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>              <span class="fu">starts_with</span>(<span class="st">"item_type"</span>), <span class="at">skip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>regspec3 <span class="ot">&lt;-</span> </span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  base_processing <span class="sc">|&gt;</span> </span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_select</span>(time_to_repair_hrs, has_ext_warranty, purchase_price, </span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>              <span class="fu">starts_with</span>(<span class="st">"item_type"</span>), months_since_purchase, <span class="at">skip =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>regspec3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Recipe ──────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Inputs </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Number of variables by role</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>outcome:   1
+predictor: 6</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Operations </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Centering and scaling for: all_numeric_predictors()</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Dummy variables from: item_type</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Variables selected: time_to_repair_hrs has_ext_warranty, ...</code></pre>
+</div>
+</div>
+</section>
+<section id="testing-the-model-candidates" class="level3" data-number="5.6.3">
+<h3 data-number="5.6.3" class="anchored" data-anchor-id="testing-the-model-candidates"><span class="header-section-number">5.6.3</span> Testing the model candidates</h3>
+<p>Next we create a so called workflow set. This set captures basically all the combinations of pre-processing recipes and models families that we want to evaluate.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>set1 <span class="ot">&lt;-</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow_set</span>(</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">preproc =</span> <span class="fu">list</span>(<span class="at">m1 =</span> regspec1, <span class="at">m2 =</span> regspec2, <span class="at">m3 =</span> regspec3),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">models =</span> <span class="fu">list</span>(<span class="at">LR =</span> lin_model, <span class="at">PR =</span> pois_model),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cross =</span> <span class="cn">TRUE</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>wf_rs_fits <span class="ot">&lt;-</span> </span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  set1 <span class="sc">|&gt;</span> </span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow_map</span>(<span class="st">"fit_resamples"</span>, <span class="at">resamples =</span> folds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(wf_rs_fits)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 22%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 3%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">wflow_id</th>
+<th style="text-align: left;">.config</th>
+<th style="text-align: left;">preproc</th>
+<th style="text-align: left;">model</th>
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">std_err</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">m1_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">17.8173458</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.1802478</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m1_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.1369425</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0137135</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">m1_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">17.7696005</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.1353523</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m1_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.1434471</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0174740</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">m2_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">17.1774336</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.2199095</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m2_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.1981286</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0173554</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">m2_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">17.1517882</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.1950304</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m2_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.2023034</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0197845</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">m3_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">16.9061934</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.2182276</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m3_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.2226727</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0129704</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">m3_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">16.7645840</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.1636187</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m3_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.2389841</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.0146713</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><code>collect_metrics</code> shows us cross-validated performance of our 3 x 2 model combinations: 3 regression equations and 2 model families (classic regression versus poisson regression). The default error metrics are ok here. We believe that in this setting, large prediction errors are more severe in terms of cost they produce. Thus, a linear regression is fine and the RMSE a measure in alignment with this logic.</p>
+<p>A few observations: - The errors RMSE of 17.8 to 16.9 hours seems quite big. Being of by 16 hours on average is basically being of by more than two working days on average. It looks like adding the predictors, especially how long ago an item was purchased seem to help predictions. - Poisson regressions seem to be working slightly better. This could be because hours to repair is basically count data, which is what poisson regressions are designed for.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rank_results</span>(wf_rs_fits, <span class="at">rank_metric =</span><span class="st">"rmse"</span>, <span class="at">select_best =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 22%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 3%">
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">wflow_id</th>
+<th style="text-align: left;">.config</th>
+<th style="text-align: left;">.metric</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">std_err</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: left;">preprocessor</th>
+<th style="text-align: left;">model</th>
+<th style="text-align: right;">rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">m3_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: right;">16.7645840</td>
+<td style="text-align: right;">0.1636187</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m3_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: right;">0.2389841</td>
+<td style="text-align: right;">0.0146713</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">m3_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: right;">16.9061934</td>
+<td style="text-align: right;">0.2182276</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m3_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: right;">0.2226727</td>
+<td style="text-align: right;">0.0129704</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">m2_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: right;">17.1517882</td>
+<td style="text-align: right;">0.1950304</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m2_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: right;">0.2023034</td>
+<td style="text-align: right;">0.0197845</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">m2_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: right;">17.1774336</td>
+<td style="text-align: right;">0.2199095</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m2_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: right;">0.1981286</td>
+<td style="text-align: right;">0.0173554</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">m1_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: right;">17.7696005</td>
+<td style="text-align: right;">0.1353523</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m1_PR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: right;">0.1434471</td>
+<td style="text-align: right;">0.0174740</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">poisson_reg</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">m1_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: right;">17.8173458</td>
+<td style="text-align: right;">0.1802478</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m1_LR</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: right;">0.1369425</td>
+<td style="text-align: right;">0.0137135</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recipe</td>
+<td style="text-align: left;">linear_reg</td>
+<td style="text-align: right;">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="fitting-the-chosen-model" class="level3" data-number="5.6.4">
+<h3 data-number="5.6.4" class="anchored" data-anchor-id="fitting-the-chosen-model"><span class="header-section-number">5.6.4</span> Fitting the chosen model</h3>
+<p>We choose the best combination via its workflow id <code>wflow_id</code>, fit it to the whole training data this time, and use it to predict the time to repair on the 20% test sample we have not used yet.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>chosen_wf <span class="ot">&lt;-</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  set1 <span class="sc">|&gt;</span> </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_workflow</span>(<span class="st">"m3_PR"</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>chosen_wf_fit <span class="ot">&lt;-</span> </span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  chosen_wf <span class="sc">|&gt;</span> </span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> repair_other)</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>chosen_wf_pred <span class="ot">&lt;-</span> </span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  chosen_wf_fit <span class="sc">|&gt;</span> </span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(<span class="at">new_data =</span> repair_test) <span class="sc">|&gt;</span> </span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(repair_test)</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(chosen_wf_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 18%">
+<col style="width: 5%">
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 12%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">.pred</th>
+<th style="text-align: right;">months_since_purchase</th>
+<th style="text-align: right;">month</th>
+<th style="text-align: right;">has_ext_warranty</th>
+<th style="text-align: left;">item_type</th>
+<th style="text-align: left;">employee_id</th>
+<th style="text-align: right;">purchase_price</th>
+<th style="text-align: right;">time_to_repair_hrs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">5.996136</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">mobile_mp</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: right;">471</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8.320281</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">laptop_budget</td>
+<td style="text-align: left;">9</td>
+<td style="text-align: right;">568</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5.110682</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">laptop_budget</td>
+<td style="text-align: left;">23</td>
+<td style="text-align: right;">520</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">25.053715</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">mobile_hp</td>
+<td style="text-align: left;">56</td>
+<td style="text-align: right;">990</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">11.809965</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">laptop_gaming</td>
+<td style="text-align: left;">44</td>
+<td style="text-align: right;">1254</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">28.152449</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">laptop_premium</td>
+<td style="text-align: left;">37</td>
+<td style="text-align: right;">1698</td>
+<td style="text-align: right;">15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Finally, we can see what the RMSE is on the held-out test data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rmse</span>(chosen_wf_pred, <span class="at">truth =</span> time_to_repair_hrs, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">15.78436</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(chosen_wf_pred, <span class="at">truth =</span> time_to_repair_hrs, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">10.22567</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>chosen_wf_pred <span class="sc">|&gt;</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> .pred, <span class="at">x =</span> time_to_repair_hrs, <span class="at">color =</span> item_type)) <span class="sc">+</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">range</span>(chosen_wf_pred<span class="sc">$</span>time_to_repair_hrs)) <span class="sc">+</span> </span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">range</span>(chosen_wf_pred<span class="sc">$</span>time_to_repair_hrs)) <span class="sc">+</span> </span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">slope =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"cornflowerblue"</span>) <span class="sc">+</span> </span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">shape =</span> <span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">nrow=</span><span class="dv">3</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>))  <span class="sc">+</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"predicted time_to_repair_hrs"</span>, <span class="at">color =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-fitchecking" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fitchecking-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="predictions_files/figure-html/fig-fitchecking-1.png" class="img-fluid figure-img" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fitchecking-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.5: Comparing actual outcomes to predicted outcomes (1)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>RMSE, MAE, and the plot all show us that this is a bad model. RMSE of 16 hours and MAE of 10 hours is probably too much (we will later do a cost analysis). The graph also tells us that we a doing a bad job at getting the really long jobs correct (A perfect prediction model would have all points lined up on the blue line). And we also see that our dummy variables does not capture the variance in the data well.</p>
+</section>
+<section id="a-better-model-with-a-problem" class="level3" data-number="5.6.5">
+<h3 data-number="5.6.5" class="anchored" data-anchor-id="a-better-model-with-a-problem"><span class="header-section-number">5.6.5</span> A better model with a problem</h3>
+<p>Let us try another model, which as its main new input is employee_id. We have the suspicion that time_to_repair might also depend a lot on how able the employee is. We also show a bunch of other steps like taking the square root of the price, just to show you that things like this are also possible.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>repair_dta2 <span class="ot">&lt;-</span> repair_dta <span class="sc">|&gt;</span> </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>(month, <span class="at">name =</span> <span class="st">"Busy"</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>splits2  <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(repair_dta2, <span class="at">prop =</span> <span class="fl">0.8</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>repair_test2  <span class="ot">&lt;-</span> <span class="fu">testing</span>(splits2)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>repair_other2 <span class="ot">&lt;-</span> <span class="fu">training</span>(splits2)</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>folds2 <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(repair_other2, <span class="at">v =</span> <span class="dv">5</span>)</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>rec2 <span class="ot">&lt;-</span> </span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="co"># define the outcome and denote all other variables as predictors</span></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>    time_to_repair_hrs <span class="sc">~</span> months_since_purchase <span class="sc">+</span> purchase_price <span class="sc">+</span> item_type <span class="sc">+</span> Busy <span class="sc">+</span> employee_id,  </span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> repair_other2</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(months_since_purchase, Busy)  <span class="sc">|&gt;</span> </span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(item_type, employee_id) <span class="sc">|&gt;</span> </span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_sqrt</span>(purchase_price)</span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>wf2 <span class="ot">&lt;-</span> </span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rec2) <span class="sc">|&gt;</span> </span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(pois_model)</span>
+<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>wf2_fit <span class="ot">&lt;-</span> </span>
+<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>  wf2 <span class="sc">|&gt;</span> </span>
+<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> repair_other2)</span>
+<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a>wf2_pred <span class="ot">&lt;-</span> </span>
+<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a>  wf2_fit <span class="sc">|&gt;</span> </span>
+<span id="cb48-31"><a href="#cb48-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(<span class="at">new_data =</span> repair_test2) <span class="sc">|&gt;</span> </span>
+<span id="cb48-32"><a href="#cb48-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(repair_test2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rmse</span>(wf2_pred, <span class="at">truth =</span> time_to_repair_hrs, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">7.137474</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(wf2_pred, <span class="at">truth =</span> time_to_repair_hrs, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">4.210186</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>wf2_pred <span class="sc">|&gt;</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> .pred, <span class="at">x =</span> time_to_repair_hrs, <span class="at">color =</span> item_type)) <span class="sc">+</span> </span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">range</span>(chosen_wf_pred<span class="sc">$</span>time_to_repair_hrs)) <span class="sc">+</span> </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">range</span>(chosen_wf_pred<span class="sc">$</span>time_to_repair_hrs)) <span class="sc">+</span> </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">slope =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"cornflowerblue"</span>) <span class="sc">+</span> </span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">shape =</span> <span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">nrow=</span><span class="dv">3</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>)) <span class="sc">+</span> </span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"predicted time_to_repair_hrs"</span>, <span class="at">color =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-fitchecking2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fitchecking2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="predictions_files/figure-html/fig-fitchecking2-1.png" class="img-fluid figure-img" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fitchecking2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.6: Comparing actual outcomes to predicted outcomes (2)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>That is a drastically better model. We still don’t get the large times fully right, maybe we need a model that accounts for a bigger tails than a poisson regression allows. But we are down to a MAE of 4 hours. And the plot looks much much cleaner.</p>
+</section>
+<section id="making-a-decision" class="level3" data-number="5.6.6">
+<h3 data-number="5.6.6" class="anchored" data-anchor-id="making-a-decision"><span class="header-section-number">5.6.6</span> Making a decision</h3>
+<p>This is a problem for us. Why? Because it is mainly employee id that gave us this increase in predictive power. We cannot use employee effects to predict and estimate the staffing costs! We do not know the new employees that we will hire to staff the repair counters. Maybe we could collect new data to analyse what it is about the employees that drive time efficiency. But we would still then need to either assume we can hire employees with the right traits or predict what traits new employers would come with. This seems too involved and brittle for our staffing cost problem. We build this problem specifically this way to illustrate the issue that sometimes, you can figure out who to make better predictions, but you cannot use that information for various reasons. Often there is variation that you just cannot predict, even if you knew how. And we still need to make a decision on whether to use one of the models to inform our staffing costs. And if so, how to proceed.</p>
+<p>Based on our model we could use estimates of the typical type of cadence of different types of items, busyness, etc. to predict the average amount of repair time in a store. From this we could deduce how many FTEs we need. We also know, however, that we have a fairly big error rate (ca. 10 hours) for each. These errors do not simply add up though. In fact, if our tendency to underestimate or overestimate time is random, they might cancel out to a large extent (we already saw though, we have a tendency to underestimate the big time killers). To examine the aggregate error, we can run a prediction simulation to see what the error for the sum of expected time_to_repair is.</p>
+<p>We will fit a final model without employee effects:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>rec3 <span class="ot">&lt;-</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="co"># define the outcome and denote all other variables as predictors</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    time_to_repair_hrs <span class="sc">~</span> months_since_purchase <span class="sc">+</span> purchase_price <span class="sc">+</span> item_type <span class="sc">+</span> Busy,  </span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> repair_other2</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(months_since_purchase, Busy)  <span class="sc">|&gt;</span> </span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(item_type) <span class="sc">|&gt;</span> </span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_sqrt</span>(purchase_price)</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>wf3 <span class="ot">&lt;-</span> </span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rec3) <span class="sc">|&gt;</span> </span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(pois_model)</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>wf3_fit <span class="ot">&lt;-</span> </span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>  wf3 <span class="sc">|&gt;</span> </span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> repair_other2)</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>wf3_pred <span class="ot">&lt;-</span> </span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>  wf3_fit <span class="sc">|&gt;</span> </span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(<span class="at">new_data =</span> repair_test2) <span class="sc">|&gt;</span> </span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(repair_test2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And now, we are going to create a few <em>bootstrap</em> samples from the 20% test sample predictions. Each time we will sum up the predictions and the true time_to_repair values. We then look at the variation the man absolute error across all bootstrapped samples.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">47</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>gen_sum_descs <span class="ot">&lt;-</span> <span class="cf">function</span>(split) {</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  split <span class="sc">|&gt;</span> </span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">sum_pred_hrs =</span> <span class="fu">sum</span>(.pred),</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">sum_true_hrs =</span> <span class="fu">sum</span>(time_to_repair_hrs),</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">abs_diff_sum_hrs =</span> <span class="fu">abs</span>(sum_pred_hrs <span class="sc">-</span> sum_true_hrs),</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">pct_abs_diff =</span> <span class="fu">round</span>(abs_diff_sum_hrs <span class="sc">/</span> sum_true_hrs, <span class="dv">3</span>)</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>boot_res <span class="ot">&lt;-</span> </span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(wf3_pred) <span class="sc">|&gt;</span> </span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bootstraps</span>(<span class="at">times =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">res =</span> <span class="fu">map</span>(splits, gen_sum_descs)) <span class="sc">|&gt;</span> </span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>splits) <span class="sc">|&gt;</span> </span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boot_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      id             sum_pred_hrs    sum_true_hrs   abs_diff_sum_hrs   
+ Length:1000        Min.   :10857   Min.   : 9562   Min.   :   0.4015  
+ Class :character   1st Qu.:11370   1st Qu.:10841   1st Qu.: 190.4397  
+ Mode  :character   Median :11552   Median :11184   Median : 441.2819  
+                    Mean   :11557   Mean   :11180   Mean   : 480.5079  
+                    3rd Qu.:11729   3rd Qu.:11528   3rd Qu.: 706.5152  
+                    Max.   :12347   Max.   :12870   Max.   :1580.1642  
+  pct_abs_diff  
+ Min.   :0.000  
+ 1st Qu.:0.017  
+ Median :0.039  
+ Mean   :0.044  
+ 3rd Qu.:0.065  
+ Max.   :0.165  </code></pre>
+</div>
+</div>
+<p>In absolute, terms, we are actually not far off and often too high.</p>
+<p>Visualizing the results, we get <a href="#fig-sumerr" class="quarto-xref">Figure&nbsp;<span>5.7</span></a>:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-sumerr" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sumerr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="predictions_files/figure-html/fig-sumerr-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sumerr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.7: Absolute error of predicting the sum of time to repair as percent of true sum of time to repair
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We see that there is quite a bit of variation, but if we want to be conservative (we seem to mostly overestimate the sum of hours needed anyway), then something like an 8% markup might make sense. What you actually do here will mostly depend on your other decision criteria (remember, <a href="decision-making.html" class="quarto-xref"><span>Chapter 2</span></a>). But you have all the information now to make an informed decision.</p>
+</section>
+</section>
+<section id="advanced-stuff-shrinkage" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="advanced-stuff-shrinkage"><span class="header-section-number">5.7</span> Advanced stuff: shrinkage</h2>
+<p>It is quite easy to show that if a) you care about squared losses, b) you want to fit linear models, and c) you want the <em>best unbiased</em> linear predictor, then math tells you to use a classic linear regression model. But that does not mean it will be the best predictor, just the best predictor that is unbiased. You might get even better predictions by allowing a bit of bias because a slightly biased predictor might have a much lower sensitivity to noise (lower variance). This is precisely the motivation for penalized regression models such as lasso regressions.</p>
+<p><strong>To be completed.</strong></p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-ginsberg2009detecting" class="csl-entry" role="listitem">
+Ginsberg, Jeremy, Matthew H Mohebbi, Rajan S Patel, Lynnette Brammer, Mark S Smolinski, and Larry Brilliant. 2009. <span>“Detecting Influenza Epidemics Using Search Engine Query Data.”</span> <em>Nature</em> 457 (7232): 1012–14. <a href="https://www.nature.com/articles/nature07634">https://www.nature.com/articles/nature07634</a>.
+</div>
+<div id="ref-lazer2014parable" class="csl-entry" role="listitem">
+Lazer, David, Ryan Kennedy, Gary King, and Alessandro Vespignani. 2014. <span>“The Parable of Google Flu: Traps in Big Data Analysis.”</span> <em>Science</em> 343 (6176): 1203–5. <a href="https://www.science.org/doi/full/10.1126/science.1248506">https://www.science.org/doi/full/10.1126/science.1248506</a>.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>In our lecture, we have not focused much on unsupervised learning methods, such as clustering, mainly due to time constraints. We will see over time whether we can add them at some point.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>The interpretation of the actual number of the MSE, the 1448.7, depends on the scale of your outcome variable <span class="math inline">\(y\)</span>. Whether a particular number is high or low thus always depends on context.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./diagnostics.html" class="pagination-link" aria-label="Diagnostic Analytics">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnostic Analytics</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./reporting.html" class="pagination-link" aria-label="Reporting Design">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Reporting Design</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
