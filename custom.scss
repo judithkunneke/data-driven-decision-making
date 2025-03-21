@@ -1,0 +1,68 @@
+/*-- scss:uses --*/
+
+@use 'sass:color';
+
+/*-- scss:defaults --*/
+
+/*
+@import url('https://fonts.googleapis.com/css?family=JetBrains+Mono');
+
+@import 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Oswald:wght@300;400;500&display=swap';
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+$font-family-sans-serif: "Lato", sans-serif;
+$font-family-sans-serif: "Poppins", sans-serif;
+$font-family-sans-serif: "Source Sans 3", sans-serif;
+
+*/
+
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
+$font-family-monospace: 'Source Code Pro';
+$font-family-sans-serif: "Roboto", sans-serif;
+
+/* Company color theme */
+$color1: #003366;
+$color2: #CCCCCC;
+$color3: #0E9CEF;
+$color4: #CC9933;
+$color5: #001111;
+
+$toc-color: $color1;
+
+
+/*$link-color: color.adjust($color1, $blackness: 20%);*/
+$link-color: $color1;
+
+$headings-color: color.adjust($color5, $whiteness: 20%);
+
+$callout-color-note: color.adjust($color1, $whiteness: 20%);
+
+
+/*-- scss:rules --*/
+
+p {
+  text-align: justify !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-transform: none;
+  letter-spacing: normal;
+  border-bottom: none;
+  font-weight: 500;
+  text-align: left !important;
+}
+
+nav {
+  text-align: left !important;
+}
+
+.header-section-number {
+    color: color.adjust($color5, $whiteness: 20%);
+}

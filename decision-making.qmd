@@ -14,16 +14,16 @@ source("hhs-ggtheme.R")
 
 knit_print.gt <- function(x, ...) {
   stringr::str_c(
-    "<div style='all:initial';>\n", 
-    gt::as_raw_html(x), 
+    "<div style='all:initial';>\n",
+    gt::as_raw_html(x),
     "\n</div>"
-  ) |> 
+  ) |>
     knitr::asis_output()
-    
+
 }
 registerS3method(
-  "knit_print", 'gt_tbl', knit_print.gt, 
-  envir = asNamespace("gt") 
+  "knit_print", 'gt_tbl', knit_print.gt,
+  envir = asNamespace("gt")
   # important to overwrite {gt}s knit_print
 )
 
@@ -38,11 +38,11 @@ registerS3method(
 
 ## Rational decision-making
 
-As stated in @sec-introduction, this course is about how to make sensible decisions with the help of data. Before we dive into doing data analysis though, we first want to discuss what "sensible decision-making" means. So we first need to talk about the building blocks of a decision problem. Some of the terms we'll discuss (e.g., minimax) may sound strange or complicated. But, all we are doing is laying down some simple arguments for how to best structure an analysis to draw conclusions from it.
+As stated in @sec-introduction, this course is about how to make sensible decisions with the help of data. Before we dive into doing data analysis though, we first want to discuss what "sensible decision-making" means. So we first need to talk about the building blocks of a decision problem. Some of the terms we’ll discuss (e.g., minimax) may sound strange or complicated. But, all we are doing is presenting some basic reasoning for how to best structure an analysis and draw conclusions from it.
 
 The first thing to note is that most important business decisions involve some degree of uncertainty. Think of uncertainty simply as *missing knowledge about past, present, or future events (Walkter et al. 2003).* The knowledge that you would need in order to choose the best action under various potential actions.
 
-We care about uncertainty because whenever there is uncertainty, there is a chance to make a mistake or make a sub-optimal choice. Also, in lots of real-world cases, some mistakes are more costly than others. This implies that a useful decision rule suggests not only an expected best action out of a set of actions. It also accounts for the costs of different kinds of mistakes when deciding on a particular action.
+We care about uncertainty because whenever there is uncertainty, there is a chance to make a mistake or make a sub-optimal choice. Also, in lots of real-world cases, some mistakes are more costly than others. For example, when prescribing a drug to a patient, the mistake "the drug didn't work" is potentially less "costly" to the patient than the mistake "the drug had some serious side-effects on the patient". This implies that a useful decision rule suggests not only an expected best action out of a set of actions. It also accounts for the costs of different kinds of potential mistakes.  
 
 Not always will we be able to quantify costs or probabilities of making mistakes though. That's fine, we will still need to come up with simple decision rules that will help us make sensible decisions. Think of rules like: "If this course of action still performs best in the worst case, then let's do it" (called maximin rule).
 
@@ -50,13 +50,13 @@ Ideally, though, we'd like to reduce the chance of making (costly) mistakes and 
 
 ## A decision-making process framework
 
-The first part of the course is all about learning a framework. Why spend so much time on it? Because Data analysis is not easy. It is easy to get stuck and stare at the data, not seeing the forest for the trees. Over the years of teaching and practicing data analysis in various forms, we have seen it happen frequently and to students at all levels--from bachelor to PhD students. It happens to us too still. Especially for beginners, the best remedy against getting stuck is to have a helpful framework of procedures. So let us try to give you one.
+The first part of the course is about learning a framework. Why spend a full chapter on it? Because Data analysis is not easy. It is easy to get stuck and stare at the data, not seeing the forest for the trees. Over the years of teaching and practicing data analysis in various forms, we have seen it happen frequently and to students at all levels--from bachelor to PhD students. It happens to us too still. Especially for beginners, the best remedy against getting stuck is to have a helpful framework of procedures. So, let us try to give you one.
 
 If you google "business decision-making" then you will at some point stumble upon a process picture like this one:
 
-![A stylized rational decision process](pics/P1/dmdiag.svg){#fig-dmdiag height="300px"}
+![A stylized rational decision process](pics/P1/dmdiag.svg){#fig-dmdiag1 height="300px"}
 
-@fig-dmdiag shows our version of what a rational decision-making process looks like (Broadly based on @schoenfeld2010). While very stylized, this is not a bad schema for trying to find answers to important business problems. Let us explain each step in turn.
+@fig-dmdiag1 (based on @schoenfeld2010) shows our version of what a rational decision-making process looks like. While very stylized, this is not a bad schema for trying to find answers to important business problems. Let us explain each step in turn.
 
 ### Detect the problem
 
@@ -64,8 +64,9 @@ Sometimes the problem is clear. Designing a new sales forecasting model or optim
 
 ### Identify the problem
 
-To us, this is the most important step. Essentially, here we clarify what we want to know. It is key to slow down and properly identify what the problem really is. Do not go in blind and start digging. Even with exploratory analyses, first step back and take a moment to clarify what the problem is that the analysis tries to tackle. This is not always clear from the beginning. For example, is a sales decline because of demotivated salespeople or are salespeople demotivated because the product is outdated? It can easily happen that we mistake symptoms for causes. One of the most important messages of this chapter is: Guide your analysis by specifying the goal clearly and asking a succession of questions that are aimed at bringing you closer to the goal.
+To us, this is the most important step. Essentially, here we clarify what we want to know. Define what the current situation looks like. Then define the ideal outcome we are looking for. Describe the difference and then try to figure out what is causing the difference. The root-cause analysis will give you a path towards the problem. 
 
+It is key to slow down and properly identify what the problem really is. Do not go in blind and start digging. Even with exploratory analyses, first step back and take a moment to go through the steps described in the previous paragraph. This is not always easy. For example, is a sales decline because of demotivated salespeople or are salespeople demotivated because the product is outdated? It can easily happen that we mistake symptoms for causes. One of the most important messages of this chapter is: Guide your analysis by specifying the goal clearly and asking a succession of questions that are aimed at bringing you closer to the goal.
 
 Often, we need to gather and analyze a significant amount of data to better understand what is happening. A lot of our data analysis will happen at this stage. Consider the following simple example.
 
@@ -77,14 +78,14 @@ You are working for a technology vendor that not only sells the technology but a
 #| echo: false
 
 resp_order <- c("Certainly Not", "Probably Not", "Maybe", "Likely", "Highly Likely")
-d <- read_excel("analysisgen/book-examples.xlsx", sheet = "ch2-1") |> 
+d <- read_excel("analysisgen/book-examples.xlsx", sheet = "ch2-1") |>
   mutate(`Survey Answer` = factor(`Survey Answer`, levels = resp_order, ordered = TRUE))
 
-d |> 
-  select(`Survey Answer`, `Service Tier`, Responses) |> 
-  summarize(Responses = sum(Responses), .by = `Survey Answer`) |> 
-  mutate(Percent = round(Responses / sum(Responses) * 100, 1)) |> 
-  gt(rowname_col = "Survey Answer") |> 
+d |>
+  select(`Survey Answer`, `Service Tier`, Responses) |>
+  summarize(Responses = sum(Responses), .by = `Survey Answer`) |>
+  mutate(Percent = round(Responses / sum(Responses) * 100, 1)) |>
+  gt(rowname_col = "Survey Answer") |>
   # tab_style(
   #    locations = list(cells_stubhead(), cells_column_labels(columns = everything())),
   #    style     = list(
@@ -97,47 +98,47 @@ d |>
   grand_summary_rows(
     columns = c(Responses, Percent),
     fns = list(TOTAL = ~sum(., na.rm = TRUE))
-  ) |> 
+  ) |>
   opt_stylize(style = 1, color = "gray")
 ```
 
-@tbl-survey1 seems to suggest that 11% of respondents indicate that they are "probably not" or "certainly not" renewing the service package. You know from experience that such survey answers often overstate the true dropout rate. You also know that the numbers are in line with survey responses from previous years. So you could go to the CFO and tell her that nothing seems to have changed.
+@tbl-survey1 seems to suggest that 12% of respondents indicate that they are "probably not" or "certainly not" renewing the service package. You know from experience that such survey answers often overstate the true dropout rate. You also know that the numbers are in line with survey responses from previous years. So you could go to the CFO and tell her that nothing seems to have changed.
 
-However, you don't. Your company has different service tiers and you decide to split the survey responses by service tier. You are presented with the following data:
+You don't. Your company has different service tiers and you decide to split the survey responses by service tier. You are presented with the following data:
 
 ```{r}
 #| label: tbl-survey2
 #| tbl-cap: "Survey results stratified by service tier"
 #| echo: false
-d |> 
-  select(`Survey Answer`, `Service Tier`, Responses) |> 
-  pivot_wider(names_from = `Service Tier`, values_from = Responses) |> 
-  gt(rowname_col = "Survey Answer") |> 
+d |>
+  select(`Survey Answer`, `Service Tier`, Responses) |>
+  pivot_wider(names_from = `Service Tier`, values_from = Responses) |>
+  gt(rowname_col = "Survey Answer") |>
   grand_summary_rows(
     columns = c(`Service Tier 1`, `Service Tier 2`, `Service Tier 3`, `Service Tier 4`, `Service Tier 5`),
     fns = list(TOTAL = ~sum(., na.rm = TRUE))
-  ) |> 
+  ) |>
   opt_stylize(style = 1, color = "gray")
 ```
 
-You can see that most service tiers are fine. However, @tbl-survey2 shows that the high tiers (the most expensive ones) have significantly higher frequencies of lower responses. *You found a meaningful pattern.* This is a very simple example of what data analytics is all about: finding meaningful patterns in raw data. (see @sec-introduction). We will have much more to say about this in @sec-datapat.
+You can see that most service tiers are fine. However, @tbl-survey2 shows that the high tiers (tier 4 and 5, the most expensive ones) have significantly higher frequencies of lower responses. *You found a meaningful pattern.* This is a very simple example of what data analytics is all about: finding meaningful patterns in raw data. (see @sec-introduction). We will have much more to say about this in @sec-datapat.
 
-You create a quick visualization that shows the pattern more clearly. This pattern was not obvious in the overall survey answers in @tbl-survey1, because the high-tier service packages are fewer than the low-tier packages. The pattern is also much more obvious in percentage terms (@fig-survey):
+You create a quick visualization that shows the pattern more clearly. This pattern was not obvious in the overall survey answers in @tbl-survey1. The reason is that there are fewer responses for high-tier service package than for low-tier packages. The pattern is this much more obvious in percentage terms (@fig-survey):
 
 ```{r}
 #| label: fig-survey
 #| fig-cap: "Percentage of respondents stratified by service tier"
 #| echo: false
-d |> 
-  select(`Survey Answer`, `Service Tier`, Responses) |> 
-  mutate(`Percent Answered` = round(Responses / sum(Responses) * 100), 
-         .by = `Service Tier`) |> 
+d |>
+  select(`Survey Answer`, `Service Tier`, Responses) |>
+  mutate(`Percent Answered` = round(Responses / sum(Responses) * 100),
+         .by = `Service Tier`) |>
   ggplot(aes(y = `Survey Answer`, x = `Service Tier`, fill = `Percent Answered`))  +
   geom_tile(color = "black") +
   geom_text(aes(label = glue("{`Percent Answered`}%")), color = "white", size = 4) +
-  coord_fixed() + 
-  scale_fill_viridis_c(limits = c(0, 100)) + 
-  labs(x = NULL) + 
+  coord_fixed() +
+  scale_fill_viridis_c(limits = c(0, 100)) +
+  labs(x = NULL) +
   theme(
     legend.position = "none",
     panel.border = element_blank(),
@@ -146,7 +147,7 @@ d |>
   )
 ```
 
-Stop for a moment and consider how you would have possibly spotted this pattern if you had not known it existed (an unknown unknown). How could you have found it? You had some expert knowledge (there are multiple service tiers) and you probably had a mental model of your customers. Both lead you to entertain the idea that mismatches might differ across tiers. We point this out to highlight the importance of models. Only if you combine the right inquisitive mindset with a modicum of background/expert knowledge, will you be able to properly identify problems.
+Stop for a moment and consider how you would have possibly spotted this pattern if you had not known it existed (an unknown unknown). How could you have found it? We used some expert knowledge (there are multiple service tiers) and we had some type of *mental model* of the customers. That model suggested that customer siatifaction might vary across tiers (maybe higher tier customers are more demanding). Both led us to entertain the idea that mismatches might differ across tiers. We point this out to highlight the importance of models. Only if you combine the right inquisitive mindset with a bit of background/expert knowledge, will you be able to properly identify problems.
 
 You probably do not want to stop right there either. Before going to your boss to tell her the bad news, you might want to better understand what is going on. In other words, we have a guiding question for the next analysis: What might be the reason for the low survey score for the expensive tiers? And how do we figure that out? Again, we now need to come up with a mental model of how the customer response came to pass and start testing for indications that are either consistent or inconsistent with this model--rinse and repeat.
 
@@ -178,7 +179,9 @@ Typical questions you might want to ask yourself at this stage:
 
 ### Develop alternatives
 
-After you have set the relevant criteria for a good solution it is time to come up with potential alternatives that might lead to a solution to the problem at hand. Creativity is often key here. This step often involves building and entertaining different mental models of how the problem might have arisen. Sometimes this is done in brainstorm sessions with the whole team. Imagine you are part of a team and some team members disagree on what the best course of action is. In some cases (e.g., enough resources) it might be the best way forward to run both courses in parallel until one alternative clearly dominates.
+After you have set the relevant criteria for a good solution it is time to come up with potential alternatives that might lead to a solution to the problem at hand. 
+
+Creativity is often key here. The insights gathered from a careful root-cause analysis in Step 2: "identify the problem" are usually very useful at this stage too. Developing alternative solutions often involves building and entertaining different mental models of how the problem might have arisen. Sometimes this is done in brainstorm sessions with the whole team. Imagine you are part of a team and some team members disagree on what the best course of action is. In some cases (e.g., enough resources) it might be the best way forward to run both courses in parallel until one alternative clearly dominates.
 
 This is another step where the large chunk of the data analytics resides. It is required for at least two reasons:
 
@@ -206,9 +209,9 @@ d2 <- data.frame(
   loc_richness = sample(c(3,4,4,5,8,8,9, 9,10,14), n_sms, replace = TRUE),
   loc_culture = sample(c(1,2,3,4), n_sms, replace = TRUE)
 )
-dummy_culture <- d2 |> 
-  select(MarketID, loc_culture) |> 
-  table() |> 
+dummy_culture <- d2 |>
+  select(MarketID, loc_culture) |>
+  table() |>
   as.data.frame.matrix()
 colnames(dummy_culture) <- paste0("Cul", 1:4)
 d2 <- cbind(d2, dummy_culture)
@@ -218,8 +221,8 @@ avg_revenues <- 54e5
 avg_clients <- 475e3
 avg_basket_size <- avg_revenues/avg_clients
 
-d2 <- 
-  d2 |> 
+d2 <-
+  d2 |>
   mutate(
     size = case_when(
     loc_density == 1 ~ sample(sm_categories, n_sms, replace = TRUE, prob = c(0.1, 0.2, 0.2, 0.25, 0.25)),
@@ -232,17 +235,17 @@ d2 <-
   clients = round(
     (0.5) * avg_clients/mean(loc_density) * loc_density +
       (0.5) * avg_clients/mean(size) * size +
-    (-1) * Cul1 * rnorm(n_sms, mean = 5e4, sd = 1e4) + 
-    Cul2 * rnorm(n_sms, mean = 5e4, sd = 1e4)  + 
-    (-1) * Cul3 * rnorm(n_sms, mean = 6e4, sd = 3e3) + 
-    Cul4 * rnorm(n_sms, mean = 3e4, sd = 1e5) 
+    (-1) * Cul1 * rnorm(n_sms, mean = 5e4, sd = 1e4) +
+    Cul2 * rnorm(n_sms, mean = 5e4, sd = 1e4)  +
+    (-1) * Cul3 * rnorm(n_sms, mean = 6e4, sd = 3e3) +
+    Cul4 * rnorm(n_sms, mean = 3e4, sd = 1e5)
   ),
   basket_size = round(
-    avg_basket_size / mean(loc_richness) * loc_richness + 
-    (1) * Cul1 * rbeta(n_sms, 2, 5) + 
-    (-2) * Cul2 * rbeta(n_sms, 2, 5)   + 
-    (-1) * rbeta(n_sms, 2, 5)  + 
-    (3) *  Cul4 * rbeta(n_sms, 2, 5)  
+    avg_basket_size / mean(loc_richness) * loc_richness +
+    (1) * Cul1 * rbeta(n_sms, 2, 5) +
+    (-2) * Cul2 * rbeta(n_sms, 2, 5)   +
+    (-1) * rbeta(n_sms, 2, 5)  +
+    (3) *  Cul4 * rbeta(n_sms, 2, 5)
   ),
   # basket_size
   revenues = round(clients * basket_size),
@@ -253,7 +256,7 @@ d2 <-
     loc_density == 6 ~ "D",
     loc_density == 8 ~ "E",
     loc_density == 12 ~ "F",
-  ), 
+  ),
   rich_cat = case_when(
     loc_richness == 3 ~ "A",
     loc_richness %in% c(4,5) ~ "B",
@@ -264,7 +267,7 @@ d2 <-
 )
 
 head(d2, 10) |>
-  select(MarketID, size, clients, revenues) |> 
+  select(MarketID, size, clients, revenues) |>
   gt(rowname_col = "MarketID") |>
   cols_label(
     size = "Market size (m2)",
@@ -276,27 +279,27 @@ head(d2, 10) |>
   tab_stubhead("Market ID")
 ```
 
-You know the location available is a larger one, ca. 1,200 square meters. That is one reason why your firm is considering setting up shop in that town. You could start by looking at what supermarkets of that size in your portfolio produce in revenues. You start by computing some average statistics:
+You know that the location available is ca. 1,200 square meters. That is one reason why your firm is considering setting up shop in that town. You could start by looking at what supermarkets of that size in your portfolio produce in revenues. You start by computing some average statistics:
 
 ```{r}
 #| label: tbl-supmart2
 #| tbl-cap: "Supermarket example 2: Revenue(€) descriptives by market size group"
 #| echo: false
-descr(d2$revenues, by = d2$size) |> 
-  as.data.frame() |> 
-  select(`Size Group` = Group, N, `Avg.` = Mean, SD, `5% Perc.` = `5%`, `95% Perc.` = `95%`) |> 
-  gt(rowname_col = "Size Group") |> 
-  tab_stubhead("Size Group (sqm)")|> 
-  fmt_number(columns = where(is.numeric), decimals = 0, suffixing = c("T€", NA, NA, NA)) |> 
-  opt_stylize(style = 1, color = "gray") 
-  
+descr(d2$revenues, by = d2$size) |>
+  as.data.frame() |>
+  select(`Size Group` = Group, N, `Avg.` = Mean, SD, `5% Perc.` = `5%`, `95% Perc.` = `95%`) |>
+  gt(rowname_col = "Size Group") |>
+  tab_stubhead("Size Group (sqm)")|>
+  fmt_number(columns = where(is.numeric), decimals = 0, suffixing = c("T€", NA, NA, NA)) |>
+  opt_stylize(style = 1, color = "gray")
+
 ```
 
 The averages (means) are roughly as expected, with bigger stores having more revenues. But not always, The 29 1,200 square meter supermarkets have on average lower revenues than the 1,000 square meter markets.
 
-Does it make sense to just report the mean of 5,674T€ as an estimate of the new market's revenues? Probably not. The other columns in @tbl-supmart2 give us an indication of the variation among the 1,200 square meter markets. The standard deviation (SD) measures how dispersed the data is relative to the mean. The SD of 3,098T€, circa 3 million euros, is large for a "standard" distance from the mean. We also get a feeling of significant variation when examining the 5% and 95% percentiles. They tell us that 5% of the 29 markets have revenues lower than 1,8 million euros and 5% have revenues higher than 10,5 million euros. (Again, disclaimer, these are simulated data.) The important point is that the descriptives summarizing within size group variation tell us that "report the mean of similarly sized supermarkets" is not a good potential solution to the problem "provide a sales forecast for a store at the new location". It is very likely to violate any accuracy-related decision criterion.
+Does it make sense to just report the mean of 5,674T€ as an estimate of the new market's revenues? Probably not. The other columns in @tbl-supmart2 give us an indication of the variation among the 1,200 square meter markets. The standard deviation (SD) measures how dispersed the data is relative to the mean. The SD of 3,098T€, circa 3 million euros, is large for a "standard" distance from the mean. We also get a feeling of significant variation when examining the 5% and 95% percentiles. They tell us that 5% of the 29 markets have revenues lower than 1,8 million euros and 5% have revenues higher than 10,5 million euros.^[Again, disclaimer, these are simulated data]. The important point is that the three descriptives SD, 5%, and 95% percentiles that there is a lot of variation around the mean. That tells us that "report the mean of similarly sized supermarkets" is not a good potential solution to the problem "provide a sales forecast for a store at the new location". It is very likely to violate any accuracy-related decision criterion.
 
-So we learned from the data that we cannot just look at similarly sized supermarkets we already have. What alternatives do we have? We now need to start entertaining some mental models. You often do this automatically, but we want to highlight the importance of doing this a bit more explicitly. The question we want to start with when building a model is: What would a process look like that generates the outcome we are interested in? (In this case: supermarket revenues). Such a model is also sometimes called a "data-generating process". We can start simple. We could split revenues into two determinants: the number of customers served times the average basket size of their shopping (volume times price). And then we think about possible determinants of these two determinants. What would determine the average basket size? The average basket size is probably determined by the average wealth of the customers (do they buy more expensive products) and the amount they buy. The latter can be driven by many things. Are the average customers busy people who eat a lot outside and only buy small quantities? Or do they buy for a whole family, etc.? What would determine how many customers buy in the market? The market size probably plays a role (you are more likely to find what you are looking for) and simply how close the market is to the customer. Then, stores in densly populated areas should have more customers. On the hand though, it is probably more difficult and more expensive to find a large location for a store in densely populated areas. So there should also be a negative relation between market size and population density in an area. We often like to draw DAGs (directed acyclical graphs) to visualize the data-generating process we have in mind. @fig-dag-sm shows one describing our reasoning thus far.
+We learned from the data that we cannot just look at similarly sized supermarkets we already have. What alternatives do we have? We now need to start entertaining some mental models. You often do this automatically, but we want to highlight the importance of doing this a bit more explicitly. The question we want to start with when building a model is: What would a process look like that generates the outcome we are interested in? (In this case: supermarket revenues). Such a model is also sometimes called a "data-generating process". We can start simple. We could split revenues into two determinants: the number of customers served times the average basket size of their shopping (volume times price). And then we think about possible determinants of these two determinants. What would determine the average basket size? The average basket size is probably determined by the average wealth of the customers (do they buy more expensive products) and the amount they buy. The latter can be driven by many things. Are the average customers busy people who eat a lot outside and only buy small quantities? Or do they buy for a whole family, etc.? What would determine how many customers buy in the market? The market size probably plays a role (you are more likely to find what you are looking for) and simply how close the market is to the customer. Then, stores in densely populated areas should have more customers. On the other hand though, it is probably more difficult and more expensive to find a large location for a store in densely populated areas. Thus, there should also be a negative relation between market size and population density in an area. We often like to draw DAGs (directed acyclical graphs) to visualize the data-generating process we have in mind. @fig-dag-sm shows one describing our reasoning thus far.
 
 ```{r}
 #| label: fig-dag-sm
@@ -308,9 +311,9 @@ dag_sm <- dagify(
   b ~ d + e,
   f ~ c,
   outcome = "y",
-  labels = c(y = "Market revenues", 
-             x = "Treatment", 
-             a = "No. clients", 
+  labels = c(y = "Market revenues",
+             x = "Treatment",
+             a = "No. clients",
              b = "Avg. basket size",
              c = "Loc. density",
              d = "Loc. wealth",
@@ -330,15 +333,15 @@ ggdag_status(dag_sm, use_labels = "label", text = FALSE) +
 
 Often visualizing your mental model like this helps you inspect it. Is our reasoning sound? Have we forgotten anything important? Probably. For example, we do not have competition from other supermarkets in the area in our model. But it is often better to start simple and add more detail later.
 
-We want to test how descriptive this model is for the true data-generating process. Because if it can explain a decent part of the variation that we have observed in the variation in revenues of supermarkets of the same size (@tbl-supmart2), then it could give us very helpful guidance on how to make better predictions.
+We want to test how descriptive this model is for the true data-generating process. Because if it can explain a decent part of the variation that we have observed in revenues of supermarkets of the same size (@tbl-supmart2), then it could give us very helpful guidance on how to make better predictions.
 
-How we can test the model's descriptive power? We are going into much more detail on how to do this when discussing predictive analytics in @sec-pred. But often you can already get a decent idea with some simple descriptives already. You have old data on the population density from previous planning projects readily at hand. It is sorted into categories though. Still, we can expand our descriptive statistics and see how much variation within size and density groups exists:
+How can we test the model's descriptive power? We are going into much more detail on how to do this when discussing predictive analytics in @sec-pred. But often you can already get a decent idea with some simple descriptives. You have old data on the population density from previous planning projects readily at hand. It is sorted into categories though. Still, we can expand our descriptive statistics and see how much variation within size and density groups exists:
 
 ```{r}
 #| label: tbl-supmart3
 #| tbl-cap: "Supermarket example 3: Revenue(€) descriptives by market size group and location density category"
 #| echo: false
-d2 |> 
+d2 |>
   summarize(
     N = n(),
     `Avg.` = mean(revenues),
@@ -346,18 +349,18 @@ d2 |>
     `5% Perc.` = quantile(revenues, 0.05),
     `95% Perc.` = quantile(revenues, 0.95),
     .by = c(size, den_cat)
-  ) |> 
-  arrange(size, den_cat) |> 
-  filter(size == 1200) |> 
-  mutate(st = glue("{size} x {den_cat}")) |> 
-  select(-size, -den_cat) |> 
-  gt(rowname_col = "st") |> 
-  tab_stubhead("Groups: Size (sqm) x Density")|> 
-  fmt_number(columns = where(is.numeric), decimals = 0, suffixing = c("T€", NA, NA, NA)) |> 
+  ) |>
+  arrange(size, den_cat) |>
+  filter(size == 1200) |>
+  mutate(st = glue("{size} x {den_cat}")) |>
+  select(-size, -den_cat) |>
+  gt(rowname_col = "st") |>
+  tab_stubhead("Groups: Size (sqm) x Density")|>
+  fmt_number(columns = where(is.numeric), decimals = 0, suffixing = c("T€", NA, NA, NA)) |>
   opt_stylize(style = 1, color = "gray")
 ```
 
-Compared to the within-group variation shown in @tbl-supmart2, @tbl-supmart3 shows that we already do a better job by considering density in the area as a determinant of revenues. The variation across density categories shows itself in the variation across averages and is sizable (compare it to the mean of 5,674T€ for the 1,200 sqm supermarkets). We only focus on the relevant size category (1,200 square meters) here for ease of exposition, but you should of course always check whether your model holds for all areas of the data. The standard deviation and percentiles still indicate a sizable amount of variation though. If we can further improve it would be worthwhile to do so.
+Compared to the within-group variation shown in @tbl-supmart2, @tbl-supmart3 shows that we already do a better job by considering density in the area as a determinant of revenues. The variation across density categories shows itself in the variation across averages and is sizable (compare it to the mean of 5,674T€ for the 1,200 sqm supermarkets). We only focus on the relevant size category (1,200 square meters) here for ease of exposition, but you should of course always check whether your model holds for all areas of the data. The standard deviation and percentiles still indicate a sizable amount of variation though. If we can further improve on explained variation, it would be worthwhile to do so.
 
 Let's assume you also have categories of how wealthy people are on average in the area around the supermarket. These are also from previous planning projects (never throw away data). We can also expand our descriptives via this potential determinant:
 
@@ -365,7 +368,7 @@ Let's assume you also have categories of how wealthy people are on average in th
 #| label: tbl-supmart4
 #| tbl-cap: "Supermarket example 4: Revenue(€) descriptives by market size group and location wealth category"
 #| echo: false
-d2 |> 
+d2 |>
   summarize(
     N = n(),
     `Avg.` = mean(revenues),
@@ -373,14 +376,14 @@ d2 |>
     `5% Perc.` = quantile(revenues, 0.05),
     `95% Perc.` = quantile(revenues, 0.95),
     .by = c(size, rich_cat)
-  ) |> 
-  arrange(size, rich_cat) |> 
-  filter(size == 1200) |> 
-  mutate(st = glue("{size} x {rich_cat}")) |> 
-  select(-size, -rich_cat) |> 
-  gt(rowname_col = "st") |> 
-  tab_stubhead("Groups: Size (sqm) x Wealth")|> 
-  fmt_number(columns = where(is.numeric), decimals = 0, suffixing = c("T€", NA, NA, NA)) |> 
+  ) |>
+  arrange(size, rich_cat) |>
+  filter(size == 1200) |>
+  mutate(st = glue("{size} x {rich_cat}")) |>
+  select(-size, -rich_cat) |>
+  gt(rowname_col = "st") |>
+  tab_stubhead("Groups: Size (sqm) x Wealth")|>
+  fmt_number(columns = where(is.numeric), decimals = 0, suffixing = c("T€", NA, NA, NA)) |>
   opt_stylize(style = 1, color = "gray")
 ```
 
@@ -390,7 +393,7 @@ d2 |>
 #| label: tbl-supmart5
 #| tbl-cap: "Supermarket example 5: Revenue(€) descriptives by market size group, location density category, and location wealth category"
 #| echo: false
-d2 |> 
+d2 |>
   summarize(
     N = n(),
     `Avg.` = mean(revenues),
@@ -398,19 +401,21 @@ d2 |>
     `5% Perc.` = quantile(revenues, 0.05),
     `95% Perc.` = quantile(revenues, 0.95),
     .by = c(size, den_cat, rich_cat)
-  ) |> 
-  arrange(size, den_cat, rich_cat) |> 
-  filter(size == 1200) |> 
-  mutate(st = glue("{size} x {den_cat} x {rich_cat}")) |> 
-  select(-size, -den_cat, -rich_cat) |> 
-  gt(rowname_col = "st") |> 
-  tab_stubhead("Groups: Size (sqm) x Density x Wealth")|> 
-  fmt_number(columns = where(is.numeric), decimals = 0, suffixing = c("T€", NA, NA, NA)) |> 
-  opt_stylize(style = 1, color = "gray")  |> 
+  ) |>
+  arrange(size, den_cat, rich_cat) |>
+  filter(size == 1200) |>
+  mutate(st = glue("{size} x {den_cat} x {rich_cat}")) |>
+  select(-size, -den_cat, -rich_cat) |>
+  gt(rowname_col = "st") |>
+  tab_stubhead("Groups: Size (sqm) x Density x Wealth")|>
+  fmt_number(columns = where(is.numeric), decimals = 0, suffixing = c("T€", NA, NA, NA)) |>
+  opt_stylize(style = 1, color = "gray")  |>
   sub_missing(missing_text = "---")
 ```
 
-Now, @tbl-supmart5 starts to become unwieldy. And while it looks like the combo density x wealth of the area is important, we are getting into tricky territory. A lot of the cells in @tbl-supmart5 contain only one supermarket. You can also see that because of N = 1, most do not have a standard deviation associated with them. You can think of the cells with N = 1 as "anecdotes". Maybe, if we would have more supermarkets in the "1200 x E x E" category, the average would be very different, and show significant variation. We do not know, we only have one observation. In technical terms, the average is an imprecise estimate of the expected value if the number of observations is small. With N = 1, we basically only have an anecdote. The same goes double for standard deviation and the percentiles. Measures of variation are even more dependent on a decent amount of observations. All this means, that while it seems that density x wealth explains a large amount of variation, we really do not know that for certain because we do not have enough supermarket observation to say much with certainty here. More importantly, if we would use those cell averages to make predictions, we need to be very cautious. These averages are only "anecdotal"---we cannot have confidence that the pattern in averages represents a generalizable pattern. Thus, using cell averages would probably not yield reliable forecasts. We quickly ran into the issue that for precise extrapolations we need enough data to draw conclusions from.
+Now, @tbl-supmart5 starts to become unwieldy. But it looks like the combo density x wealth of the area is important. As we will see in later chapters, regression models and other machine learning approaches essentially do what we did here--only more sophisticated. We are computing conditional means here. Means conditional on a given density and wealth level. More sophisticated models also estimate means (or other statistics) conditional on many possible conditions. The important takeaway here is to realize that we often want to know conditional means in forecasting problems. And as you can see, we can do this to some rudimentary degree just using tables.
+
+We have a problem though: sample size. While It looks like the combo density x wealth of the area is important, we are getting into tricky territory. A lot of the cells in @tbl-supmart5 contain only one supermarket. You can also see that because of N = 1, most do not have a standard deviation associated with them. You can think of the cells with N = 1 as "anecdotes". Maybe, if we would have more supermarkets in the "1200 x E x E" category, the average would be very different, and show significant variation. We do not know, we only have one observation. In technical terms, the average is an imprecise estimate of the expected value if the number of observations is small. With N = 1, we basically only have an anecdote. This is even more important for standard deviation and the percentiles. Measures of variation are even more dependent on a decent amount of observations. All this means, that while it seems that density x wealth explains a large amount of variation, we really do not know that for certain. We do not have enough supermarket observation to say much with certainty here. If we would use those cell averages to make predictions, we need to be very cautious. These averages are only "anecdotal"---we cannot have confidence that the pattern in averages represents a generalizable pattern. Thus, using cell averages would probably not yield reliable forecasts. We quickly ran into the issue that for precise extrapolations we need enough data to draw conclusions from.
 
 Still, we need to make a decision whether to further explore building a supermarket at the offered location or not. And we need to decide how to proceed. We have not yet actually proposed any alternatives---any forecasts. From our previous analysis we can draw tentative conclusions: density and wealth in the area most likely matter for supermarket revenues. What next? Remember, guide your analysis by specifying the goal clearly and asking a succession of questions that are always aimed at bringing you closer to the goal. The following questions remain:
 
@@ -420,7 +425,7 @@ Still, we need to make a decision whether to further explore building a supermar
 
 We have not yet tested whether lifestyle matters. We do not have data on that, so if we think this is important, then we need to think about whether collecting the data is worthwhile given our decision criteria *and* given how precise we would be able to forecast without. When discussing predictive analytics in session three we will learn more tools that help us in making such decisions.
 
-Density and wealth seem to explain a decent amount of variation in revenues; we probably want to use the two determinants in our forecast model. But we are quite uncertain whether we can use the averages from our existing categories. One problem might be that we only have categorical data. We have five density categories and four wealth categories. If we could collect data on things like average income and amount of households in a certain radius around our markets, we could potentially get more precise estimates[^decision-making-1]
+Density and wealth seem to explain a decent amount of variation in revenues; we probably want to use the two determinants in our forecast model. But we are quite uncertain whether we can use the averages from our existing categories. One problem might be that we only have categorical data. We have five density categories and four wealth categories. If we could collect data on things like average income and amount of households in a certain radius around our markets, we could potentially get more precise estimates.[^decision-making-1]
 
 [^decision-making-1]: And if the relation between the variables is roughly linear. More on that in @sec-pred.
 
@@ -429,10 +434,10 @@ So carrying on with density and wealth, we have a few alternatives. In all we ha
 -   We ignore lifestyle, categorize the new location into the density and wealth categories and use the average as our forecast, ignoring what we discussed before. For this we need to collect data:
     -   Infer this from public statistics if available
     -   Pay someone to survey the location and thus generate the data we need.
--   We investigate the importance of lifestyle before making any further decisions
+-   We investigate the importance of lifestyle before making any further decisions.
 -   We ignore lifestyle but explore how we can get better data, ideally continuous data, on density and wealth, then use a linear model (e.g., a regression model) if the relation between the variables turns out to be as roughly linear as @tbl-supmart3 and @tbl-supmart4 suggest. Then, we again need to do the same for the new location and apply the fitted model to the new data.
 
-Which of these three paths is the best to follow next (or in parallel) depends on our decision criteria, which is why it is important to specify them first. For example, imagine that we are asked to deliver a rough estimate by tomorrow for a quick upper-management brainstorming session. Then you do not have time to collect more information. It might be optimal to extrapolate from the cell averages in @tbl-supmart5 (But highlight how imprecise this forecast is). However, if this is part of the full feasibility analysis of building that supermarket and you have days to finish this (as well as a bigger budget), then spending some time on investigating lifestyle importance is probably worthwhile. The intermediate alternative could be fine too. We ignore lifestyle because density and wealth already explain a lot of variation in revenues across supermarkets. But we invest a bit of time and effort measuring these two predictors with more precision and test whether different forecast (resting on more, but defendable assumptions) helps us get more precise estimates and more readily interpretable confidence intervals. This could be the best combination of expected accuracy, uncertainty, and effort if we have a moderate (time) budget.
+Which of these three paths is the best to follow next (or in parallel) depends on our decision criteria, which is why it is important to specify them first. For example, imagine that we are asked to deliver a rough estimate by tomorrow for a quick upper-management brainstorming session. Then you do not have time to collect more information. It might be optimal to extrapolate from the cell averages in @tbl-supmart5 to deliver a forecast (including reporting how imprecise this forecast). However, if this is part of the full feasibility analysis of building that supermarket and you have days to finish this (as well as a bigger budget), then spending some time on investigating lifestyle importance is probably worthwhile. The intermediate alternative could be fine too. We ignore lifestyle because density and wealth already explain a lot of variation in revenues across supermarkets. But we invest a bit of time and effort measuring these two predictors with more precision and test whether different forecast (resting on more, but defendable assumptions) helps us get more precise estimates and more readily interpretable confidence intervals. This could be the best combination of expected accuracy, uncertainty, and effort if we have a moderate (time) budget.
 
 In summary, what we have done is to start with a simple model, and worked our way forward. How much variation does our simple model capture? Do the *expected* benefits of extending the model outweigh the costs of doing so? Iterating on these two questions will ultimately lead us to one or more forecasts.
 
@@ -456,7 +461,7 @@ If one were able to quantify the costs of making a mistake, then one can compose
 #| label: fig-lossfuns
 #| fig-cap: "Different types of loss functions"
 #| echo: false
-#| 
+#|
 root_squared_log_error <- function(true, pred) {
   square_log_error = ((log(true + 1) - log(pred + 1)))^2
   rsle_loss = sqrt(square_log_error)
@@ -472,9 +477,9 @@ absolute_error <- function(true, pred) {
 ggplot(data.frame(x = 1:100), aes(x)) +
   geom_function(fun = ~root_squared_log_error(50, .), colour = "red") +
   geom_function(fun = ~absolute_error(50, .), colour = "blue") +
-  annotate("text", x = 25, y = 2, color = "red", 
+  annotate("text", x = 25, y = 2, color = "red",
            label = "sqrt((log(true + 1) - log(pred + 1))^2)", parse = TRUE) +
-  annotate("text", x = 70, y = 0.7, color = "blue", 
+  annotate("text", x = 70, y = 0.7, color = "blue",
            label = "over(abs(true - pred),true)", parse = TRUE) +
   labs(
     y = "Loss",
@@ -510,7 +515,7 @@ In the examples above we have already touched upon some types of analysis that a
 
 ### Descriptive Analysis --- Identifying data patterns
 
-Descriptive analytics examines what happened in the past. Our decision steps "detect the problem" and "identify the problem" are very much reliant on well-executed descriptive analysis. Because descriptive analysis is where we examine data about past events to spot patterns and trends in the data. A good descriptive analysis takes the raw data and aggregates and summarizes it in just the right way to isolate the pattern that reveals the insight we are looking for. In practice, it is the core of most businesses' analytics, simply because it can already answer many important questions like: "How much did orders grow from a region?" or "How has client satisfaction developed, and what might be reasons for the trend?"
+Descriptive analytics examines what happened in the past. Our decision steps "detect the problem" and "identify the problem" are very much reliant on well-executed descriptive analysis. That is because descriptive analysis is where we examine data about past events to spot patterns and trends in the data. A good descriptive analysis takes the raw data and aggregates and summarizes it in just the right way to isolate the pattern that reveals the insight we are looking for. In practice, it is the core of most businesses' analytics, simply because it can already answer many important questions like: "How much did orders grow from a region?" or "How has client satisfaction developed, and what might be reasons for the trend?"
 
 Descriptive analysis is powerful. It is often *exploratory*, requiring creativity and business expertise. But even for more complex decisions, it is a helpful first step for decision-makers and managers. You can go a long way in analyzing data from past events. Still, once we spotted relevant patterns in the past, it's up to us to ask how or why those patterns arise and develop adequate responses to it. For example, in the supermarket example, we started building a mental model to *explain* the variation in revenues across supermarkets of different sizes. While we did so using simple descriptive statistics we also did some basic *diagnostic analysis*. We will cover descriptive analysis in @sec-datapat.
 
@@ -562,4 +567,4 @@ There are basically three big sources of uncertainty to deal with: Model uncerta
 
 1.  **Model uncertainty.** Sometimes also called system uncertainty. We like the term model uncertainty because we want to include all the implicit mental models you might have---but never fully spelled out---about how the world works. All our (mental) models are simplifications and sometimes we simplified away from something important. In the channel tunnel example, the planners did not consider important competitive dynamics for travel routes to and from England. Another way of saying the same thing is: There is always the possibility you are operating under wrong assumptions. Unknown unknowns reside here.
 2.  **Data quality.** Say you have decided on one model like the one in @fig-dag-sm (or maybe a few alternative models) of the revenue generation process for supermarkets. You have a model of what drives the number of customers per month, the average basket size they buy. Now you need to start forecasting how these drivers will develop in the future. These forecasts will be based on assumptions and extrapolations from data. The quality of the data will be an important (but far from the only) driver of how much you can trust these forecasts. Common statistical methods provide means of quantifying aspects of this uncertainty and we will talk about this in more detail in @sec-pred. However, data quality has numerous facets, some hard to get a good handle on. Is data selected, censored, or missing in a non-random way, is current data even representative of the expected future dynamics, etc.?
-3.  **Residual uncertainty.** This is the biggest and often most difficult to grasp source of uncertainty. It arises from all the aspects of the problem we have either not included in the model or could not measure. Take a coin flip. It is in principle a well-understood physical mechanism. If we could measure all aspect of it, wind, angle, and force of the flip, etc., then we should be able to forecast quite accurately whether a coin lands heads or tails every time. However, even in this simple case, it is impossible to measure all aspects of the problem without any measurement error. Thus even here there will always be residual uncertainty about how the coin lands. In real-world problems, it is also common that certain dynamics are either too complicated (some competitive dynamics) to be forecast with any degree of precision, or simply unknown to us. Thus in many situations, it is impossible to quantify the residual uncertainty and we have to think about how to make sensible decisions in these cases too.
+3.  **Residual uncertainty.** This is the biggest and often most difficult to grasp source of uncertainty. It arises from all the aspects of the problem we have either not included in the model or could not measure. Take a coin flip. It is in principle a well-understood physical mechanism. If we could measure all aspect of it, wind, angle, and force of the flip, etc., then we should be able to forecast quite accurately whether a coin lands heads or tails every time. However, even in this simple case, it is impossible to measure all aspects of the problem without any measurement error. Thus even here there will always be residual uncertainty about how the coin lands. In real-world problems, it is also common that certain dynamics are either too complicated (some competitive dynamics) to be forecast with any degree of precision, or simply unknown to us. Thus in many situations, it is impossible to quantify the residual uncertainty and we have to think about how to make sensible decisions in these cases too.^[There are interesting philosophical problems here that we don't have the time to cover. For example, if we didn't include competitive dynamics into our model, is this model uncertainty or residual uncertainty? It depends. We think of a model to cover the relevant dynamics. For example, if competitive dynamics affect the relation between our main variables of interest, then we have a wrong model. If competitive dynamics only affect the main variable of interest but not others, then we might not necessarily have a bad model for the problem of interest.]

@@ -15,20 +15,20 @@ box::use(
   )
 source("hhs-ggtheme.R")
 
-knit_print.gt <- function(x, ...) {
-  stringr::str_c(
-    "<div style='all:initial';>\n", 
-    gt::as_raw_html(x), 
-    "\n</div>"
-  ) |> 
-    knitr::asis_output()
-    
-}
-registerS3method(
-  "knit_print", 'gt_tbl', knit_print.gt, 
-  envir = asNamespace("gt") 
-  # important to overwrite {gt}s knit_print
-)
+# knit_print.gt <- function(x, ...) {
+#   stringr::str_c(
+#     "<div style='all:initial';>\n", 
+#     gt::as_raw_html(x), 
+#     "\n</div>"
+#   ) |> 
+#     knitr::asis_output()
+#     
+# }
+# registerS3method(
+#   "knit_print", 'gt_tbl', knit_print.gt, 
+#   envir = asNamespace("gt") 
+#   # important to overwrite {gt}s knit_print
+# )
 
 ```
 
@@ -39,23 +39,23 @@ registerS3method(
 
 ## Scope of this chapter
 
-In the language of machine learning, this chapter is about supervised learning.^[In our lecture, we have not focused much on unsupervised learning methods, such as clustering, mainly due to time constraints. We will see over time whether we can add them at some point.] Supervised learning is what we mostly think of as prediction models, where we have inputs (called independent variables, features, or predictors) and have one or more outputs (often called, responses, dependent variables, or outcome variables). Depending on the type of the outcome variable, two types of prediction (or learning) problems are distinguished: regression problems (predicting a continuous response) and classification problems (predicting a binary or categorical response). Both categories feature an ever expanding set of models and algorithms. We do not have the time to cover this expanding model space in any way that do it justice. That would be a course (or two) by itself. This is not our goal. What we aim at in this chapter is to provide you with the foundation of predictive analysis and sufficient practice with generalized linear regression models. Even today, these are incredibly useful model families for most applications. You will be surprised how far the standard approaches already carry you. 
+In the language of machine learning, this chapter is about supervised learning.^[In our lecture, we have not focused much on unsupervised learning methods, such as clustering, mainly due to time constraints. We will see over time whether we can add them at some point.] Supervised learning is what we mostly think of as prediction models, where we have inputs (called independent variables, features, or predictors) and have one or more outputs (often called, responses, dependent variables, or outcome variables). Depending on the type of the outcome variable, two types of prediction (or learning) problems are distinguished: regression problems (predicting a continuous response) and classification problems (predicting a binary or categorical response). Both categories feature an ever expanding set of models and algorithms. We do not have the time to cover this expanding model space in any way that does it justice. That would be a course (or two) by itself. Instead, our goal for this chapter is to provide you with the foundation of predictive analysis and some practice with generalized linear regression models. Even given the plethora of more advanced algorithms, these are incredibly useful model families for most applications. You will be surprised how far the standard approaches will carry you. 
 
-After introducing the basic concepts about the sources of prediction errors, we will discuss how to assess whether a particular model seems to be doing a decent job at predicting. The trend towards machine learning and AI has brought with it a rich body of knowledge on how to assess the prediction quality of even complex models and we will draw on more recent advances in this field. Once you know how to assess model performance, we will showcase a full prediction pipeline and close with an extension: a brief treatment of the powerful toolkit enabled by penalized regression models.
+After introducing the basic concepts about the sources of prediction errors, we will discuss how to assess whether a particular model predicts well. The trend towards machine learning and AI has brought with it a rich body of knowledge on how to assess the prediction quality of even complex models and we will draw on more recent advances in this field. Once you know how to assess model performance, we will showcase a full prediction pipeline and close with an extension: a brief treatment of the powerful toolkit enabled by penalized regression models.
 
 ## What is predictive analysis?
 
-Predictive analysis is asking questions, such as "What will happen?", "What is the most likely response, given these conditions?", etc. It encompasses a huge and growing field of prediction and forecasting models---from classic time-series models to the most complex large language models powering ChatGPT. In this chapter we will focus mostly on the core concepts behind data-driven predictions. We will explain what exactly the issues are that make extrapolating from a historical sample to (yet) unseen data so difficult. These issues are quite broad and but provide a good foundation not only for designing useful predictive analyses, but also for a basic understanding of modern AI models behind driverless cars, generative Art, or generative text models, such as ChatGPT. At their heart, all of these applications are prediction models. 
+Predictive analysis is asking questions, such as "What will happen?", "What is the most likely response, given a set of conditions?", etc. It encompasses a huge and growing field of prediction and forecasting models---from classic time-series models to the most complex large language models. In this chapter we will focus mostly on the core concepts behind data-driven predictions. We will explain what exactly the issues are that make extrapolating from a historical sample to (yet) unseen data so difficult. These issues are quite broad and but provide a good foundation not only for designing useful predictive analyses, but also for a basic understanding of modern AI models behind driverless cars, generative Art, or generative text models, such as ChatGPT. At their heart, all of these applications are prediction models. 
 
-It is important to understand that predictive analysis has a different goal than diagnostic analysis and thus also has different criteria to assess model quality. In @sec-diag, we stressed that diagnostic model quality can ultimately only be assessed via theory (your mental model). That is because diagnostic analysis asks "Why?" questions. Predictive analysis is less strict. You can easily have a prediction model that provides quite accurate forecasts without being even close to modelling causal relations. For example, the developers of the by now infamous early "Google Flu Trends" model, which predicted flu outbreaks using Google search terms, reported weeding out highly predictive but unrelated search terms related to basketball [@ginsberg2009detecting]. Basketball terms were highly predictive of flu outbreaks, because the main US basketball season is March, which is also the main flu season. So basketball search terms were just predictive of season, not causally related to flu outbreaks itself. [See also the @lazer2014parable discussion of GFT as a parable for traps utilizing big data.]. Still, while weeding out search terms to basketball helps making the model more robust, a predictive model does not need to isolate causal relations. Consider a somewhat trivial example similar to the one used in @sec-diag (@fig-dag-rs). Imagine we are interest in predicting next week's retail store sales and have as inputs the number of staff and number of purchases in the previous week. If more store staff is associated with more purchases, including both number of purchases and number of staff is fine for prediction purposes. But you would not include number of purchases into your model if you would run a diagnostic analysis of the importance of the number of staff for sales. That is because part of the expected effect of staff on sales is via more purchases. Again, the point here is that models for predictive purposes and diagnostic purposes have different but equally important goals. Thus they need to be designed based on different criteria. 
+It is important to understand that predictive analysis has a different goal than diagnostic analysis. Thus it also has different criteria to assess model quality. In @sec-diag, we stressed that diagnostic model quality can ultimately only be assessed via theory (your mental model). That is because diagnostic analysis asks "Why?" questions. Predictive analysis is less strict. You can easily have a prediction model that provides quite accurate forecasts without being even close to modelling causal relations. For example, the developers of the by now infamous early "Google Flu Trends" model, which predicted flu outbreaks using Google search terms, reported weeding out highly predictive but unrelated search terms related to basketball [@ginsberg2009detecting]. Basketball terms were highly predictive of flu outbreaks, because the main US basketball season is March, which is also the main flu season. So basketball search terms were just predicting season, not causally related to flu outbreaks itself. [See also the @lazer2014parable discussion of GFT as a parable for traps utilizing big data.]. Still, while weeding out search terms to basketball helps making the model more robust, a predictive model does not need to isolate causal relations. Consider a somewhat trivial example similar to the one used in @sec-diag (@fig-dag-rs). Imagine we are interest in predicting next week's retail store sales and have as inputs the number of staff and number of purchases in the previous week. If more store staff is associated with more purchases, including both number of purchases and number of staff is fine for prediction purposes. But you would not include number of purchases into your model if you would run a diagnostic analysis of the importance of the number of staff for sales. That is because part of the expected effect of staff on sales is via more purchases. Again, the point here is that models for predictive purposes and diagnostic purposes have different but equally important goals. Thus, they need to be designed based on different criteria. 
 
 ## The source of prediction errors
 
 ### Overfitting vs underfitting
 
-In the previous section we argued that models for diagnostic analysis and predictive analysis are not constructed using the same criteria. In @sec-diag, we argued that just adding variables is a bad idea, as sometimes adding a variable to your model can bias the coefficient that you are after. But since in predictive analysis we do not care so much about understanding how the determinants of our outcome of interest $y$ relate, only that they are determinants of the outcome. So, is it okay to just throw all of the hypothesized determinants into a model? The answer is no. Here is why. 
+In the previous section we argued that models for diagnostic analysis and predictive analysis are not constructed using the same criteria. In @sec-diag, we argued that just adding variables is a bad idea, as adding a variable to your model can sometimes bias the coefficient that you are after. But in predictive analysis we do not care so much about the coefficients--about understanding how the determinants of our outcome of interest $y$ relate--only that they are determinants of the outcome. So, is it okay to just throw all of the hypothesized determinants into a model? The answer is still no. Here is why. 
 
-By adding more variables, a model becomes more complex, and will often explain variation in the sample that the model is fitted on better. But the reason might not be that the model actually predicts (new data) better. Instead, the more variables (parameters) a model has, the more likely it is that a newly included variable was chosen in error and accidentally fits noise. This issue is called **overfitting**. It is a very important concept, and we will try to explain it with some illustrations. 
+By adding more variables, a model becomes more complex, and will often better explain variation in the sample that the model is fitted on. But the reason might not be that the model actually predicts (new data) better. Instead, the more variables (parameters) a model has, the more likely it is that a newly included variable was chosen in error and accidentally fits noise. This issue is called **overfitting**. It is a very important concept, and we will try to explain it with some illustrations. 
 
 
 ```{r}
@@ -103,25 +103,24 @@ p2 <-
        )
 
 
-p1_gif <- animate(p1, width = 3.5, height = 3.5, units = "in", device = "ragg_png", res = 90)
-p2_gif <- animate(p2, width = 3.5, height = 3.5, units = "in", device = "ragg_png", res = 90)
+p1_gif <- animate(p1, width = 3.5, height = 3.5, 
+                  units = "in", device = "ragg_png", res = 90)
+p2_gif <- animate(p2, width = 3.5, height = 3.5, 
+                  units = "in", device = "ragg_png", res = 90)
 
-p1_mgif <- image_read(p1_gif)
-p2_mgif <- image_read(p2_gif)
-new_gif <- image_append(c(p1_mgif[1], p2_mgif[1]))
-for(i in 2:51){
-  combined <- image_append(c(p1_mgif[i], p2_mgif[i]))
+new_gif <- image_append(c(p1_gif[1], p2_gif[1]))
+for(i in 2:100){
+  combined <- image_append(c(p1_gif[i], p2_gif[i]))
   new_gif <- c(new_gif, combined)
 }
-
 new_gif
 ```
 
-For @fig-overfit, we simulated five samples of the form $y = -200 + 10 * x + u$ with the same x variables and $u$ drawn from a $N(0, (x + 30)^2)$ distribution. Each model we fit with two types of models. A classic linear one $y = a + b *x$ and a polynomial one $y = a + b *x + c * x^2$. Since we know the true relation, we know that the polynomial version has an unnecessary variable in there $x^2$. Normally we do not know that, however. We never know for sure what the real world dynamics look like that give rise to real world data. That is why we used simulations to make the following points: Notice how the (wrong) polynomial regression always has the same or better $R^2$ than the (correct) linear model. This is overfitting. Even though the polynomial version is wrong. It fits the sample it got trained on better. Why does overfitting arise? This is because the additional variable starts fitting the noise part of the sample. The x values are always the same in each sample, the only thing that changes, and that gets picked up by $x^2$ to a bigger or smaller extend is the unmeasured influences in the error term $u$. And since these change from sample to simple, $x^2$ picking up the sample $u$ is bad news for out-of-sample predictions! 
+For @fig-overfit, we simulated five samples of the form $y = -200 + 10 * x + u$ with the same x variables and $u$ drawn from a $N(0, (x + 30)^2)$ distribution. Each model we fit with two types of models. A classic linear one $y = a + b *x$ and a polynomial one $y = a + b *x + c * x^2$. Since we know the true relation, we know that the polynomial version has an unnecessary variable in there $x^2$. Usually, we do not know that, however. We never know for sure what the real world dynamics look like. That is why we used simulations here; to make the following points: Notice how the (wrong) polynomial regression always has the same or better $R^2$ than the (correct) linear model. This is overfitting. Even though the polynomial version is wrong. It fits the sample it got trained on better. Why does overfitting arise? This is because the additional variable starts fitting the noise part of the sample. The x values are always the same in each sample, the only thing that changes, and that gets picked up by $x^2$ to a bigger or smaller extend is the unmeasured influences in the error term $u$. And since these change from sample to simple, $x^2$ picking up the sample $u$ is bad news for out-of-sample predictions! 
 
-Overfitting is a serious issue (also for diagnostic models, btw). Notice how especially the fitted lines from the really curved samples with high $R^2$ are off. These will very likely be a terrible fit for the other samples? *Overfitted models will likely fit the sample they got trained on better than less overfit models, but they will predict new data worse*. And of course, since the theme is prediction, we really only care about how good a model fits new data. 
+Overfitting is a serious issue (also for diagnostic models, btw). Notice how especially the fitted lines from the really curved samples with high $R^2$ are off. These will very likely be a terrible fit for the other samples. *Overfitted models will likely fit the sample they got trained on better than less overfit models, but they will predict new data worse*. And, since the theme is prediction, we really only care about how good a model fits new data. 
 
-To illustrate the severity of the issue, we computed a common prediction error metric, the mean squared error (MSE) for each of the five samples. The MSE is simply the average of all $(y-y_{predicted})^2$. In the @tbl-mse1, you see the difference in in-sample MSE between the polynomial model and linear model. In the last column, we also report the average difference in *out-of-sample MSE* for the other samples. The logic behind these out-of-sample averages is illustrated in @fig-overfit2. For each of the five samples and each model (poly or linear), we fitted to model to a sample (say sample 2 in row 2). We then used the fitted model to make predictions for each observation in the other four samples (for row 2, samples 1, 3, 4, and 5).
+To illustrate the severity of the issue, we computed a common prediction error metric, the mean squared error (MSE) for each of the five samples. The MSE is simply the average of all aquared prediction errors: $(y-y_{predicted})^2$. In the @tbl-mse1, you see the difference in in-sample MSE between the polynomial model and linear model. In the last column, we also report the average difference in *out-of-sample MSE* for the other samples. The logic behind these out-of-sample averages is illustrated in @fig-overfit2. For each of the five samples and each model (poly or linear), we fitted to model to a sample (say sample 2 in row 2). We then used the fitted model to make predictions for each observation in the other four samples (for row 2, samples 1, 3, 4, and 5).
 
 ```{r}
 #| message: false
@@ -181,7 +180,7 @@ sf_1 + sf_2 + sf_3 + sf_4 + sf_5 +
   plot_layout(design = layout)
 ```
 
-With these predictions, we computed out-of-sample MSE for each of the four samples for each model. We then computed the difference in MSE between the polynomial and the linear model. Finally we averaged the difference in out-of-sample MSEs for all samples not used to fit the models (again, for row 2, the average of the differences for samples 1, 3, 4, and 5). 
+From those predictions, we computed the out-of-sample MSE for each of the four samples for each model. We then computed the difference in MSE between the polynomial and the linear model. Finally we averaged the difference in out-of-sample MSEs for all samples not used to fit the models (again, for row 2, the average of the differences for samples 1, 3, 4, and 5). 
 
 ```{r}
 #| label: tbl-mse1
@@ -250,18 +249,18 @@ In @sec-diag we discussed that one should not use in-sample measures of goodness
 
 ### Determinants of overfitting risk
 
-The above simulation shows that model complexity increases the chance of overfitting. This is always also relative to the amount of data. It is difficult to give concrete guidelines here, but if you have a lot of data, then you can get away with more complex models too. At the same time, complex data, with lots of complicated interactions and where a lot of the variation in the data is left unexplained (relegated to the error term) are also data where it is also easier to accidentally fit in-sample noise. We thus need a way to judge overfitting risk by a model, which is what we discuss next.
+The above simulation shows that model complexity increases the chance of overfitting. This is always also relative to the amount of data. It is difficult to give concrete guidelines here. But if you have a lot of data, then you can get away with more complex models too. At the same time, complex data, with lots of complicated interactions and where a lot of the variation in the data is left unexplained (relegated to the error term) are also data where it is also easier to accidentally fit in-sample noise. We thus need a way to judge overfitting risk by a model, which is what we discuss next.
 
 ### The bias variance trade-off
 
-A nice feature of MSE as an error metric is that it can be easily decomposed to examine the reasons for prediction errors. Imagine we have some prediction model $\hat m (x, D)$ with inputs $x$ and trained on some data $D$. Then the mean squared error of such a model is: 
+A nice feature of MSE as an error metric is that it can be easily decomposed into two components that tell us more about the reasons for prediction errors. Imagine we have some prediction model $\hat m (x, D)$ with inputs $x$ and trained on some data $D$. Then the mean squared error of such a model is: 
 
 $$MSE = \mathbb{E}\left[(y -\hat m (x, D))^2\right] = Var(y - \hat m (x, D)) + \left(\mathbb{E}\left[y - \hat m (x, D)\right]\right)^2$$
 $$MSE = \mathbb{E}\left[(y -  \hat m (x, D))^2\right]  = Var(\hat m (x, D)) + Bias(\hat m (x, D))^2$$
 
-There are two sources of errors according to this formula. One is variance, and this is the term that is affected by overfitting. Variance reflects errors arising from sensitivity to small fluctuations in the sample used to fit the modes. The second term, Bias, reflects systematic errors, such as those arising from an *underfitted* model, one that misses a systematic determinant and thus makes a systematic error. If it helps, you can think of the bias variance trade-off as an overfitting/underfitting trade-off. Sometimes it is better to have simpler models that are likely to underfit (a bit of Bias), than complex models that might be prone to large overfitting (high variance). 
+There are two sources of errors according to this formula. One is variance, and this is the term that is affected by overfitting. Variance reflects errors arising from sensitivity to small fluctuations in the sample used to fit the modes. The second term, Bias, reflects systematic errors, such as those arising from an *underfitted* model (one that misses a systematic determinant and thus makes a systematic error). If it helps, you can think of the bias variance trade-off as an overfitting/underfitting trade-off. Sometimes it is better to have simpler models that are likely to underfit or make a systematic mistake (a bit of Bias), than complex models that might be prone to large overfitting (high variance). 
 
-This trade-off is quite general, irrespective of the error metric, though it is easiest to show with MSE. And there often is no clear ex-ante guideline when to expect that a certain model will have a better trade-off than another. For that reason, we often have to evaluate different models and simply choose the one that seems to have the better bias variance trade-off in our particular setting. To do so, we need to discuss how to assess prediction performance in a principled way next.
+This trade-off is quite general, irrespective of the error metric. And there often is no clear ex-ante guideline when to expect that a certain model will have a better trade-off than another. For that reason, we often have to evaluate different models and simply choose the one that seems to have the better bias variance trade-off in our particular setting. To do so, we need to discuss how to assess prediction performance in a principled way next.
 
 ## Assessing prediction performance
 
@@ -273,20 +272,24 @@ The idea behind cross-validation is similar in spirit to what we did to generate
 
 Cross-validation is a resampling method. We take a sample of data and randomly partition it into k parts. We then fit the model on one part (consisting of k-1 parts, called the training set) and fit the model to the left-out part k. We do this for all k parts, compute MSE (or another suitable error metric) on the left-out part each time, and finally compute the average of all k error metrics. 
 
-Of course, by randomly partitioning the data into training and testing sets and then averaging across partitions, we do not really evaluate completely new data. Instead, the purpose of cross-validation is to *estimate* how accurate the model would be if it were to be thrown at truly new data. The cross-validated average out-of-sample MSE (or other error metrics) is thus only an estimate. But a very useful one. Let's illustrate this with another simulated example. We will use the tidymodels packages for our prediction exercises from now on:
+Of course, by randomly partitioning the data into training and testing sets and then averaging across partitions, we do not really evaluate completely new data. Instead, the purpose of cross-validation is to *estimate* how accurate the model would be if it were to be thrown at truly new data. The cross-validated average out-of-sample MSE (or other error metrics) is thus only an estimate. But a very useful one. Let's illustrate this with another simulated example. We will use the [tidymodels](https://www.tidymodels.org/) packages for our prediction exercises from now on:
 
 ```{r load-tm}
 #| message: false
 library(tidymodels)
 ```
+
+If you want to learn more about using tidymodels for machine learnings, the open [webook](https://www.tmwr.org/) by Max Kuhn and Julia Silge is a great start. 
+
 We will use a simulated data set used by IBM to illustate a Watson data science pipline ([source here](https://github.com/IBM/employee-attrition-aif360)).
+
 
 ```{r load-data}
 data(attrition)
 glimpse(attrition)
 ```
 
-This is a fictional dataset used to examine the question of what possible determinants of employer attrition are. Note, this is usually a diagnostic question. Instead, we turn to the purely predictive question: Can we predict who left the organization, irrespective of the reason? 
+This is a fictional dataset used to examine the question of what possible determinants of employee attrition are. Note, this is usually a diagnostic question. Instead, we turn to the purely predictive question: Can we predict who left the organization, irrespective of the reason? 
 
 The models we are about to fit, are not so much the focus right now. Here we only want to illustrate the use of cross-validation. First, we use the `vfold_cv()` function out of the tidymodels's `rsample` package to partition the sample five times. Again, we do this so that we can come up with an estimate of which model will likely do better if used to predict actual dropouts of future employees.
 
@@ -295,29 +298,32 @@ set.seed(456)
 folds <- vfold_cv(attrition, v = 5)
 print(folds)
 ```
+
 As you can see, each cut has cut the 1,470 data points into 1,176 observations for training and 294 observations for evaluating model performance. Five times 294 yields you the full sample of 1,470 data points again. 
 
-We now fit a few ad-hoc models to each fold. The tidymodels package has a nice pipeline structure that allows us to fit a list of different model types and preprocess steps. For what we are doing right now, it is a bit overkill, but we will still start introducing it already.Our outcome variable is binary (left organization: yes / no), so we start with a simple logistic regression. We start with WorkLifeBalance and MonthlyIncome as predictors for the outcome variable Attrition.
+We now fit a few ad-hoc models to each fold. The tidymodels package has a nice pipeline structure that allows us to fit a list of different model types and preprocess steps. For what we are doing right now, it is a bit overkill, but we will still start introducing it already. Our outcome variable is binary (Attrition: "left organization" yes / no), so we start with a simple logistic regression. We start with WorkLifeBalance and MonthlyIncome as predictors for the outcome variable Attrition.
 
 ```{r mini-ml-workflow}
 # define the model type and a workflow including the predictors and the outcome
 log_model <- logistic_reg(mode = "classification", engine = "glm")
+
 logistic_1 <- 
-  workflow() %>%
-  add_model(log_model) %>%
+  workflow() |> 
+  add_model(log_model) |> 
   add_formula(Attrition ~ WorkLifeBalance + MonthlyIncome)
 
 fit_rs_1 <- 
-  logistic_1 %>% 
+  logistic_1 |> 
   fit_resamples(folds)
 
 collect_metrics(fit_rs_1)
 ```
-We get outputs for two metrics: accuracy and roc_auc (ROC area under the curve). These are default error metrics to judge the performance of classification problems (We will discuss what that means in the next section). Tidymodels automatically chose to report those because we told it we are fitting a classification model. 
+
+We get outputs for three metrics: accuracy, brier_class, and roc_auc (ROC area under the curve). These are default error metrics to judge the performance of classification problems (We will discuss what that means in the next section). Tidymodels automatically chose to report those because we told it we are fitting a classification model. 
 
 The mean column shows the average of both metrics across the five 294-observation folds, we generated with cross-validation. The average accuracy is 83.8%, which means we got 84% of labels correct. That is not as great as it sounds though. Accuracy is a tricky error metric whenever you have a disbalance in labels. We do have much
 
-The std_err column shows you the standard error across the five folds. It is the an indication of the variation of both metrics across the five folds, which is going to be important when comparing different models. In fact, the distribution of our outcome variable in the full dataset is like this
+The std_err column shows you the standard error across the five folds. It is an indication of the variation of both metrics across the five folds, which is going to be important when comparing different models. In fact, the distribution of our outcome variable in the full dataset is like this
 
 ```{r}
 attrition |> 
@@ -325,16 +331,19 @@ attrition |>
             .by = Attrition)
 ```
 
-So, if we would just use no model, just predict every employer to stay in the organization, we would also get 83,8% of our predictions correct! Our first model is thus really not anything to write home about. 
+So, if we would just use "no"-model, just predict every employer to stay in the organization, we would also get 83,8% of our predictions correct! Our first model is really is not better than an obviously lazy model. 
 
 We will discuss how to interpret roc_auc in a minute. First, we also fit another model for comparison. In this one we add two more predictors: DistanceFromHome and BusinessTravel, assuming that both might affect the desirability of a job.
 
 ```{r}
 logistic_1 |> 
-  update_formula(Attrition ~ WorkLifeBalance + MonthlyIncome + DistanceFromHome + BusinessTravel) |> 
+  update_formula(
+    Attrition ~ WorkLifeBalance + MonthlyIncome + DistanceFromHome + BusinessTravel
+  ) |> 
   fit_resamples(folds) |> 
   collect_metrics()
 ```
+
 We get a very similar accuracy score and a slightly higher roc_auc. Now, does this mean the second model is better or not that different? What do these metrics tell us?
 
 ### Common error metrics
@@ -352,11 +361,13 @@ simple_pred_probs <-
   logistic_1 |> 
   fit(data = attrition) |>  
   predict(new_data = attrition, type = "prob")
+
 simple_pred_probs <- 
   attrition |> 
   select(Attrition) |> 
   bind_cols(simple_pred_probs) |> 
   mutate(Attrition = fct_relevel(Attrition, "Yes", "No"))
+
 head(simple_pred_probs)
 ```
 
@@ -368,8 +379,10 @@ We could then pick a probability threshold to assign an observation a prediction
 simple_preds <- 
   simple_pred_probs |> 
   mutate(.pred = if_else(.pred_Yes >= 0.25, "Yes", "No"))
+
 head(simple_preds)
 ```
+
 With this threshold ("Yes" if .pred_Yes >= 25%), we would get the following classification result. 
 
 ```{r}
@@ -435,15 +448,16 @@ bind_rows(roc_data1, roc_data2) |>
     x = 'False positive rate (1 - True "No" rate)',
     color = NULL
   ) +
+  coord_fixed(ratio = 1) +
   theme(
     legend.position = "bottom",
-    legend.text.align = 0,
+    legend.text = element_text(hjust = 0),
     legend.margin = margin(l = 0, unit = "in"),
     plot.margin = margin(t = 0.1, r = .12, unit = "in")
   )
 ```
 
-This is the ROC curve. To understand this graph, think about the corners of it. Say, we use as threshold .pred_Yes >= 0% (always predict "Yes"). That is the top right corner of the graph. Intuitively, when we always predict "Yes", then we will always get all truly positive observations classified correctly (true positive rate will be 1). But, we will always misclassify all true "No" cases (our true negative rate will be zero or, equivalently, our false positive rate will be 1) The other extreme case is the .pred_Yes >= 100% (always predict "No"). Again, intuitively, when we always predict "No" then we can never predict the true "Yes" cases correctly but we will always predict the true "No" cases correctly. That is the 0, 0 bottom left of the graph. 
+This is the ROC curve. To understand this graph, think about the corners of it. Say, we use as threshold .pred_Yes >= 0% (always predict "Yes"). That is the top right corner of the graph. Intuitively, when we always predict "Yes", then we will always get all truly positive observations classified correctly (true positive rate will be 1). But, we will always misclassify all true "No" cases (our true negative rate will be zero or, equivalently, our false positive rate will be 1) The other extreme case is the .pred_Yes > 100% (always predict "No"). Again, intuitively, when we always predict "No" then we can never predict the true "Yes" cases correctly but we will always predict the true "No" cases correctly. That is the 0, 0 bottom left of the graph. 
 
 A good prediction model thus has a curve that is as high as possible. Compare for example, the red line, the logistic regression model with DistanceHome and BusinessTravel as additional variables. For almost each level of false positives (i.e., for the same level of getting "Yes" wrong) it gets more "Yes" correctly classified. This is what the higher sitting curve implies and it is a good sign. 
 
@@ -513,6 +527,7 @@ dta2 <- tibble(
 dta3 <- 
   dta2 |> 
   left_join(emp_effects, join_by(employee_id))
+dta3$item_type <- as.factor(dta3$item_type)
 ames_rec <-
   recipe(NULL, x = dta3) |> 
   step_dummy(item_type) |> 
@@ -696,7 +711,7 @@ mae(chosen_wf_pred, truth = time_to_repair_hrs, estimate = .pred)
 
 
 ```{r}
-#| fig-height: 4
+#| fig-height: 5
 #| fig-width: 5
 #| label: fig-fitchecking
 #| fig-cap: "Comparing actual outcomes to predicted outcomes (1)"
@@ -706,7 +721,8 @@ chosen_wf_pred |>
   scale_x_continuous(limits = range(chosen_wf_pred$time_to_repair_hrs)) + 
   geom_abline(intercept = 0, slope = 1, color = "cornflowerblue") + 
   geom_point(alpha = 0.9, shape = 21) +
-  guides(color = guide_legend(nrow=3, byrow=TRUE)) + 
+  guides(color = guide_legend(nrow=3, byrow=TRUE))  +
+  coord_fixed(ratio = 1) + 
   labs(y = "predicted time_to_repair_hrs", color = NULL)
 ```
 
@@ -760,7 +776,7 @@ mae(wf2_pred, truth = time_to_repair_hrs, estimate = .pred)
 ```
 
 ```{r}
-#| fig-height: 4
+#| fig-height: 5
 #| fig-width: 5
 #| label: fig-fitchecking2
 #| fig-cap: "Comparing actual outcomes to predicted outcomes (2)"
@@ -771,6 +787,7 @@ wf2_pred |>
   geom_abline(intercept = 0, slope = 1, color = "cornflowerblue") + 
   geom_point(alpha = 0.9, shape = 21) +
   guides(color = guide_legend(nrow=3, byrow=TRUE)) + 
+  coord_fixed(ratio = 1) + 
   labs(y = "predicted time_to_repair_hrs", color = NULL)
 ```
 

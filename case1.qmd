@@ -209,15 +209,15 @@ We have a goal (organizing a festival, which promotes the store and generates ne
 - To maximize promotional effect, we ideally want to put the festival somewhere where we can reach
   many customers. So put it where most existing customers are or none?
   - We probably want an area with a lot of existing customers (we can target them and they are more likely
-    to come and we need to make sure the festival is not empty. Empty festivals are negative promotion! But we
-    also want potential new customers to come so that give them a favorable impression of the store.
-  - So, what is a good location? Where a lot of existing customers are + many potential new customers live in the area
-  - Any customers or where we do most revenues?
+    to come). We need to make sure the festival is not empty. Empty festivals are negative promotion! But we
+    also want potential new customers to come and give them a favorable impression of the store.
+  - So, what is a good location? Where there are lots of existing customers + many potential new customers
+  - Should we focus on high revenue customers? Or would any customer do?
 - What is a good line-up?
-  - You probably have something like 10 hours of show potential 12:00 to 22:00. 4 * 1 +  4* 1.5 is 10 hours meaning 8 artist
+  - You probably have something like 10 hours of show potential (12:00 to 22:00). 4 * 1 +  4* 1.5 is 10 hours meaning 8 artist
     slots.
-  - Do we want the most popular artists only? Probably not. We need some to draw a crowd. But those are expensive. And people own their songs already. If possible, we should also have promising, young artists or popular ones with new albums in there. Those will, if well-received, be bought and generate revenues.
-  - What is a good mix? Very much depends on budget which we do not know. Qualify, but for now, half and half is probably a good default. 
+  - Do we want the most popular artists only? Probably not. We need some popular artists in order to draw a crowd. But those are expensive. And people own their songs already. If possible, we should also have promising, young artists or popular ones with new albums in there. Those will, if well-received, be bought and generate revenues.
+  - What is a good mix? Very much depends on budget, which we do not know. Qualify, but for now, half and half is probably a good default. 
   
 ### Finding the location
 
@@ -253,7 +253,7 @@ rev_by_city <-
 head(rev_by_city)
 ```
 
-As an aside, since dplyr operates on a table connection in this specific case, it actually transforms what typed into SQL code and sends that code to the SQL database. We can see that code by calling `show_query()`:
+As an aside, since dplyr operates on a table connection in this specific case, it actually transforms the dplyr code into SQL code and sends that code to the SQL database. We can see that code by calling `show_query()`:
 
 ```{r}
 tbl(conn, "invoices") |>

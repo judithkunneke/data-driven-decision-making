@@ -6,9 +6,8 @@
 library(tidymodels)
 library(poissonreg)
 library(ggdag)
-box::use(
-  collapse[descr]
-)
+library(patchwork)
+library(collapse, include.only = c("descr"))
 source("hhs-ggtheme.R")
 ```
 
@@ -76,9 +75,9 @@ A good first step is to examine the outcome variable of interest. A histogram to
 dta |> 
   ggplot(aes(x = n_renovations)) + 
   geom_histogram(binwidth = 5) + 
-  scale_x_continuous(n.breaks = 25) +
-  scale_y_continuous(expand = expansion(c(0.01,0.05))) + 
-  theme(panel.grid.major.x = element_blank())
+  scale_x_continuous(breaks = scales::breaks_width(10)) +
+  scale_y_continuous(expand = expansion(c(0.0,0.05))) +
+  theme(panel.grid.minor.x = element_blank()) 
 ```
 
 ```{r}
@@ -94,9 +93,7 @@ We do this via the initial split function. Here we actually use a `group_` split
 We could also stratify slightly by the outcome variable. What this does is it sorts `n_renovations` in 3-4 buckets (think: low, medium, high) and ensures that training and test are roughly comparable in their proportions of low, medium, and high number of renovations. This is just a precaution to make sure our testing set is not randomly tilted in terms of the outcome. In our case, we cannot do that however, because we do not have enough data to do such stratification. So we will have to live without
 
 ```{r}
-set.seed(47)  # always set this so that you always get the same split again
-# dta <- mutate(dta, avg_nrenov = mean(n_renovations), .by = hotel_id)
-# splits  <- group_initial_split(dta, prop = 0.8, group = hotel_id, strata = avg_nrenov)
+set.seed(47)  
 splits  <- group_initial_split(dta, prop = 0.8, group = hotel_id)
 dta_test  <- testing(splits)
 dta_train <- training(splits)
@@ -122,52 +119,84 @@ Below we just tried a few combinations to illustrate how to set up different mod
 lin_model <- linear_reg(mode = "regression", engine = "lm")
 pois_model <- poisson_reg(mode = "regression", engine = "glm")
 
-m1 <- 
-  recipe(n_renovations ~ n_rooms + n_guests,  data = dta_train) |> 
-  step_normalize(all_numeric_predictors())
-
-m2 <- 
-  recipe(n_renovations ~ n_rooms + n_guests + family_guests + young_tourists + other + business_traveller,  data = dta_train) |> 
-  step_normalize(all_numeric_predictors())
-
-m3 <- 
-  recipe(n_renovations ~ n_rooms + n_guests + young_tourists + price_rank,  data = dta_train) |> 
-  step_normalize(all_numeric_predictors())
-
-m4 <- 
-  recipe(n_renovations ~ n_rooms + n_guests + price_rank,  data = dta_train) |> 
+# basic steps we want in all models:
+r0 <- recipe(dta_train) |> 
   step_normalize(all_numeric_predictors()) |> 
-  step_dummy(price_rank)
+  update_role(n_renovations, new_role = "outcome")
 
-m5 <- 
-  recipe(n_renovations ~ n_rooms + n_guests + price_rank,  data = dta_train) |> 
-  step_normalize(all_numeric_predictors()) |> 
-  step_poly(n_guests)|> 
-  step_dummy(price_rank)
+# Individual versions of inputs for each model
+# Each one updates the preceding version. 
+r1 <- r0 |> 
+  update_role(c(n_rooms, n_guests), new_role = "predictor")
 
+r2 <- r1 |> 
+  update_role(
+    c(family_guests, young_tourists, business_traveller),
+    new_role = "predictor"
+  )
+
+r3 <- r2 |> 
+  update_role(price_rank, new_role = "predictor") |> 
+  remove_role(c(family_guests, business_traveller), old_role = "predictor") 
+
+r4 <- r3 |> 
+  remove_role(c(young_tourists), old_role = "predictor") |> 
+  step_dummy(price_rank)
+  
+r5 <- r4 |> 
+  step_poly(n_guests)
 ```
 
 Once we have defined all our models, we combine them into what tidymodels calls a workflowset. With the `cross = TRUE` option, we will have every combination of model specification and model class as one model in our workflow set. 
 
 ```{r}
-set1 <- 
+model_set1 <- 
   workflow_set(
-    preproc = list(m1 = m1, m2 = m2, m3 = m3, m4 = m4, m5 = m5),
+    preproc = list(m1 = r1, m2 = r2, m3 = r3, m4 = r4, m5 = r5),
     models = list(LR = lin_model, PR = pois_model),
     cross = TRUE
   )
 ```
 
-We now take the defined workflowset and test each model in it on the cross validation folds. Afterwards we use the `rank_results` function to rank the different models according to the root mean squared error metric. We chose RMSE because we are concerned about large errors. 
+We now take the defined workflowset and test each model in it on the cross validation folds. Afterwards we use the `rank_results` function to rank the different models according to the root mean squared error metric. We chose RMSE because we are concerned about large errors. We use the verbose option in case there are model hiccups. If there is something going awry (e.g., a rank deficit matrix because we accidentally selected fully co-linear variables) then the verbose option will tell us which work flow had an issue.
 
 ```{r}
-wf_rs_fits <- 
-  set1 |> 
-  workflow_map("fit_resamples", resamples = folds)
+model_set1_fits <- model_set1 |> 
+  workflow_map("fit_resamples", 
+               # Options to `workflow_map()`: 
+               seed = 1101, verbose = TRUE,
+               # Options to `fit_resamples()`: 
+               resamples = folds, control = control_resamples(save_pred = TRUE)
+               )
+```
 
-results_ranked <- rank_results(wf_rs_fits, rank_metric ="rmse")
+```{r}
+results_ranked <- rank_results(model_set1_fits, rank_metric ="rmse")
 results_ranked
 ```
+
+We can also look at the results in figure form:
+
+```{r fig-predperform1}
+#| fig-cap: "Prediction performance of different models in terms of RMSE and R-squared"
+#| fig-height: 4
+#| fig-width: 7
+p1 <- 
+  autoplot(model_set1_fits, metric = "rmse") +
+  ggrepel::geom_text_repel(aes(label = wflow_id), 
+                           nudge_x = 1/8, nudge_y = 1/100, size = 3.5) +
+  theme(legend.position = "none")
+
+p2 <- 
+  autoplot(model_set1_fits, metric = "rsq") +
+  ggrepel::geom_text_repel(aes(label = wflow_id), 
+                           nudge_x = 1/8, nudge_y = 1/100, size = 3.5) +
+  theme(legend.position = "none")
+
+(p1 + p2)
+```
+
+
 
 Apparently, the last model with a polynomial specification and price rank dummies does best. Let us take this as our chosen model. We now take it and fit it to the whole training data. And then we will finally assess how well it does on the test sample.
 
@@ -177,19 +206,15 @@ Apparently, the last model with a polynomial specification and price rank dummie
 We choose the best combination via its workflow id `wflow_id`, fit it to the whole training data this time, and use it to predict the time to repair on the 20% test sample we have not used yet. To better explore the performance of our model it often helps to add our predictions to the test sample:
 
 ```{r}
-best_model_id <- results_ranked$wflow_id[1]
+best_wf_id <- results_ranked$wflow_id[1]
+chosen_wf <- extract_workflow(model_set1_fits, best_wf_id)
 
-chosen_wf <- 
-  set1 |> 
-  extract_workflow(best_model_id)
+# we want to refit the best model/workflow on the full training set
+chosen_wf_fit <- fit(chosen_wf, data = dta_train)
 
-chosen_wf_fit <- 
-  chosen_wf |> 
-  fit(data = dta_train)
-
+# Now we can use the fitted model to predict on the test set
 chosen_wf_pred <- 
-  chosen_wf_fit |> 
-  predict(new_data = dta_test) |> 
+  predict(chosen_wf_fit, new_data = dta_test) |> 
   bind_cols(dta_test)
 
 head(chosen_wf_pred)
@@ -220,7 +245,8 @@ chosen_wf_pred |>
   geom_abline(intercept = 0, slope = 1, color = "coral1") + 
   geom_point(alpha = 0.9, shape = 21) +
   labs(y = "predicted n_renovations") + 
-  theme(legend.position = "right")
+  theme(legend.position = "right")+ 
+  coord_fixed(ratio = 1) 
 ```
 
 ## An alternative set of model with transformed outcomes
@@ -251,9 +277,10 @@ dta2 |>
 ```{r}
 descr(dta2$prop_renov)
 ```
+
 This is still a pretty skewed distribution. The descriptives show you that we have one year where more than 50% of the rooms were renovated. So, visually it is hard to tell whether this outcome might or might not be hard to get right. Let us carry on nevertheless. It seems a bit easier to reason about it. 
 
-We do our data preparation steps again
+We do our data preparation steps again. This time we do a split that is aware of hotel_id and we also do a cross-validation that is aware of hotel_id. This means, that we effectively randomly choose hotels for the test and training set and for the different folds. This is important because we want to make sure that we do not accidentally train on the same hotel in the training and test set.
 
 ```{r}
 set.seed(47)
@@ -269,71 +296,71 @@ print(folds2)
 And we define new models
 
 ```{r}
-m6 <- 
-  recipe(prop_renov ~ room_freq,  data = dta_train2) |> 
-  step_normalize(all_numeric_predictors())
+r0 <- recipe(dta_train2) |> 
+  update_role(prop_renov, new_role = "outcome")
 
-m7 <- 
-  recipe(prop_renov ~ room_freq + family_guests + young_tourists + other + business_traveller,  data = dta_train2) |> 
-  step_normalize(all_numeric_predictors())
+r1 <- r0 |> 
+  update_role(room_freq, new_role = "predictor") 
 
-m8 <- 
-  recipe(prop_renov ~ room_freq + price_rank,  data = dta_train2) |> 
-  step_normalize(all_numeric_predictors()) |> 
+r2 <- r1 |> 
+  update_role(c(family_guests, young_tourists, business_traveller), 
+              new_role = "predictor")
+r3 <- r1 |> 
+  update_role(price_rank, new_role = "predictor") |>
   step_dummy(price_rank)
 
-m9 <- 
-  recipe(prop_renov ~ room_freq + family_guests + young_tourists + other + business_traveller + price_rank,  data = dta_train2) |> 
-  step_normalize(all_numeric_predictors()) |> 
+r4 <- r1 |> 
+  update_role(price_rank, new_role = "predictor") |>
   step_dummy(price_rank)
 
-m10 <- 
-  recipe(prop_renov ~ room_freq + price_rank,  data = dta_train2) |> 
-  step_sqrt(room_freq) |> 
-  step_dummy(price_rank)
+r5 <- r3 |> 
+  step_sqrt(room_freq)
 
-m11 <- 
-  recipe(prop_renov ~ room_freq + price_rank + family_guests + young_tourists,  data = dta_train2) |> 
-  step_sqrt(room_freq) |> 
-  step_dummy(price_rank)
+r6 <- r4 |> 
+  step_sqrt(room_freq)
 
-m12 <- 
-  recipe(prop_renov ~ room_freq + price_rank + family_guests + young_tourists,  data = dta_train2) |> 
-  step_sqrt(room_freq) |> 
-  step_poly(room_freq) |> 
-  step_dummy(price_rank)
+# Here we "accidentally" add another transformation to room_freq after taking
+# the square root. This is just to illustrate that you can chain transformations
+r7 <- r6 |> 
+  step_poly(room_freq)
 
-set2 <- 
+# Here we leave out the root transformation step
+r8 <- r4 |> 
+  step_poly(room_freq)
+
+model_set2 <- 
   workflow_set(
-    preproc = list(m6 = m6, m7 = m7, m8 = m8, m9 = m9, m10 = m10, m11 = m11, m12 = m12),
+    preproc = list(m1 = r1, m2 = r2, m3 = r3, m4 = r4, m5 = r5, 
+                   m6 = r6, m7 = r7, m8 = r8),
     models = list(LR = lin_model),
     cross = TRUE
   )
 
-wf_rs_fits2 <- 
-  set2 |> 
-  workflow_map("fit_resamples", resamples = folds2)
+model_set2_fits <- 
+  model_set2 |> 
+  workflow_map("fit_resamples", 
+                # Options to `workflow_map()`: 
+               seed = 1101, verbose = TRUE,
+               # Options to `fit_resamples()`: 
+               resamples = folds2, control = control_resamples(save_pred = TRUE)
+               )
+```
 
-results_ranked2 <- rank_results(wf_rs_fits2, rank_metric ="rmse")
+```{r}
+results_ranked2 <- rank_results(model_set2_fits, rank_metric ="rmse")
 results_ranked2
 ```
+
 
 Because we have transformed the outcome variable, the RMSE is now in terms of renovation proportions and not renovations anymore. So, when we want to compare our new predictions with the old ones we need to create a new variable that is the predicted proportion of renovations times the number of rooms (line 15 below)
 
 ```{r}
 best_model_id2 <- results_ranked2$wflow_id[1]
 
-chosen_wf2 <- 
-  set2 |> 
-  extract_workflow(best_model_id2)
-
-chosen_wf_fit2 <- 
-  chosen_wf2 |> 
-  fit(data = dta_train2)
-
+chosen_wf2 <- extract_workflow(model_set2, best_model_id2)
+chosen_wf_fit2 <- fit(chosen_wf2, data = dta_train2)
 chosen_wf_pred2 <- 
-  chosen_wf_fit2 |> 
-  predict(new_data = dta_test2) |> 
+  predict(chosen_wf_fit2, new_data = dta_test2) |> 
   bind_cols(dta_test2) |> 
   mutate(pred_renov = n_rooms * .pred)
 
@@ -356,13 +383,32 @@ rmse(chosen_wf_pred2, truth = n_renovations, estimate = pred_renov)
 mae(chosen_wf_pred2, truth = n_renovations, estimate = pred_renov)
 ```
 
+```{r  fig-predperform2}
+#| fig-cap: "Prediction performance of different models in terms of RMSE and R-squared"
+#| fig-height: 4
+#| fig-width: 7
+p1 <- 
+  autoplot(model_set2_fits, metric = "rmse") +
+  ggrepel::geom_text_repel(aes(label = wflow_id), 
+                           nudge_x = 1/8, nudge_y = 1/100, size = 3.5) +
+  theme(legend.position = "none")
+
+p2 <- 
+  autoplot(model_set2_fits, metric = "rsq") +
+  ggrepel::geom_text_repel(aes(label = wflow_id), 
+                           nudge_x = 1/8, nudge_y = 1/100, size = 3.5) +
+  theme(legend.position = "none")
+
+(p1 + p2)
+```
+
 Our transformation did seem to help. We managed to get the RMSE down quite a bit and also slightly reduced the MAE. We can double check the coefficients of our regression model as well to see whether the coefficients are looking reasonable. However, there is an important caveat here. The coefficients might not be intuitively interpretable. That is because we have not designed the regression with isolating specific associations in mind. We only cared about prediction performance when designing the model. You need a DAG again, to see whether and how you can interpret the coefficients. 
 
 ```{r}
 chosen_wf_fit2 |> tidy()
 ```
 
-```{r}
+```{r fig-predcomp3}
 #| fig-cap: "Predicted values versus actual outcomes"
 #| fig-height: 4
 #| fig-width: 5
@@ -373,7 +419,8 @@ chosen_wf_pred2 |>
   geom_abline(intercept = 0, slope = 1, color = "coral1") + 
   geom_point(alpha = 0.9, shape = 21) +
   labs(y = "predicted n_renovations") + 
-  theme(legend.position = "right")
+  theme(legend.position = "right") + 
+  coord_fixed(ratio = 1) 
 ```
 
 It looks like the transformed regression really helped us doing a better job at the outlying observations (That is also why the RMSE went down more than the MAE). We also seem to do a better job with the hotel-years with low number of observations. This is a common reason why we want to think about transformations in the first place. Whenever we see that we have trouble predicting a specific part of the distribution correctly, we might want to see whether we can transform the distribution to something easier to fit. 

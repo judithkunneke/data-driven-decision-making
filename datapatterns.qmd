@@ -1,32 +1,38 @@
 # Identifying Data Patterns {#sec-datapat}
 
-```{r}
+```{r setup}
 #| echo: false
 #| warning: false
+#| message: false
 library(tidyverse)
 library(glue)
 library(readxl)
 library(gt)
 library(ggdag)
 library(knitr)
+library(ggrepel)
+library(treemapify)
+library(ggradar)
 box::use(collapse[descr])
 source("hhs-ggtheme.R")
 
 knit_print.gt <- function(x, ...) {
   stringr::str_c(
-    "<div style='all:initial';>\n", 
-    gt::as_raw_html(x), 
+    "<div style='all:initial';>\n",
+    gt::as_raw_html(x),
     "\n</div>"
-  ) |> 
+  ) |>
     knitr::asis_output()
-    
+
 }
 registerS3method(
-  "knit_print", 'gt_tbl', knit_print.gt, 
-  envir = asNamespace("gt") 
+  "knit_print", 'gt_tbl', knit_print.gt,
+  envir = asNamespace("gt")
   # important to overwrite {gt}s knit_print
 )
 
+s1 <- read_excel("analysisgen/C2 viz.xlsx", sheet = "Sheet1 (2)")
+age <- s1$Age
 ```
 
 ## Learning goals
@@ -35,7 +41,7 @@ registerS3method(
 3.	Explain and tackle several data challenges
 
 ## Definition of data patterns
-A pattern is a recognizable feature or tendency that can be observed in a dataset. Data patterns are recurring or consistent structures or relationships in data that can provide valuable insights into trends, relationships, and underlying structures, and help to carve out areas for further investigation using more advanced analysis. 
+A pattern is a recognizable feature or tendency that can be observed in a dataset. Data patterns are recurring or consistent structures or relationships in data that can provide valuable insights into trends, relationships, and underlying structures, and help to carve out areas for further investigation using more advanced analysis.
 
 ## Importance of identifying data patterns
 Identifying data patterns is the starting point in data-driven decision-making because it lays the foundation for understanding the relationships, trends, and insights hidden within the data. This understanding is crucial for making informed, evidence-based decisions, developing effective strategies, and gaining a competitive advantage as a business.
@@ -61,7 +67,7 @@ In both cases, identifying data patterns in consumer data is the first step to s
 ###	Financial data
 A business gathers data on its expenses, including the types of expenses and the amounts spent in each category. Data analysis may indicate a recurring pattern of increased expenses in a particular category, such as travel expenses. After diving deeper into the data, it may become clear that this pattern emerges due to a particular reason, such as frequent business trips or a lack of cost-saving measures. The business can adjust its policies to reduce expenses in that category, such as using video conferencing instead of traveling for meetings or negotiating discounts with travel vendors.
 
-In another case, the business may identify a pattern of excessive expenses in multiple categories that exceed the budgeted amounts. More advanced analysis shows that this pattern is due to the lack of oversight and accountability in expense management. The business can establish more robust expense management policies and implement expense tracking systems to monitor and control expenses. At the same time, this may also be a signal that overall expenses are increasing and that budgets (for certain categories) have to be updated. 
+In another case, the business may identify a pattern of excessive expenses in multiple categories that exceed the budgeted amounts. More advanced analysis shows that this pattern is due to the lack of oversight and accountability in expense management. The business can establish more robust expense management policies and implement expense tracking systems to monitor and control expenses. At the same time, this may also be a signal that overall expenses are increasing and that budgets (for certain categories) have to be updated.
 
 As you see, looking for patterns in expense data helps with the control of costs.
 
@@ -70,7 +76,7 @@ Imagine a manufacturing business collects data on its production processes, incl
 
 Alternatively, the business may identify a pattern of bottlenecks or delays during a certain stage of production that is causing the entire process to slow down. After further investigation, they may realize that this pattern is due to a lack of resources. The business can adjust its resources or optimize its supply chain to increase production efficiency and reduce delays.
 
-Also here, monitoring production data and identifying data patterns helps the company to improve its production processes and reduce waste.  
+Also here, monitoring production data and identifying data patterns helps the company to improve its production processes and reduce waste.
 
 ###	Marketing data
 A company is collecting data on its marketing campaigns, including the channels used for advertising and the response rates from customers. Data analysis may indicate a recurring pattern of increased response rates from customers who receive personalized email campaigns. Further analysis shows that this pattern is due to the increased relevance of personalized email campaigns to the customer's interests and preferences. Knowing this, the business can adjust its marketing strategy to focus more on personalized email campaigns or consider other personalized marketing tactics, such as targeted social media advertising.
@@ -84,15 +90,15 @@ Imagine a company that has been tracking employee turnover. The company may noti
 
 Alternatively, the organization may use employee satisfaction surveys to gather data on how employees feel about their jobs and the company as a whole. After analyzing the data further, they may notice a pattern where employees who have flexible work arrangements, such as the ability to work from home or adjust their work hours, report higher levels of job satisfaction. Based on this additional analysis, offering flexible work arrangements may be considered as an effective strategy for improving employee satisfaction, and the organization may decide to implement or expand these arrangements as a result.
 
-Both examples show how the identification of simple pattern can kick off analyses to decrease turnover nd increase job satisfaction.
+Both examples show how the identification of simple patterns can kick off analyses to decrease turnover and increase job satisfaction.
 
 ##	Techniques for identifying data patterns
 ###	Start with the right mindset
-First and foremost, it's important to approach the data with a sense of curiosity and a desire to understand what it's telling you. This means asking questions and exploring different angles, rather than simply accepting what you see at face value. By staying curious, you can uncover unexpected insights that might not be immediately obvious. At the same time, it's important to maintain objectivity when analyzing data. Avoid making assumptions or jumping to conclusions based on preconceived notions. Instead, let the data guide your thinking, and be willing to challenge your own assumptions if the data suggests a different interpretation. This can be particularly challenging if you have pre-existing beliefs about what the data should show, but it's important to keep an open mind and let the evidence speak for itself. It can be tempting to latch onto a particular idea or theory and look for evidence to support it, but this can lead to confirmation bias and blind you to other potentially important insights. Developing a structured approach to data analysis can also be helpful. By using a systematic approach, you can ensure that you're analyzing the data in a consistent and rigorous manner, which can help you identify meaningful patterns more easily. 
+First and foremost, it's important to approach the data with a sense of curiosity and a desire to understand what it's telling you. This means asking questions and exploring different angles, rather than simply accepting what you see at face value. By staying curious, you can uncover unexpected insights that might not be immediately obvious. At the same time, it's important to maintain objectivity when analyzing data. Avoid making assumptions or jumping to conclusions based on preconceived notions. Instead, let the data guide your thinking, and be willing to challenge your own assumptions if the data suggests a different interpretation. This can be particularly challenging if you have pre-existing beliefs about what the data should show, but it's important to keep an open mind and let the evidence speak for itself. It can be tempting to latch onto a particular idea or theory and look for evidence to support it, but this can lead to confirmation bias and blind you to other potentially important insights. Developing a structured approach to data analysis can also be helpful. By using a systematic approach, you can ensure that you're analyzing the data in a consistent and rigorous manner, which can help you identify meaningful patterns more easily.
 
 When analyzing the data, it is key to put yourself into the “shoes of the data-generating process”. A data-generating process helps business analysts to understand the underlying mechanism that produces the data they are working with and defines the factors that affect the data and how they contribute to its creation. For example, if you want to look into customer behavior, imagine yourself how you act as a customer. Imagine that you are making certain decisions and take actions, thereby actually creating the data (assuming that there is some type of variable measured and recorded that will reflect your decisions and actions). The figure below shows many factors that can influence our buying behavior.
 
-![Buyer decision process](pics/C2/consumbeh.png){height="400px"}
+![Buyer decision process](pics/C2/consumbeh.png){#fig-buydeproc height="400px"}
 
 For example, what aspects would make you enter a drugstore and what aspects would keep you away from the store? Large price boards in the windows, commercial boards standing on the street, or employees handing out samples? What kind of aspects make you choose one hotel, but not the other? Price, proximity to the city center, or the cleanliness rating? And again, then hopefully you have data in your datasets that reflect or at least approximate these aspects such that you can use the data for your analysis. These examples are a bit easier as all of us are customers at some point. However, when you want to analyze bottlenecks in a production process, you probably have to consult your colleagues involved in the production. But even for the customer behavior example, it may be wise to contact colleagues from marketing to get a better picture of decisions customers typically make. You can get additional information from professional magazines or academic papers to put yourself into the data-generating process.
 Finally, it's important to be patient when analyzing data. Finding patterns in data can take time and require persistence. Don't expect to find all the answers right away, but be willing to put in the effort to uncover insights that can lead to better business decisions. s
@@ -104,9 +110,9 @@ Before jumping into the creation of visualizations, there are two questions rela
 1.	Is the information *conceptual* or *data-driven*?
 2.	Am I *exploring* something or *declaring* something?
 
-![Nature and purpose of visualization.](pics/C2/2questions.png){height="300px"}
+![Nature and purpose of visualization.](pics/C2/2questions.png){#fig-natur height="300px"}
 
-<font size="0.6">Source: https://hbr.org/2016/06/visualizations-that-really-work </font> 
+<font size="0.6">Source: https://hbr.org/2016/06/visualizations-that-really-work </font>
 
 The first question is quite easy to answer given the title of our course – the nature of our information is based on data. We are not exploring concepts or ideas that we want to visualize, but we want to use data.
 
@@ -114,14 +120,44 @@ The second question gets at the purpose of the visualization: do you want to pro
 
 For the purpose of exploring data, we look at different types of patterns, each coming with typical forms of visualization.
 
-####	Distributions 
+####	Distributions
 Before looking at the relationships and patterns of our data and variables, it may be useful to get a “feeling” for the key variables in the dataset and visualize some characteristics of these variables. For these visual insights, we typically rely on histograms, bell curves, and box plots to understand the distribution of each variable.
 
 A **histogram** is a type of graph that displays the frequency distribution of a continuous or discrete variable, such as sales, revenue, customer demographics, or product performance. By grouping the data into bins or intervals, histograms provide a visual representation of the underlying patterns in the dataset. Histograms are commonly used to identify the shape and spread of a dataset.
 
 For example, let's say you work with a marketing analyst at your company and you analyze the distribution of customer ages in your customer database. You create a histogram where the x-axis represents age intervals, and the y-axis represents the count of customers falling within each age interval.
 
-![Histogram.](pics/C2/histogram.png){height="300px"}
+<!-- ![Histogram.](pics/C2/histogram.png){#fig-hist height="300px"} -->
+
+```{r}
+#| code-fold: true
+#| fig-height: 3.5
+#| fig-width: 6
+#| fig-format: svg
+#| label: fig-c2-histex
+#| fig-cap: "Histogram example"
+
+s1 |>
+  ggplot(aes(x = Age)) +
+  geom_histogram(
+    # binwidth = 5
+    breaks = seq(20, 80, 5)
+    ) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.02)),
+    n.breaks = 6
+    ) +
+  scale_x_continuous(breaks = seq(20, 80, 5)) +
+  labs(
+    y = "Count by bin",
+    x = "Age",
+  ) +
+  theme(
+    panel.grid.major.x = element_blank()
+  )
+```
+
+
 
 By examining the shape of the histogram, analysts can identify trends and patterns, such as whether the distribution is symmetric, skewed, or has other notable characteristics. Histograms can help analysts to visualize various statistical measures, such as the mean, median, mode, and measures of dispersion (e.g., variance or standard deviation) (see 3.5.3). In the example above, you see that it seems that customer age follows a normal distribution (see also bell curve). You also see whether there is any interesting variation in the data useful for further statistical analysis. E.g., if all age bins would contain the same number of customers, there is no age variation that can be used to explain, e.g., customer behavior. However, we do not need to worry in this example as we can identify variation from the age bins. Furthermore, histograms can serve as a basis for fitting parametric models, such as normal, log-normal, or exponential distributions, to the data. These models can then be used for predictive analytics, forecasting, and other advanced statistical analyses, which can provide valuable insights for decision-making and strategic planning.
 Additionally, from a business decision perspective, you can identify any patterns that may exist in the age distribution of your customer base. In this example, you see that most customers are between 48 and 52 years old. This information can help guide marketing efforts towards the specific age group that is most likely to purchase your products or services. At the same time, if you believe that your product or service should theoretically be very interesting for people of the age around 35, you could further investigate reasons why people in that age category do not buy the product as much. Additionally, histograms can be used to identify any potential outliers or unusual patterns in the customer age data. For example, if the histogram reveals a sudden spike in a specific age group, it might indicate a data entry error, an anomaly in the dataset, or an emerging trend that requires further investigation.
@@ -129,28 +165,202 @@ Another application of histograms in analyzing customer age data is to compare t
 
 Similar to a histogram, you may come across a **bell curve** (also known as normal distributions or Gaussian distributions).
 
-![Bell curve](pics/C2/bellcurve.png){height="300px"}
+<!-- ![Bell curve](pics/C2/bellcurve.png){height="300px"} -->
+
+```{r}
+#| code-fold: true
+#| label: fig-c2-bellcurve
+#| fig-cap: "Bell Curve example"
+#| fig-height: 3.5
+#| fig-width: 6
+#| fig-format: svg
+
+s1 |>
+  ggplot(aes(x = Age)) +
+  geom_density(
+    color = "red",
+    fill = "red", alpha = 0.1
+    ) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.02)),
+    n.breaks = 6
+    ) +
+  scale_x_continuous(breaks = seq(20, 80, 5), limits = c(15, 85)) +
+  stat_function(fun = dnorm,
+                geom = "area",
+                color = "dodgerblue",
+                fill = "dodgerblue",
+                alpha = 0.4,
+                xlim = c(0, quantile(age, 0.16)),
+                args = list(
+                  mean = mean(age),
+                  sd = sd(age)
+                )) +
+    stat_function(fun = dnorm,
+                geom = "area",
+                color = "dodgerblue",
+                fill = "dodgerblue",
+                alpha = 0.8,
+                xlim = c(quantile(age, 0.16), quantile(age, 0.84)),
+                args = list(
+                  mean = mean(age),
+                  sd = sd(age)
+                )) +
+  stat_function(fun = dnorm,
+                geom = "area",
+                color = "dodgerblue",
+                fill = "dodgerblue",
+                alpha = 0.4,
+                xlim = c(quantile(age, 0.84), 80),
+                args = list(
+                  mean = mean(age),
+                  sd = sd(age)
+                )) +
+  annotate(
+    "line",
+    x = c(quantile(age, 0.16), quantile(age, 0.84)),
+    y = c(0.01, 0.01)
+  ) +
+  annotate(
+    "text",
+    x = mean(s1$Age),
+    y = 0.011,
+    size = 3,
+    label = "One standard deviation (68%)"
+  ) +
+  labs(
+    y = "Density",
+    x = "Age",
+  ) +
+  theme(
+    panel.grid.major.x = element_blank()
+  )
+```
 
 Bell curves are relevant for further statistical analysis, as they come with specific properties that can simplify calculations and provide a foundation for hypothesis testing and other statistical procedures. When data follows a normal distribution, the mean, median, and mode are equal, and approximately 68% of the data falls within one standard deviation of the mean, 95% within two standard deviations, and 99.7% within three standard deviations.
 
 A **box plot**, also known as a box-and-whisker plot, is a type of chart that displays the distribution of data by showing its median, quartiles, and outliers.
 
-![Box plot](pics/C2/boxplot.png){height="400px"}
+<!-- ![Box plot](pics/C2/boxplot.png){height="400px"} -->
+
+```{r}
+#| code-fold: true
+#| label: fig-c2-boxplot
+#| fig-cap: "Boxplot example"
+#| fig-height: 3.5
+#| fig-width: 5
+#| fig-format: svg
+
+
+age2 <- c(13, age)
+q_ages <- quantile(age2, c(0.25, 0.5, 0.75))
+lb <- q_ages[2] - 1.5 * IQR(age2)
+ub <- q_ages[2] + 1.5 * IQR(age2)
+data.frame(Age = age2) |>
+  ggplot(aes(y = Age)) +
+  geom_boxplot(
+    width = 0.2,
+    fill = "dodgerblue",
+    outlier.colour = "orange", outlier.shape = 19, outlier.size = 3
+    ) +
+  scale_x_continuous(breaks = seq(-0.2, 0.2, 0.1), limits = c(-0.2, 0.2)) +
+  labs(
+    x = NULL,
+    y = "Age"
+  ) +
+  annotate(
+    "text",
+    x = 0.11,
+    y = c(13, lb, q_ages, 72),
+    label = round(c(13, lb, q_ages, 72))
+    ) +
+  theme(
+    panel.grid.major.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_blank()
+  )
+```
+
 
 The box represents the interquartile range (IQR, see 3.5.3.1.4), which contains the middle 50% of the data. The box extends from the lower quartile (Q1) to the upper quartile (Q3). The median line is the line within the box that represents the median (Q2) of the dataset. The whiskers (probably coming from cat whiskers) are the lines extending from the box and represent the range of the data, excluding outliers. The whiskers typically extend to the minimum and maximum data points within 1.5 or 3 times the IQR from Q1 and Q3, respectively. Outliers are data points that fall outside the whiskers, typically represented by individual points or symbols. Using an adjusted dataset from the histogram, this box plot indicates a relatively normal distribution given that the median is in the middle and the same length of the quartiles. If the box is short and the whiskers are long, the data are spread out and there may be many outliers. If the box is tall and the whiskers are short, the data are tightly clustered and there may be few outliers. We see that indeed one outlier in terms of age exists, giving reason to further investigate how to deal with it. Alternatively, this could hint a **data quality issue**.
 
 ####	Relative proportions
 Proportions refer to the comparison of data between different groups or categories, and involves examining how data varies relative to other factors. Imagine a simple count of employees in different age categories, revenues per product line, or marketing expenses per marketing channel. Common visualizations to express proportions are pie charts or tree map charts (amongst others).
 
-A **pie chart** is a type of chart used to display data in a circular graph. It is composed of a circle divided into slices, each representing a portion of the whole. The size of each slice is proportional to the quantity it represents, with the entire circle representing 100% of the data. Pie charts are commonly used to show the distribution of a set of categorical data, where each slice represents a different category or group. The size of each slice is determined by the percentage or fraction of the data that belongs to that category. Pie charts are useful because they provide a clear and intuitive way to compare the relative sizes of different categories. They also allow for the easy identification of the largest and smallest categories and can be effective in communicating the overall pattern or trend in the data. 
+A **pie chart** is a type of chart used to display data in a circular graph. It is composed of a circle divided into slices, each representing a portion of the whole. The size of each slice is proportional to the quantity it represents, with the entire circle representing 100% of the data. Pie charts are commonly used to show the distribution of a set of categorical data, where each slice represents a different category or group. The size of each slice is determined by the percentage or fraction of the data that belongs to that category. Pie charts are useful because they provide a clear and intuitive way to compare the relative sizes of different categories. They also allow for the easy identification of the largest and smallest categories and can be effective in communicating the overall pattern or trend in the data.
 
-![Pie chart](pics/C2/piechart.png){height="300px"}
+<!-- ![Pie chart](pics/C2/piechart.png){height="300px"} -->
 
-Imagine you help out your colleagues from HR. The pie chart above displays HR firm data on age categories and proportion of employees in their respective age categories. This information helps you understand the age distribution of your workforce. You can quickly identify that the age group of employees between 41 and 50 is most frequently observed in that firm. In addition, you see that there is a relatively low inflow of younger people. This is alarming if you think about succession and business continuity, and further analysis is needed in that regard. 
+```{r}
+#| code-fold: true
+#| label: fig-c2-piechart
+#| fig-cap: "Piechart example"
+#| fig-height: 3.5
+#| fig-width: 5
+#| fig-format: svg
+
+Z <-
+  table(cut(age, seq(20, 80, 10))) |>
+  as.data.frame()
+Z$prop <- Z$Freq / length(age)
+Z <- Z %>%
+  mutate(csum = rev(cumsum(rev(prop))),
+         pos = prop/2 + lead(csum, 1),
+         pos = if_else(is.na(pos), prop/2, pos))
+
+
+ggplot(Z, aes(x="", y=prop, fill=(Var1))) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start=0) +
+  # geom_text_repel(aes(y = pos, label = paste0(round(prop*100), "%")),
+  #                  size = 3, nudge_x = 1, show.legend = FALSE) +
+  theme(axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 10),
+        panel.background = element_rect(fill = "white"),
+        panel.border = element_blank(),
+        panel.grid = element_blank(),
+        legend.position = "left"
+        )+
+  scale_y_continuous(breaks = Z$pos, labels = paste0(round(Z$prop*100), "%")) +
+  scale_fill_brewer(palette = 1, name = "Age Group")
+```
+
+
+Imagine you help out your colleagues from HR. The pie chart above displays HR firm data on age categories and proportion of employees in their respective age categories. This information helps you understand the age distribution of your workforce. You can quickly identify that the age group of employees between 41 and 50 is most frequently observed in that firm. In addition, you see that there is a relatively low inflow of younger people. This is alarming if you think about succession and business continuity, and further analysis is needed in that regard.
 
 A **tree map** chart is a type of chart that displays hierarchical data as a set of nested rectangles. The size and color of the rectangles represent the relative sizes of the different categories or data points, with larger rectangles representing larger values and different colors representing different categories.
 
-![Tree map](pics/C2/treemap.png){height="300px"}
+<!-- ![Tree map](pics/C2/treemap.png){height="300px"} -->
+
+```{r}
+#| code-fold: true
+#| label: fig-c2-treemap
+#| fig-cap: "Treemap example"
+#| fig-height: 3.5
+#| fig-width: 5
+#| fig-format: svg
+
+Z <- data.frame(
+  Campaign = c("TV ads", "Magazines", "Billboards", "Social media ads", "Email campaigns", "Influence"),
+  Budget = c(46, 6, 24, 23, 3, 15) * 1000
+)
+
+
+my_palette <- scales::brewer_pal(palette = 1)(9)[4:9]
+
+ggplot(Z, aes(area = Budget, fill = Campaign,
+               label = paste(Campaign,
+                             scales::label_currency()(Budget), sep = "\n"))) +
+  geom_treemap() +
+  geom_treemap_text(colour = "white",
+                    place = "centre",
+                    size = 10,
+                    ) +
+  scale_fill_manual(values = my_palette) +
+  theme(legend.position = "none")
+```
+
 
 Suppose the marketing manager of your firm approached you to dig into their expense data. The tree map above includes marketing data on the expenses per marketing channel, with TV ads clearly making up the largest proportion of expenses. This information helps you understand how your marketing expenses are allocated across different channels and you can start further investigations into how far each channel is successful in, e.g., acquiring new customers, and whether the expenses allocated to the respective channels are justified.
 
@@ -159,26 +369,97 @@ Ranking in the context of data visualization refers to the process of ordering d
 
 A **bar chart**, also known as a bar graph, is a type of chart or graph that represents data using rectangular bars. The length or height of each bar is proportional to the value it represents. Bar charts can be used to display data in horizontal or horizontal orientation, with the latter usually called a column chart (see also 3.5.2.5).
 
-![Bar chart](pics/C2/barchart.png){height="300px"}
+<!-- ![Bar chart](pics/C2/barchart.png){height="300px"} -->
 
-Suppose you support a quality control manager at your manufacturing company. The bar chart above includes failure rates per product category. It becomes clear that Product A should be more closely investigated given the seemingly higher failure rate compared to the other products.
+```{r}
+#| code-fold: true
+#| label: fig-c2-barchart
+#| fig-cap: "Barchart example"
+#| fig-height: 3.5
+#| fig-width: 5
+#| fig-format: svg
+
+Z <- data.frame(
+  product = paste("Product", LETTERS[1:5]),
+  failure_rate = c(0.083, 0.015, 0.02, 0.032, 0.038)
+)
+Z$status = if_else(Z$failure_rate > 0.05, "bad", "ok")
+
+ggplot(Z,
+  aes(
+    y = fct_reorder(product, -failure_rate),
+    x = failure_rate,
+    fill = status
+  ),
+) +
+  geom_col(color = "white") +
+  scale_x_continuous(labels = scales::label_percent(), expand = expansion(c(0, 0.02))) +
+  theme(
+    legend.position = "none",
+    panel.grid.major.y = element_blank()
+  ) +
+  geom_vline(xintercept = 0.05) +
+  annotate("text", x = 0.05, y = 1, label = "5% threshold", vjust = 0.5, hjust = -0.1) +
+  labs(
+    y = NULL,
+    x = "Failure rate after x months"
+  )
+```
+
+
+Suppose you support a quality control manager at your manufacturing company. The bar chart above includes failure rates per product category. It becomes clear that Product A should be more closely investigated given the seemingly higher failure rate compared to the other products. Notice how small tweaks add to make the punch line of the plot as obivous as possible: the choice of two colors, annotating the plot with a vertical line, and ordering the products so that the "worst" product is at the bottom
 
 A **radar chart**, also known as a spider chart or a web chart, is a type of chart that displays data on a polar coordinate system. Radar charts are useful for comparing multiple sets of data across different categories or variables. Each set of data is represented by a different line or shape on the chart, with each variable represented by a spoke. The length of each line or shape corresponds to the magnitude of the data for that variable, and the different lines or shapes can be compared to one another.
 
-![Radar chart](pics/C2/radarchart.png){height="500px"}
+<!-- ![Radar chart](pics/C2/radarchart.png){height="500px"} -->
 
-Imagine you help a product manager at your retail company. In the radar chart above, three products are compared based on their properties of price, quality, popularity, and durability. An interesting observation, e.g., is that Product C has the highest price and highest popularity while having the lowest quality. This is interesting because usually, one would expect that a high price and low quality would negatively affect popularity, so it is worth further investigating whether, e.g., a certain minimum requirement for quality is already met and therefore does not impact popularity.  
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: fig-c2-radarchart
+#| fig-cap: "Radarchart example"
+#| fig-height: 5
+#| fig-width: 8
+#| fig-format: svg
+# remotes::install_github("ricardo-bion/ggradar")
 
-**Another important use of visualizations:** This interesting finding could also hint at a data problem. Visualization can also help us identify data quality issues, such as missing or outlier values, which may be less noticeable when examining raw data. Any data points out of the order may provide a signal for you to review the quality of the data (see also section 3.6). 
+Z <- data.frame(
+  product = c("A", "B", "C"),
+  Price = c(8, 10, 14),
+  Quality = c(10, 11, 9),
+  Popularity = c(8, 9, 11),
+  Durabil. = c(10, 4, 7)
+)
+lcols <- c("#EEA236", "#5CB85C", "#46B8DA")
+ggradar(
+  Z,
+  background.circle.colour = "white",
+  axis.line.colour = "gray60",
+  gridline.min.colour = "gray60",
+  gridline.mid.colour = "gray60",
+  gridline.max.colour = "gray60",
+  gridline.min.linetype = 1,
+  gridline.mid.linetype = 1,
+  gridline.max.linetype = 1,
+  legend.title = "Product",
+  legend.position = "bottom",
+  group.colours = lcols
+)
+```
+
+
+Imagine you help a product manager at your retail company. In the radar chart above, three products are compared based on their properties of price, quality, popularity, and durability. An interesting observation, e.g., is that Product C has the highest price and highest popularity while having the lowest quality. This is interesting because usually, one would expect that a high price and low quality would negatively affect popularity, so it is worth further investigating whether, e.g., a certain minimum requirement for quality is already met and therefore does not impact popularity.
+
+**Another important use of visualizations:** This interesting finding could also hint at a data problem. Visualization can also help us identify data quality issues, such as missing or outlier values, which may be less noticeable when examining raw data. Any data points out of the order may provide a signal for you to review the quality of the data (see also section 3.6).
 
 ####	Clustering
 Clustering in the context of data visualization refers to the process of grouping data points together based on their similarities or proximity to one another. Common visualizations are bubble charts and scatter plots (amongst others).
 
-A **bubble chart** is a type of chart that displays data points as bubbles or circles on a two-dimensional graph. Each bubble represents a data point and is located at the intersection of two variables on the graph. The size of the bubble represents a third variable, typically a quantitative value, and can be used to convey additional information about the data point. Bubble charts are useful for displaying data with three variables, where two variables are plotted on the x- and y-axes, and the third variable is represented by the size of the bubble. This allows for the visualization of complex relationships between variables and can be used to identify patterns or trends in the data. 
+A **bubble chart** is a type of chart that displays data points as bubbles or circles on a two-dimensional graph. Each bubble represents a data point and is located at the intersection of two variables on the graph. The size of the bubble represents a third variable, typically a quantitative value, and can be used to convey additional information about the data point. Bubble charts are useful for displaying data with three variables, where two variables are plotted on the x- and y-axes, and the third variable is represented by the size of the bubble. This allows for the visualization of complex relationships between variables and can be used to identify patterns or trends in the data.
 
 ![Bubble chart](pics/C2/bubblechart.png){height="400px"}
 
-Imagine you help the controller in your retail company. The bubble chart above reflects financial data on each product’s revenue (x-axis), gross profit margin (y-axis), and operating profit margin (bubble size). The bubble chart allows you to quickly identify which products are generating the most revenue (Product F) and gross profit margin (Product C and E), as well as which ones have the highest operating profit margin (Product E). You could also identify any outliers, such as products with high revenue but low gross profit margin (Product F), or a product with low revenue but high operating profit margin (Product C). This information provides a first insight into which products to invest in, which ones to cut back on, and how to optimize your overall financial performance. 
+Imagine you help the controller in your retail company. The bubble chart above reflects financial data on each product’s revenue (x-axis), gross profit margin (y-axis), and operating profit margin (bubble size). The bubble chart allows you to quickly identify which products are generating the most revenue (Product F) and gross profit margin (Product C and E), as well as which ones have the highest operating profit margin (Product E). You could also identify any outliers, such as products with high revenue but low gross profit margin (Product F), or a product with low revenue but high operating profit margin (Product C). This information provides a first insight into which products to invest in, which ones to cut back on, and how to optimize your overall financial performance.
 Furthermore, you can color-code the bubbles based on the product category or production location to find patterns in other common characteristics, or clusters. Suppose that the orange bubbles represent the same production site: this could indicate that the production is similarly efficient as both products have an operating profit margin of 10% (and have similar revenue and gross profit margins). However, as with all initial evidence based on data patterns, this has to be further investigated as there might be many more reasons for such a similar operating profit margin.
 
 A **scatter plot** is a type of graph that uses dots to represent values for two different variables. The position of each dot on the graph represents the values of the two variables.
@@ -189,7 +470,7 @@ Suppose you help a plant manager at your manufacturing company, and you want to 
 Scatter plots are also useful to detect outliers which would imply that one (or multiple) of the data points would appear further away from the other clusters.
 
 ####	Change
-In the context of data patterns, changes or trends, refer to a general direction or tendency in the data that shows a pattern over time. Trends can be further classified as upward, downward, or flat, depending on the direction of the trend. Line graphs and column charts (amongst others) are commonly used to depict changes and trends. 
+In the context of data patterns, changes or trends, refer to a general direction or tendency in the data that shows a pattern over time. Trends can be further classified as upward, downward, or flat, depending on the direction of the trend. Line graphs and column charts (amongst others) are commonly used to depict changes and trends.
 
 **Line graphs** are a type of graph that display data points as a series of connected points, or markers, that form a line. They are commonly used to show trends or changes in data over time. The x-axis typically represents the time period, while the y-axis represents the value of the variable of interest.
 
@@ -197,7 +478,7 @@ In the context of data patterns, changes or trends, refer to a general direction
 
 For example, let's say you help out a human resources manager at your company and you want to track changes in employee turnover over time. The line graph above shows the number of employees who have left the company each month over the past year. The x-axis would represent the months of the year, while the y-axis would represent the number of employees who left. You notice a sudden increase in employee turnover in June, July, and August, and you can further investigate the root cause of this upward “summer” trend.
 
-**Column charts**, also known as vertical bar charts, are a type of graph that uses vertical bars to represent data. Each column or bar represents a category or group, and the height of the bar corresponds to the value or frequency of the variable being measured. 
+**Column charts**, also known as vertical bar charts, are a type of graph that uses vertical bars to represent data. Each column or bar represents a category or group, and the height of the bar corresponds to the value or frequency of the variable being measured.
 
 ![Column chart](pics/C2/columnchart.png){height="300px"}
 
@@ -205,22 +486,22 @@ Imagine the marketing assistant approached you to help with some data analysis t
 In the above column chart, you quickly identify that sales are uncommonly low in July, and increasing in November and December. By repeating this analysis across multiple years, you may see that this is a consistent pattern across years, and you have a starting point to look closer into the causes of this pattern.
 
 ####	Correlations
-To identify correlations between variables visually, most often **scatter plots** are used as well. 
+To identify correlations between variables visually, most often **scatter plots** are used as well.
 
 ![Scatter plot](pics/C2/corrscp2.png){height="360px"}
 
 
 ![Scatter plot](pics/C2/corrscp1.png){height="400px"}
 
-Imagine a friend of yours is a financial analyst, and asks you to check the relationship between revenue and expenses of a company over the past year. You can create a scatter plot where the x-axis represents revenue, and the y-axis represents expenses. 
+Imagine a friend of yours is a financial analyst, and asks you to check the relationship between revenue and expenses of a company over the past year. You can create a scatter plot where the x-axis represents revenue, and the y-axis represents expenses.
 Let’s look at two different outcomes. If the outcome looks like the first scatter plot, you can most likely conclude from the visual that there is no correlation between revenues and expenses. If you consider the second scatter plot, it appears that there is a correlation between revenues and expenses. You conclude that both variables move in the same direction, and you can further investigate the underlying reasons.
 
 And that was a journey throughout the most common charts and graphs used to identify data patterns. Yet, in general, it should be noted that some charts can be used for multiple purposes. For example, a bar chart can also be used to identify relative proportions. The number of categories represented in such charts also has an influence on the choice. For example, if a firm has 30 different products, it may indeed be wise to you use a bar chart or column chart to represent those products; a pie chart would be too cramped to read given many “pie pieces” reflecting the products. But some types of visualizations are also simply not useful for some purposes. For example, if we want to identify any changes over time, a pie chart is not going to help us reflecting such changes.
 
 ###	Statistical techniques for identifying patterns
-Statistical techniques are essential for exploring data patterns because they provide us with a framework for analyzing and interpreting data in a rigorous and systematic way. While visualizations are great approach to start the analysis process, eventually we also want to “crunch” the numbers. 
+Statistical techniques are essential for exploring data patterns because they provide us with a framework for analyzing and interpreting data in a rigorous and systematic way. While visualizations are great approach to start the analysis process, eventually we also want to “crunch” the numbers.
 
-####	Descriptive statistics 
+####	Descriptive statistics
 #####	Measures of central tendency (mean, median, mode)
 Measures of central tendency are statistical measures that describe the central or typical value of a set of data. They are often used to summarize large datasets and provide insights into the characteristics of the data. The three most common measures of central tendency are mean, median, and mode.
 
@@ -254,7 +535,7 @@ Skewness and kurtosis are two additional statistical measures that are often use
 
 ![Skewness](pics/C2/skewness.png){height="300px"}
 
-<font size="0.6">Source: https://www.biologyforlife.com/skew.html </font> 
+<font size="0.6">Source: https://www.biologyforlife.com/skew.html </font>
 
 Skewness is often measured using the coefficient of skewness, which is calculated as: (coefficient of skewness) = (3 * (mean - median)) / standard deviation. For example: Let's consider a dataset with the following 9 data points: 2, 4, 4, 4, 6, 6, 6, 8, 10
 
@@ -267,7 +548,7 @@ Since the dataset is ordered, the median is the middle value: Median = 6
 3. Calculate the standard deviation (σ) of the dataset:
 σ ≈ 2.29 (calculated using standard deviation formula)
 
-4. Compute the skewness using the formula: 
+4. Compute the skewness using the formula:
 Skewness = (3 * (mean - median)) / standard deviation
 Skewness = (3 * (5.33 - 6)) / 2.29 ≈ -0.88
 
@@ -287,7 +568,7 @@ The kurtosis function in Excel is KURT. For example, if you want to find the kur
 
 ![Kurtosis](pics/C2/kurtosis.png){height="300px"}
 
-<font size="0.6">Source: https://www.freecodecamp.org/news/skewness-and-kurtosis-in-statistics-explained/ </font> 
+<font size="0.6">Source: https://www.freecodecamp.org/news/skewness-and-kurtosis-in-statistics-explained/ </font>
 
 As you can see from the figures, measures of central tendency and variation are typically related to visualizations such as histograms or scatters with lines and markers (additional options in Excel).
 
@@ -331,7 +612,7 @@ Data points 50 and 55 are above the upper bound (46), so they can be considered 
 The IQR method does not rely on the assumption of a normal distribution and is more robust to extreme values than the Z-score method. However, it might not be as effective in detecting outliers in datasets with skewed distributions. Therefore, using multiple methods to detect outliers can give a more complete picture.
 
 ####	Correlation analysis
-While correlations can be depicted visually, a correlation can also be measured statisticallay, quantifying the strength and direction of the relationship between two variables. The most widely used correlation coefficient is the Pearson correlation coefficient, also known as Pearson's r. 
+While correlations can be depicted visually, a correlation can also be measured statisticallay, quantifying the strength and direction of the relationship between two variables. The most widely used correlation coefficient is the Pearson correlation coefficient, also known as Pearson's r.
 The Pearson correlation function in Excel is CORREL. For example, if you want to find the Pearson correlation coefficient between two variables in cells A2 through A20 and B2 through B20, you would enter the formula "=CORREL(A2:A20,B2:B20)" in a cell.
 
 ![Correlation coefficient](pics/C2/corrcoeff.png){height="450px"}
@@ -349,9 +630,9 @@ Further, correlations help business analysts to generate hypotheses about the un
 
 An example is the correlation between advertising spending and sales revenue. A company might want to know whether its advertising efforts is related to increased sales. To test this correlation, the company could collect data on its advertising spending and its sales revenue over a period of time, such as a quarter or a year. The company could then use the Pearson correlation coefficient to calculate the strength and direction of the correlation between the two variables. If there is a strong positive correlation between advertising spending and sales revenue, the company can conclude that advertising efforts and sales move together. On the other hand, if there is no or a weak correlation, the company may need to rethink its advertising strategy or explore other factors that may be affecting sales revenue.
 
-**Caution**: again, as stated above, correlation is not causation (and never ever write in your exams, assignment, or reports that one variable affects/impacts/influences/or increases another variable when you refer to correlations :))! While advertising spending and sales might move in the same direction, this does not automatically imply that the increase in sales is caused by the increase in advertising spending. Consider the following famous example on the correlation between ice cream sales and drowning deaths. Both variables tend to increase during the summer months, leading to a correlation between the two. However, this correlation is spurious, as there is no causal relationship between the two variables. In reality, the correlation is likely driven by a third variable, such as warmer weather. Warmer weather may lead to increased ice cream sales, as people seek cold treats to cool down, and may also lead to increased swimming and water activities, which could increase the risk of drowning deaths. Therefore, while the correlation between ice cream sales and drowning deaths may seem to suggest a causal relationship, it is actually spurious and driven by a third variable. 
+**Caution**: again, as stated above, correlation is not causation (and never ever write in your exams, assignment, or reports that one variable affects/impacts/influences/or increases another variable when you refer to correlations :))! While advertising spending and sales might move in the same direction, this does not automatically imply that the increase in sales is caused by the increase in advertising spending. Consider the following famous example on the correlation between ice cream sales and drowning deaths. Both variables tend to increase during the summer months, leading to a correlation between the two. However, this correlation is spurious, as there is no causal relationship between the two variables. In reality, the correlation is likely driven by a third variable, such as warmer weather. Warmer weather may lead to increased ice cream sales, as people seek cold treats to cool down, and may also lead to increased swimming and water activities, which could increase the risk of drowning deaths. Therefore, while the correlation between ice cream sales and drowning deaths may seem to suggest a causal relationship, it is actually spurious and driven by a third variable.
 
-An example of spurious correlation in the business context could be the correlation between heating expenses and sales numbers. While there may be some anecdotal evidence to suggest that a comfortable office temperature can improve employee productivity, that does not imply that there is a structural causal relationship between the two variables. If the business analyst were to find a correlation between heating expenses and sales, this would likely be spurious. The correlation may be due to a third variable, such as seasonality: in the winter, employees might be less likely to holidays which may imply more presence at the office which increases heating expenses, but also more working hours, hence the increase in sales. It is important to avoid drawing causal conclusions based on a spurious correlation. It is essential to carefully consider the underlying data and any potential confounding variables before making any changes to office temperature or other policies that may impact sales; more advanced econometric analyses are required to determine causality.
+An example of spurious correlation in the business context could be the correlation between heating expenses and sales numbers. While there may be some anecdotal evidence to suggest that a comfortable office temperature can improve employee productivity, that does not imply that there is a structural causal relationship between the two variables. If the business analyst were to find a correlation between heating expenses and sales, this would likely be spurious. The correlation may be due to a third variable, such as seasonality: in the winter, employees might be less likely to take holidays, which may imply longer presence at the office (which increases heating expenses) and simultaneously imply more working hours--hence the increase in sales. So we need to be cautious and avoid drawing causal conclusions based on a potentially spurious correlation. It is essential to carefully consider the underlying data and any potential confounding variables before making any changes to office temperature or other policies that may impact sales; more advanced econometric analyses are required to determine causality.
 
 ##	Data challenges
 It would be great if the data would come in a form that we can directly analyze. However, this is, unfortunately, literally never the case. Below we describe some of the common challenges we experience while preparing our data for analysis. The techniques explained earlier are actually helpful in figuring out several data issues. We also provide a couple of typical solutions to these issues. Disclaimer: please note that each of these solutions comes with its own challenges; challenges that go beyond this chapter and course.
@@ -364,15 +645,15 @@ Measurement is a notable challenge when it comes to having data available that a
 Let’s look at the example above. At the conceptual level, the study investigates in how far a company’s environmental performance predicts firm value. Now at the operational level, the measurement level, the study uses annual emissions as proxy for environmental performance. Emissions are oftentimes used because that is relatively easy to measure, certainly in regulated industries. But is this the concept you want to get at? Are environmental concerns not broader than emissions?
 This is why when working with data, business analysts and researchers often encounter difficulties in finding suitable proxies for their desired constructs. This is because the data might have been collected for purposes unrelated to the research objectives, making it hard to ensure that the available data truly aligns with the target construct. Consequently, the proxy may lack predictive validity, reducing the overall quality of the analysis.
 
-What to do about it? To enhance the predictive validity of your variables, various strategies help to ensure that the variables are accurate, reliable, and relevant to the desired construct. 
-Firstly, carefully selecting variables is essential. This involves reviewing internal and external data sources, industry benchmarks, and best practices to identify variables that have a strong association with the construct of interest. This helps to establish a sound theoretical and practical foundation for the variables used in the analysis. 
-Another approach is using multiple proxies for each construct, capturing different aspects of the construct and reducing measurement error. 
+What to do about it? To enhance the predictive validity of your variables, various strategies help to ensure that the variables are accurate, reliable, and relevant to the desired construct.
+Firstly, carefully selecting variables is essential. This involves reviewing internal and external data sources, industry benchmarks, and best practices to identify variables that have a strong association with the construct of interest. This helps to establish a sound theoretical and practical foundation for the variables used in the analysis.
+Another approach is using multiple proxies for each construct, capturing different aspects of the construct and reducing measurement error.
 
-Furthermore, validating the chosen variables is important. By ensuring that the variables have both convergent validity (measures of the same construct are highly correlated) and discriminant validity (measures of different constructs are not highly correlated), business analysts can enhance the overall predictive validity of their analysis. 
+Furthermore, validating the chosen variables is important. By ensuring that the variables have both convergent validity (measures of the same construct are highly correlated) and discriminant validity (measures of different constructs are not highly correlated), business analysts can enhance the overall predictive validity of their analysis.
 
-Proper measurement is also essential for increasing predictive validity. Analysts should use established and validated measurement tools, or, if necessary, develop and validate their own instruments. This may involve piloting the measurement process, establishing internal consistency, and assessing the stability of the measures over time. 
+Proper measurement is also essential for increasing predictive validity. Analysts should use established and validated measurement tools, or, if necessary, develop and validate their own instruments. This may involve piloting the measurement process, establishing internal consistency, and assessing the stability of the measures over time.
 
-Sample selection plays a vital role in enhancing the generalizability of the analysis. A well-chosen, representative, and diverse sample of data points can help ensure that the relationships observed between variables are robust and applicable to the wider business context, thus increasing predictive validity. 
+Sample selection plays a vital role in enhancing the generalizability of the analysis. A well-chosen, representative, and diverse sample of data points can help ensure that the relationships observed between variables are robust and applicable to the wider business context, thus increasing predictive validity.
 
 Moreover, controlling for confounding variables is crucial. Analysts should identify potential confounding variables and account for them in their analysis or models. By controlling for these factors, analysts can reduce the likelihood of spurious relationships (see 3.5.3.2) and increase the predictive validity of their chosen variables. We will return to this topic in Chapter 4.
 
@@ -385,13 +666,13 @@ For example, in a dataset containing information about customer purchases, each 
 
 Dealing with challenges posed by structured and unstructured data, particularly preprocessing and transformation of unstructured data, can be addressed through a variety of methods. While it can be time-consuming and require specialized tools or techniques, a systematic approach can help make the process more efficient and effective.
 
-Firstly, for unstructured data, it is essential to identify the specific information that needs to be extracted to address the business question. By narrowing down the focus, you can ensure that the preprocessing and transformation efforts are targeted and relevant.#
+Firstly, for unstructured data, it is essential to identify the specific information that needs to be extracted to address the business question. By narrowing down the focus, you can ensure that the preprocessing and transformation efforts are targeted and relevant.
 
-Next, leveraging specialized tools and techniques is necessary to effectively work with unstructured data. For textual data, natural language processing (NLP) tools can be used to extra relevant information from text. For image data, image recognition techniques, such as convolutional neural networks, can be employed to classify, detect objects, or segment images. Similarly, for audio data, signal processing tools and techniques can be used to extract relevant features.
+Next, leveraging specialized tools and techniques is necessary to effectively work with unstructured data. For textual data, natural language processing (NLP) tools can be used to extract relevant information from text. For image data, image recognition techniques, such as convolutional neural networks, can be employed to classify, detect objects, or segment images. Similarly, for audio data, signal processing tools and techniques can be used to extract relevant features.
 
 To tackle high dimensionality, dimensionality reduction techniques can be applied. For structured data, methods such as principal component analysis (PCA) or feature selection techniques like forward or backward selection can be used. For unstructured data, approaches like topic modeling for text data or autoencoders for image data can help reduce dimensionality.
 
-###	Data sources 
+###	Data sources
 Problems in identifying patterns in data can arise from data sources because they may contain inconsistent, incomplete, and outdated information, or may not be accessible. Data collected from different sources or systems might have different formats, units, timeframes, or representations. Inconsistencies across data sources can complicate data integration and can make it difficult to use datasets for analysis and pattern identification. Data sources may not contain all the necessary information, thus only delivering incomplete data, and requiring additional data acquisition or integration of multiple sources to get a complete picture.Furthermore, data sources may be outdated or not up-to-date, making it difficult to identify current trends or patterns. In addition, gaining access to relevant data sources can be challenging due to privacy concerns, legal restrictions, or organizational barriers. Think of GDPR concerns not allowing you to use personnel data.
 
 How to deal with it? Firstly, data cleaning and preprocessing are essential steps before conducting any analysis (see next section).
@@ -399,7 +680,7 @@ How to deal with it? Firstly, data cleaning and preprocessing are essential step
 Secondly, ensuring the accuracy and reliability of the data through validation and verification is important. Cross-checking data sources, reviewing data collection methods, and confirming the data's authenticity can help reduce the risk of errors and improve the quality of the analysis.
 
 Combining multiple data sources can help address issues of incomplete or inaccessible data. By aggregating data from different sources, you can create a more comprehensive dataset that may reveal patterns that were previously hidden. It's important to carefully assess the compatibility and quality of the different data sources before combining them.
-Updating your data sources regularly can help mitigate the issue of outdated information. 
+Updating your data sources regularly can help mitigate the issue of outdated information.
 
 By incorporating the most recent data available, you can ensure that your analysis remains relevant and accurate. This may involve subscribing to data feeds, setting up automated data updates, or maintaining a schedule for manual data updates.
 
@@ -421,14 +702,14 @@ Finally, invest in training and capacity building for your team in the areas of 
 ###	Noisy data
 Noisy data refers to data that contains irrelevant, random, or erroneous information, which can distort the true underlying patterns, relationships, or signal in the dataset. Noisy data can arise due to various reasons, such as measurement errors, data entry mistakes, data corruption, or natural variability in the data-generating process. In the context of statistical analysis, noisy data can have a detrimental impact on the performance, accuracy, and interpretability of models and algorithms. There are several types of noise that can affect data:
 
-**Random noise:** This is the result of random fluctuations or errors in the data collection or recording process. 
+**Random noise:** This is the result of random fluctuations or errors in the data collection or recording process.
 
-**Systematic noise:** This occurs when there is a consistent error or bias introduced into the data due to a flaw in the data collection or measurement process. 
+**Systematic noise:** This occurs when there is a consistent error or bias introduced into the data due to a flaw in the data collection or measurement process.
 
 **Outliers:** Outliers are data points that deviate significantly from the overall pattern or distribution of the data. They can be considered as a form of noise when they result from errors or anomalies in the data collection process.
 
-Dealing with noisy data often requires additional preprocessing steps. 
-One approach to managing noisy data is applying smoothing techniques such as moving averages, which help reduce the impact of random variations in the data. 
+Dealing with noisy data often requires additional preprocessing steps.
+One approach to managing noisy data is applying smoothing techniques such as moving averages, which help reduce the impact of random variations in the data.
 
 Outlier detection is another important aspect of handling noisy data. Identifying and dealing with outliers, which are data points that deviate significantly from the norm, can help minimize their impact on pattern identification. Visual methods such as box plots or various statistical methods, such as the Z-score or the IQR method, can be used to detect outliers.
 
@@ -436,13 +717,13 @@ Outliers can be caused by measurement errors, data entry errors, sampling proble
 
 **Measurement error** is a type of error that can occur when the measurement instrument used to collect the data is imperfect or when the measurement process is not accurate. Measurement error can cause outliers in the data because it can lead to values that are significantly different from the true value of the variable being measured. Measurement error in customer satisfaction data can occur due to errors in the survey process, such as asking unclear or biased questions, or due to errors in the data entry process. For example, if a respondent mistakenly selects the wrong answer on a customer satisfaction survey, this could result in an outlier in the data.
 
-**Data entry errors** are mistakes that occur during the process of entering data into a computer or database. Data entry errors can cause outliers in the data because they can lead to values that are significantly different from the actual value of the variable being measured. For example, suppose that the accountant incorrectly records of sales transactions and types €200 instead of €100. 
+**Data entry errors** are mistakes that occur during the process of entering data into a computer or database. Data entry errors can cause outliers in the data because they can lead to values that are significantly different from the actual value of the variable being measured. For example, suppose that the accountant incorrectly records of sales transactions and types €200 instead of €100.
 
 If the outliers are due to measurement errors, data entry errors, or sampling error, then it may be appropriate to remove them from the dataset. In that case, the data points do not belong into the data. You can use the z-Score o IQR (see section 222) to identify and delete the outlier.
 
-However, things are different when considering data points which are extreme, but real. Sometimes outliers occur naturally, and are part of the population you are investigating. In this case, you should not remove the outlier, but handle it differently. 
+However, things are different when considering data points which are extreme, but real. Sometimes outliers occur naturally, and are part of the population you are investigating. In this case, you should not remove the outlier, but handle it differently.
 
-A common approach to do so is the transformation of the variables. This can be done by applying a mathematical function to the data that changes the scale or distribution of the data. For example, a log transformation of the respective variable can be created and used in the analysis to reduce the impact of outliers in positively skewed data. 
+A common approach to do so is the transformation of the variables. This can be done by applying a mathematical function to the data that changes the scale or distribution of the data. For example, a log transformation of the respective variable can be created and used in the analysis to reduce the impact of outliers in positively skewed data.
 
 Alternatively, winsorizing is a technique that involves replacing the outliers with the nearest values that are within a certain percentile range. For example, if the 99th percentile is used, any values above the 99th percentile are replaced with the value at the 99th percentile. This can be done on both ends of the distribution to deal with outliers in both tails.
 

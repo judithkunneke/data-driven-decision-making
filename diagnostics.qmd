@@ -21,16 +21,16 @@ source("hhs-ggtheme.R")
 
 knit_print.gt <- function(x, ...) {
   stringr::str_c(
-    "<div style='all:initial';>\n", 
-    gt::as_raw_html(x), 
+    "<div style='all:initial';>\n",
+    gt::as_raw_html(x),
     "\n</div>"
-  ) |> 
+  ) |>
     knitr::asis_output()
-    
+
 }
 registerS3method(
-  "knit_print", 'gt_tbl', knit_print.gt, 
-  envir = asNamespace("gt") 
+  "knit_print", 'gt_tbl', knit_print.gt,
+  envir = asNamespace("gt")
   # important to overwrite {gt}s knit_print
 )
 
@@ -50,67 +50,68 @@ Diagnostic analysis seeks to answer the question of why a particular event or ou
 Diagnostic analysis is a natural extension of exploratory analysis---the identification of data patterns (@sec-datapat). While exploratory analysis focuses on discovering trends, patterns, and relationships in the data, diagnostic analysis goes a step further by investigating the reasons behind those patterns. Consider the following question: *Why are some business units more productive than others?* By conducting diagnostic analysis, analysts can investigate the factors contributing to productivity differences among business units. Some potential reasons could be unit-specific competitive advantages, management styles, resource allocation, employee skills, company culture, or even measurement issues. In this case, diagnostic analysis techniques provide a principled way to disentangle many potential reasons and better understand the reasons for productivity differences. And of course, the insights gained from the analysis could in turn be employed to develop targeted strategies to improve overall firm performance.
 
 Another example of a question lending itself for diagnostic analysis is: *What customers reacted well to a marketing campaign?*
-Analyzing differences in customer responses to marketing campaigns allows allows analysts to identify which customer segments reacted positively and why. This information can be used to tailor future marketing efforts, improve targeting, and increase the return on investment for marketing initiatives. Understanding the drivers of customer behavior can also inform product development, pricing strategies, and customer relationship management efforts.
+Analyzing differences in customer responses to marketing campaigns allows analysts to identify which customer segments reacted positively and why. This information can be used to tailor future marketing efforts, improve targeting, and increase the return on investment for marketing initiatives. Understanding the drivers of customer behavior can also inform product development, pricing strategies, and customer relationship management efforts.
 
 ## Diagnostic analysis requires a bit of causal reasoning
 
-A diagnostic analysis often requires more advanced statistical techniques than those used in exploratory analysis. Even more importantly, it requires an even stronger reliance on mental models. This is because mental models are required to design and interpret analyses able to speak to "why" questions. As a simple example, suppose we stumble upon a survey that finds a positive relation between respondents being married and respondents self-reported happiness score. What drives this relation? Is it that marriage makes people happy? Or that happier people are more likely to get married? Or is there even a third explanation (both variables are correlated with age). Analyzing data with the goal of answering "Why?" and "What drives...?" questions requires even more recourse to models that represent the relationships between variables and potential causal factors. The same holds even holds for the development of the analysis itself. We need a model to guide the selection of relevant variables, the choice of appropriate statistical techniques, etc.
+A diagnostic analysis often requires more advanced statistical techniques than those used in exploratory analysis. Even more importantly, it requires an even stronger reliance on mental models. This is because mental models are required to design and interpret analyses able to speak to "why" questions. As a simple example, suppose we stumble upon a survey that finds a positive relation between respondents being married and respondents self-reported happiness score. What drives this relation? Is it that marriage makes people happy? Or that happier people are more likely to get married? Or is there even a third explanation (both variables are correlated with age). Analyzing data with the goal of answering "Why?" and "What drives...?" questions requires even more recourse to models that represent the relationships between variables and potential causal factors. The same holds for the development of the analysis itself. We need a model to guide the selection of relevant variables, the choice of appropriate statistical techniques, etc.
 
 
 ### The importance of assumptions in causal reasoning
 
-Before proceeding, we want to offer a word of caution. "Establishing causality" is often considered the gold standard in decision-making, as it allows for a better understanding of cause-and-effect relationships, which can lead to more effective policies and interventions. It is also impossible because every analysis rests on untestable assumptions. Even in a randomized experiment, analysts have to make assumption about proper measurement of often difficult to define and measure constructs. 
+Before proceeding, we want to offer a word of caution. "Establishing causality" is often considered the gold standard in decision-making, as it allows for a better understanding of cause-and-effect relationships, which can lead to more effective policies and interventions. It is also impossible because every analysis rests on untestable assumptions. Even in a randomized experiment, analysts have to make assumptions about proper measurement of often difficult to define and measure constructs.
 
-When data is not arising from a randomized experiment (i.e., all real world data), decision-makers face even more challenges when trying to make policies based on data. Confounding and hard to measure other influences, disagreement about the correct mental model all make it difficult to distinguish between correlation and causation---especially in a complex and dynamic business environment. In real-world business settings, multiple factors often influence outcomes, and disentangling these factors to isolate relationships is challenging. 
+When data is not arising from a randomized experiment (i.e., all real world data), decision-makers face even more challenges when trying to infer the causes of patterns from data. Confounding, endogenous selection issues, and disagreement about the correct mental model are all issues that make it difficult to distinguish between correlation and causation. Especially in a complex and dynamic business environment we face the issue of multiple correlated factors that influence the outcomes of interest. Disentangling these factors to isolate relations is challenging.
 
-The role of theory and hypothesis development thus becomes even more crucial. Theory and hypotheses serve as the foundation for reasoning about the underlying mechanisms and relationships between variables. Developing a well-thought through mental model allows decision-makers to make more informed assumptions and predictions about the potential outcomes of their policies. It also allows them to develop more useful hypotheses to check their model assumptions (e.g., if it is ) Mental models thus guide the collection and analysis of data by specifying the expected relationships between variables and helping to identify potential confounders and biases. 
+The role of theory and hypothesis development thus becomes even more crucial. Theory and hypotheses serve as the foundation for reasoning about the underlying mechanisms and relationships between variables. Developing a well-thought through mental model allows decision-makers to make more informed assumptions and predictions about the potential outcomes of their policies. A good model makes it easier to develop useful hypotheses. Likewise, mental models guide the collection and analysis of data by specifying the expected relations between variables. Finally models help to identify potential confounders and biases.
 
 In sum, it is crucial for any decision-maker to be very clear about what the mental model and the in-built assumptions are that guide any diagnostic analysis. Only with such an understanding can the analysis be directed and results be analyzed.
 
 ## Developing a mental model
 
-A mental model is a conceptual framework that represents the relationships between variables and potential causal factors. A mental model represents how different elements in a system are interconnected and how they influence each other. In the context of business relationships, mental models can help decision-makers better understand complex dynamics and make more informed decisions. 
+A mental model is a conceptual framework that represents the relationships between variables and potential causal factors. A mental model represents how different elements in a system are interconnected and how they influence each other. In the context of business relationships, mental models can help decision-makers better understand complex dynamics and make more informed decisions.
 
 Consider the example of customer churn in a subscription-based business. The first step in developing a mental model involves identifying the key variables that are relevant to customer churn. These variables might include factors such as product quality, quality of customer support, pricing, and competitor offerings. This step of first identifying key determinants is essential, because it helps you focus the analysis on the most relevant factors.
 
-After identifying the key variables related to customer churn, the next step is to reason about the relations between these variables. This involves reasoning about how changes in one variable might affect other variables in the system. For example, how does an increase in prices impact the likelihood of a customer churning? Or how does the quality of customer support influence the likelihood of churn? By modelling these relations, we develop the underlying structure of the problem. We need this structure for diagnostic analysis. As we will see in examples later, without it we would basically interpret correlations blindly and at great peril. 
+After identifying the key variables related to customer churn, the next step is to reason about the relations between these variables. This involves reasoning about how changes in one variable might affect other variables in the system. For example, how does an increase in prices impact the likelihood of a customer churning? Or how does the quality of customer support influence the likelihood of churn? By modelling these relations, we develop the underlying structure of the problem. We need this structure for diagnostic analysis. As we will see in examples later, without it we would basically interpret correlations blindly and at great peril.
 
 The more expert knowledge we have in an area, the more we can already resort to our experience to build mental models. Still, do not forget to reason about variables and patterns uncovered via the preceeding exploratory analysis. Often new insights were generated at that step. Now, for a more systematic approach, we recommend trying to take each step one at a time to not get off track, and evaluate after each step whether you believe you completed the respective step. First, list all variables that you believe may be connected with your variable of interest that you want to explain and that popped up as interesting during the exploratory stage. Then describe the nature of the relations between the variables. We actually encourage you to draw a diagram. A visual representation of your mental model is often a great help for organizing your thoughts, critically analyzing then, and communicating them to others. The example below illustrates the point that text only may not be enough:
 
-![Mental model](pics/C4/causal mental model.png){height="400px"}
-<font size="0.6">Source: https://www.researchgate.net/publication/320349775_Causal_Attributions_of_Vineyard_Executives_-_A_Mental_Model_Study_of_Vineyard_Management/figures?lo=1 </font>
+![Mental model](pics/C4/causal mental model.png){#fig-MM1 height="400px"}
+
+<font size="0.6">Source: @schaffernicht2017causal </font>
 
 Let’s go back to our customer churn example. With regard to our key variable of interest, customer churn, we **hypothesize** the following:
 
-1.  Quality of customer support is negatively associated with customer churn (because better customer support quality makes customers happy, and they are less likely to leave)
+1. Quality of customer support is negatively associated with customer churn (because better customer support quality makes customers happy, and they are less likely to leave).
 
-2.  Product quality is negatively associated with customer churn (because higher product quality makes customers happy, and they are less likely to leave)
+2. Product quality is negatively associated with customer churn (because higher product quality makes customers happy, and they are less likely to leave).
 
-3.  Competitor offerings are positively associated with customer churn (because interesting offers from competitors might trigger our customers to switch to our customers, and they are more likely to leave)
+3. Competitor offerings are positively associated with customer churn (because interesting offers from competitors might trigger our customers to switch to our competitors).
 
-4.  Price is positively associated with customer churn (because customers do not like to pay more, and they are more likely to leave)
+4. Price is positively associated with customer churn (because customers do not like to pay more, and they are more likely to leave).
 
-5.  Product quality is positively associated with price (because higher quality is usually costly, sales prices need to be higher as well)
+5. Product quality is positively associated with price (because higher quality is usually costly, sales prices need to be higher as well).
 
-6.  Competitor offerings are negatively associated with price (because of the pressure in the market and the offer by our competitors, we might need to reduce our prices) 
+6. Competitor offerings are negatively associated with price (because of the pressure in the market and the offer by our competitors, we might need to reduce our prices).
 
 It is easy to loose the bigger picture and a quick sketch makes our reasoning much more transparent:
 
-![Mental model](pics/C4/mental model.png){height="350px"}
+![Mental model](pics/C4/mental model.png){#fig-MM2 height="350px"}
 
-And now you are ready to test your mental model against real-world data and observations to ensure its accuracy and relevance. The sketch (as we will explain later) also already tells you that you cannot analyze the relation between churn and price without holding the influence of product quality and competitor offerings fixed! Something that your analysis of a price effect will need to do, if your theory is correct. The example thus highlights, why having a mentalmodel is essential as basis for any decisions you want to make. Without a clear idea of **why** certain variables are associated, you will not be able to interpret any results that your analyses will provide you. It needs sound theoretical reasoning to give meaning to your results.
+And now you are ready to test your mental model against real-world data and observations to ensure its accuracy and relevance. The sketch (as we will explain later) also already tells you that you cannot analyze the relation between churn and price without holding the influence of product quality and competitor offerings fixed! Something that your analysis of a price effect will need to do, if your theory is correct. The example thus highlights, why having a mental model is essential as basis for any decisions you want to make. Without a clear idea of **why** certain variables are associated, you will not be able to interpret any results that your analyses will provide you. It needs sound theoretical reasoning to give meaning to your results.
 
 Developing a mental model is an iterative process, where the model is continuously refined based on the insights gained from the analysis. As new relations and factors are identified, the mental model can be updated to better represent the true underlying structure of the data. As new information emerges or the business environment changes, update your mental model to reflect these developments. This iterative process allows for a deeper understanding of the factors influencing, for example, customer churn and more effective decision-making regarding this issue.
 
 
 ## There is no such thing as chance
 
-Before diving into the details of analyzing why questions, we need to clarify some basics. You might have heard phrases like: "This relation between x and y is unlikely due to chance". What this means, is that the analyst believes the pattern observed in the data between x and y would also be present in general and not just in this particular data set. That it is generalizable. But how could "chance" (or "noise") even create a pattern? What does this mean? 
+Before diving into the details of analyzing why questions, we need to clarify some basics. You might have heard phrases like: "This relation between x and y is unlikely due to chance". What this means, is that the analyst believes the pattern observed in the data between x and y would also be present in general and not just in this particular data set. That it is generalizable. But how could "chance" (or "noise") even create a pattern? What does this mean?
 
 To understand what is actually meant by randomness or chance in our context, think of a coin flip. We usually assume the chance of a coin landing heads or tails to be even (50% it lands heads and 50% it lands tails). We often say: the chance of a coin landing heads or tails is purely *random*. Notice though, that randomness here is a statement about our *ignorance*, not a property of the universe. We know the physics of a coin flip quite well. If we could measure the angle of the coin flip, the wind around the coin, the distance to ground, etc. We could combine our knowledge with the measure to built a prediction model and estimate the probability of the coin landing heads. We would very likely do much better than 50%. Randomness is thus simple due to the fact that either, we have not measured all determinants of the outcome (e.g., coin lands heads), or we do not even know enough about the problem to specify the determinants with certainty (a mental model question). In regression models, all the unmeasured and unmodelled influence are packed into what is called an error term. The following is a typical regression equation, specifying a linear relation between $y$ and $x$:
 
 $$y = 1 + 2 * x + u$$
-The $u$ is the error term. It captures all the other things that also influence $y$ and which we didn't care to model and measure explicitly. The fact that there will be always an error term---we can never hope to name and measure all influences of even simple problems---is the source of "chance" patterns. 
+The $u$ is the error term. It captures all the other things that also influence $y$ and which we didn't care to model and measure explicitly. The fact that there will be always an error term---we can never hope to name and measure all influences of even simple problems---is the source of "chance" patterns.
 
 ```{r}
 #| message: false
@@ -125,11 +126,11 @@ gen_data <- function(i, .x = x) {
     x = .x,
     y = y,
     id = i
-  ) 
+  )
   return(d)
 }
-d <- 
-  map(1:20, \(i) gen_data(i)) |> 
+d <-
+  map(1:20, \(i) gen_data(i)) |>
   list_rbind()
 ```
 
@@ -141,7 +142,7 @@ The following simulation tries to illustrate the issue. We draw 50 x variables a
 x
 ```
 
-We then we draw some other influences at random, pack them into an error term $u$ and compute a $y$ variable according to the equation above $y = 1 + 2 * x + u$. We do this 20 times, but we always use the same $x$ values above. If you need an example, think of 20 surveys where each time 50 people were surveyed about how happy they are (y = happiness). The survey firm tried very hard to always get the same x distribution (say x is age of the respondents), but it can obviously never find exactly the same type of people. Because people of the same age are still very different, the error term $u$ will always differ quite a bit among these 20 surveys. @fig-rand1 shows how much the *sample* relation (the slope) between x and y varies between the 20 surveys:
+We then we draw some other influences at random, pack them into an error term $u$ and compute a $y$ variable according to the equation above $y = 1 + 2 * x + u$. We do this 20 times, but we always use the same $x$ values above. Importantly, this means that the true slope for all 20 samples is 2. If you need an example, think of 20 surveys where each time 50 people were surveyed about how happy they are ($y$ = happiness). The survey firm tried very hard to always get the same $x$ distribution (say x is age of the respondents), but it can obviously never find exactly the same type of people. Because people of the same age are still very different, the error term $u$ will always differ quite a bit among these 20 surveys. @fig-rand1 shows how much the *sample* relation (the slope) between x and y varies between the 20 surveys:
 
 
 ```{r}
@@ -154,15 +155,15 @@ We then we draw some other influences at random, pack them into an error term $u
 #| fig-show: animate
 #| interval: 0.1
 
-p1 <- d |> 
-  ggplot(aes(x = x, y = y)) + 
-  geom_point()  + 
+p1 <- d |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point()  +
   geom_smooth(method = "lm", formula = 'y ~ x',
-              color = "cornflowerblue", fill = "cornflowerblue", alpha = 0.2) + 
-  scale_y_continuous(limits = range(d$y)) + 
-  scale_x_continuous(limits = range(d$x)) + 
-  # theme_minimal() + 
-  theme(panel.grid.minor = element_blank()) + 
+              color = "cornflowerblue", fill = "cornflowerblue", alpha = 0.2) +
+  scale_y_continuous(limits = range(d$y)) +
+  scale_x_continuous(limits = range(d$x)) +
+  # theme_minimal() +
+  theme(panel.grid.minor = element_blank()) +
   transition_states(id) +
   ease_aes('linear')
 # anim_save("p1.gif", animation = p1, fps=5)
@@ -170,9 +171,9 @@ animate(p1, fps=5, height = 4, width = 4, units = "in", res = 90, device = "ragg
 ```
 
 
-Remember the slope underlying the relation between x and y in all 20 samples is 2! All the variation you see here in slope (some are even negative!) is due to the unmeasured influences in $u$. Remember we always used the same x values. If you pay careful attention, you can see that the dots in the plot only move up and down. The $x$ values are fixed. It is thus the changing amounts of $u$ that are added to x to arrive a $y$ that camouflage the true relation. This is what people mean when they say a relation can be due to chance. 
+Remember the slope underlying the relation between x and y for all 20 samples is 2! All the variation you see here in slope (some are even negative!) is due to the unmeasured influences in $u$. Remember we always used the same x values. If you pay careful attention, you can see that the dots in the plot only move up and down. The $x$ values are fixed. It is thus the changing amounts of $u$ that are added to x to arrive a $y$ that camouflage the true relation. This is what people mean when they say a relation can be due to chance.
 
-The "chance" of chance patterns is thus higher when there is a lot of unexplained variation of the outcome of interest left. The best remedy against this is: more data. In @fig-rand2, we start with a sample of 50 observation and increase it step by step by 10 observations up to a maximum of 500 observations. 
+The "chance" of chance patterns is thus higher when there is a lot of unexplained variation of the outcome of interest left. The best remedy against this is: more data. In @fig-rand2, we start with a sample of 50 observations and increase it step by step by 10 observations up to a maximum of 500 observations.
 
 ```{r}
 #| message: false
@@ -194,21 +195,21 @@ gen_data2 <- function(nob, .x = x, .u = u) {
     x = .x[1:nob],
     y = y,
     id = nob
-  ) 
+  )
   return(d)
 }
 
-d2 <- 
-  map(seq(50, 500, by = 10), \(i) gen_data2(i)) |> 
+d2 <-
+  map(seq(50, 500, by = 10), \(i) gen_data2(i)) |>
   list_rbind()
-p2 <- d2 |> 
-  ggplot(aes(x = x, y = y)) + 
-  geom_point()  + 
+p2 <- d2 |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point()  +
   geom_smooth(method = "lm", formula = 'y ~ x',
-              color = "cornflowerblue", fill = "cornflowerblue", alpha = 0.2) + 
-  scale_y_continuous(limits = range(d2$y)) + 
-  scale_x_continuous(limits = range(d2$x)) + 
-  theme(panel.grid.minor = element_blank()) + 
+              color = "cornflowerblue", fill = "cornflowerblue", alpha = 0.2) +
+  scale_y_continuous(limits = range(d2$y)) +
+  scale_x_continuous(limits = range(d2$x)) +
+  theme(panel.grid.minor = element_blank()) +
   transition_states(id) +
   ease_aes('linear')
 # anim_save("p2.gif", animation = p2, fps=6)
@@ -224,11 +225,11 @@ Let's consider an example from the business world to illustrate again what to lo
 
 ## Hypothesis testing
 
-Hypothesis testing is an extension of the logic we used above to provide intuition for chance patterns in the data. More formally, it is a statistical procedure used to make inferences about a *population parameter* based on a *sample* drawn from a *population*. Population just means: all relevant units of interest. The sample is then those units we have data on. A population parameter is then an unknown parameter describing a relation of interest, derived from our mental model. In @fig-rand1 the population parameter (technically unknown) was a slope parameter between y and x of 2. The sample estimates (the blue line that keeps jumping around) is our sample estimate of that population parameter. And as @fig-rand1 shows, it can be quite off sometimes. 
+Hypothesis testing is an extension of the logic we used above to provide intuition for chance patterns in the data. More formally, it is a statistical procedure used to make inferences about a *population parameter* based on a *sample* drawn from a *population*. Population just means: all relevant units of interest. The sample is then those units we have data on. A population parameter is then an unknown parameter describing a relation of interest, derived from our mental model. In @fig-rand1 the population parameter (technically unknown) was a slope parameter between y and x of 2. The sample estimates (the blue line that keeps jumping around) is our sample estimate of that population parameter. And as @fig-rand1 shows, it can be quite off sometimes.
 
 The problem that hypothesis testing tries to deal with is this: suppose that our sample estimate of the slope parameter is 0.3, what can we learn about the population parameter (in our example: 2, but again, we wouldn't know that normally). It's main component is a hypothesis concerning what the population parameter is, often called the null hypothesis. For example, we could pose a null hypothesis (H$_0$) of no-relation (the slope is hypothesized to be zero). However, a null hypothesis could also be: the slope is 15. We decide what hypothesis to test. Let us stick with H$_0$: the slope is zero. The "testing" then involves whether the data is more or less consistent with our chosen null hypothesis. Intuitively, if there is a lot of unmeasured influences in $u$, then a slope of 0.3 is probably not unrealistic to occur by chance (again, see @fig-rand1 for how much a parameter can change from sample to sample). Classical hypothesis testing formalizes this intuition and condenses it into two numbers, a chosen significance level and a derived p-value (or equivalently a confidence interval). Here is the thought experiment behind it.
 
-Suppose we would run 1,000 experiments and each time record the slope. Then we count how often we see certain magnitudes. Given our null hypothesis of the slop being 0 and an estimate of the amount of unexplained influence that lead to variation around 0, we would expect a histogram like the left one in @fig-rand3:
+Suppose we would run 1,000 experiments and each time record the slope. Then we count how often we see certain magnitudes. Given our null hypothesis of the slope being 0 and an estimate of the amount of unexplained influence that lead to variation around 0, we would expect a histogram like the left one in @fig-rand3:
 
 
 ```{r}
@@ -260,45 +261,45 @@ d3 <- tibble(
 
 siglvs <- quantile(d3$s0, probs = c(0.025, 0.975))
 
-p3 <- 
-  ggplot(d3, aes(x = s0)) + 
-  geom_histogram(fill = "cornflowerblue") + 
-  geom_vline(xintercept = 0, col = "red") + 
+p3 <-
+  ggplot(d3, aes(x = s0)) +
+  geom_histogram(fill = "cornflowerblue") +
+  geom_vline(xintercept = 0, col = "red") +
   annotate("rect", xmin = -8, xmax = siglvs[1], ymin = 0, ymax = 120,
-           alpha = .1 ,fill = "red", color = NA) + 
+           alpha = .1 ,fill = "red", color = NA) +
   annotate("rect", xmin = siglvs[2], xmax = 8, ymin = 0, ymax = 120,
            alpha = .1,fill = "red", color = NA) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.0)), limits = c(0,120)) +
   labs(
     x = "Estimates of the slope",
     subtitle = "Frequency of Occurence under the Null"
-  ) + 
+  ) +
   theme(panel.grid.major = element_blank())
 
-p4 <- 
-  ggplot(d3, aes(x = s)) + 
-  geom_histogram(fill = "cornflowerblue") + 
-  geom_vline(xintercept = 0, col = "red") + 
+p4 <-
+  ggplot(d3, aes(x = s)) +
+  geom_histogram(fill = "cornflowerblue") +
+  geom_vline(xintercept = 0, col = "red") +
   scale_y_continuous(expand = expansion(mult = c(0, 0.0)), limits = c(0,120)) +
   labs(
     x = "Estimates of the slope",
     subtitle = "Actual Frequency of Occurence"
-  ) + 
+  ) +
   theme(panel.grid.major = element_blank())
 p3 + p4
 ```
 
-If you look at the left plot, the chance of observing a slope of +/- 0.3 is quite high. A lot of counts, if H$_0$ would be true, fall into this category. When seeing a 0.3 slope, we would thus *not* be able to rule out H$_0$, would not be able to rule out that a slope value of 0.3 is due to chance, and thus not be able to rule out that the pattern is due to chance. We would make a mistake in this case, as the true slope is different from 0. It is 2. Luckily, as shown on the right plot of @fig-rand3, we are less likely to draw a slope value of 0.3 when we get a sample (but it is not unlikely!). 
+If you look at the left plot, the chance of observing a slope of +/- 0.3 is quite high. We would observe a lot of counts in this range, if H$_0$ would be true. When seeing a 0.3 slope, we would thus *not* be able to rule out H$_0$, would not be able to rule out that a slope value of 0.3 is due to chance, and thus not be able to rule out that the pattern is due to chance. But, because we simulated the date, we know that it would be mistake to conclude that the pattern is due to chance. The true slope is different from 0; it is 2. As shown on the right plot of @fig-rand3, we are less likely to draw a slope value of 0.3 when we get a sample from the true distribution (but it is not unlikely!).
 
-A p-value and significance level quantify this reasoning. We need to find a cut-off after which we say, "Now, slope values higher than that are too unlikely to be due to a population with H$_0$ as its parameter". When choosing such a cut-off, we need to also consider the chance of making a mistake. As we can see in @fig-rand3, there are some unlikely values. E.g., the slope value of 5 is rare under H$_0$: the slope is zero. But it is not impossible. Still, the chance of making an error is small when we see a value of 5 and say, "ok, the population parameter is probably not zero". The amount of error we are willing to consider is called the significance value. You can see it in the figure. It is the shaded region in the left plot. The shaded region shows the 97.5 and 2.5 percentile---the most extreme values occurring with 2.5% or less of a chance on both sides. If we get a sample whose slope value lies in the shaded region, we would only expect to see such a value with 5% chance (the chosen significance value). So we would make an error in 5% of the cases when deciding to reject H$_0$. Similarly, the p-value is the chance of seeing a slope value as the one observed in the sample if H$_0$ is true (and the regression model is correct). If it is below our chosen significance level (our chosen maximum error level), we reject H$_0$ in favor of the alternative. 
+A p-value and significance level quantify this reasoning. We need to find a cut-off after which we say, "Now, slope values higher than that are too unlikely to be due to a population with H$_0$ as its parameter". When choosing such a cut-off, we need to also consider the chance of making a mistake. As we can see in @fig-rand3, there are some unlikely values. E.g., the slope value of 5 is rare under H$_0$: the slope is zero. But it is not impossible. Still, the chance of making an error is small when we see a value of 5 and say, "ok, the population parameter is probably not zero". The amount of error we are willing to consider is called the significance value. You can see it in the figure. It is the shaded region in the left plot. The shaded region shows the 97.5 and 2.5 percentile---the most extreme values occurring with 2.5% or less of a chance on both sides. If we get a sample whose slope value lies in the shaded region, we would only expect to see such a value with 5% chance (the chosen significance value). So we would make an error in 5% of the cases when deciding to reject H$_0$. Similarly, the p-value is the chance of seeing a slope value as the one observed in the sample if H$_0$ is true (and the regression model is correct). If it is below our chosen significance level (our chosen maximum error level), we reject H$_0$ in favor of the alternative.
 
-The actual mathematics of computing p-values, test statistics, and so on are very important. However, these are covered in detail in any standard regression textbook and we do not see a lot of value in repeating them here. Instead we focused on the intuition. We hope it has become clear that *hypothesis testing is in fact a decision making framework*. One that tries to control a certain error rate with the significance level: The chance of incorrectly rejecting a hypothesis. 
+The actual mathematics of computing p-values, test statistics, and so on are very important. However, these are covered in detail in any standard regression textbook and we do not see a lot of value in repeating them here. Instead we focused on the intuition. We hope it has become clear that *hypothesis testing is in fact a decision making framework*. One that tries to control a certain error rate with the significance level: The chance of incorrectly rejecting a hypothesis.
 
 In summary, the general steps involved in hypothesis testing thus are:
 
 1. Formulate the null and alternative hypotheses: Clearly state the null hypothesis (H$_0$). The alternative H$_A$ is usually that that the population parameter is not equal to the population parameter. For example, H$_0$: There is no difference in sales performance of weekday- and weekend-workers. H$_A$: There is a difference in sales performance of weekday- and weekend-workers. There are also of course, directional hypotheses, such as the population parameter is greater than 0. The same logic applies to them.
 
-2. Choose an appropriate significance level ($α$): It is the error level we allow ourselves; the point at which we say, values that occur with a probability of $a$ or less we consider to not arise from H$_0$. A common choice for $α$ is 0.05, indicating a 5%. But that number is to some extent ad-hoc. Think carefully about what it should be in your application. 
+2. Choose an appropriate significance level ($α$): It is the error level we allow ourselves; the point at which we say, values that occur with a probability of $a$ or less we consider to not arise from H$_0$. A common choice for $α$ is 0.05, indicating a 5%. But that number is to some extent ad-hoc. Think carefully about what it should be in your application.
 
 3. Select a suitable statistical test: Depending on the research question, data type, and assumptions, choose a statistical test (e.g., t-test, chi-square test, ANOVA) to analyze the data. We have not talked much about this yet. We will talk more about it in the exercises.
 
@@ -315,15 +316,15 @@ We basically introduced half of what a regression analysis is about already in t
 
 ### Revisiting correlations
 
-In @sec-datapat, we touched upon correlations. A correlation coefficient only assesses the strength of an assumed linear relationship in a sample---*how linear* it is. It does not tell us anything about the *magnitude* of the relation. If we want to learn something about the magnitude of the linear relation---and maybe compare it to the magnitude in other settings or other variables, we need a regression model. 
+In @sec-datapat, we touched upon correlations. A correlation coefficient only assesses the strength of an assumed linear relationship in a sample---*how linear* it is. It does not tell us anything about the *magnitude* of the relation. If we want to learn something about the magnitude of the linear relation---and maybe compare it to the magnitude in other settings or other variables, we need a regression model.
 
-To illustrate, we use an example of a retail company that analyzes the performance of its employees at each branch. The company wants to understand if there is a correlation between average employee tenure at the branch level and the branch profit they generate.^[As we perform our investigation at the branch level, average employee tenure implies that the tenure of all employees at the respective branch is averaged. Technically, we need to be careful here. As the average tenure is itself estimated, there is additional noise in our x variable that we should account for. We ignore this in the example, for ease of exposition.] The company collected data on the number of months an employee works for a branch and the total profit of the respective branch. We start our analysis by calculating the correlation coefficient between these two variables. We are first interested in the strength and direction of a possible linear relationship. Similarly to earlier, we would have two competing hypotheses: 
+To illustrate, we use an example of a retail company that analyzes the performance of its employees at each branch. The company wants to understand if there is a correlation between average employee tenure at the branch level and the branch profit they generate.^[As we perform our investigation at the branch level, average employee tenure implies that the tenure of all employees at the respective branch is averaged. Technically, we need to be careful here. As the average tenure is itself estimated, there is additional noise in our x variable that we should account for. We ignore this in the example, for ease of exposition.] The company collected data on the number of months an employee works for a branch and the total profit of the respective branch. We start our analysis by calculating the correlation coefficient between these two variables. We are first interested in the strength and direction of a possible linear relationship. Similarly to earlier, we would have two competing hypotheses:
 
 - H$_0$: There is no significant association between employee tenure and profit
 
 - H$_A$: There is a significant association between employee tenure and profit
 
-To determine whether this correlation is "not by chance," the company could perform a statistical test to determine if the observed correlation coefficient is statistically significant (using the `correlation::` R package). 
+To determine whether this correlation is "not by chance," the company could perform a statistical test to determine if the observed correlation coefficient is statistically significant (using the `correlation::` R package).
 
 ```{r}
 #| echo: false
@@ -334,13 +335,13 @@ d4 <- haven::read_dta("analysisgen/Store24_module3.dta")
 correlation(d4[, c("profit", "employee_tenure")])
 ```
 
-This test would compare the observed correlation against what would be expected if there were no relationship between the two variables (i.e., the correlation is purely random). We can again use a t-test.^[Meaning the test statistic follows a t-distribution. It is computed a slightly differently than, for example, a differences-in-means t-test. The formula is: $t_r = r√(n-2) / (1-r2)$] The results present a correlation coefficient of 0.26 and a p-value of 0.06. This implies there is indeed a weak positive correlation (r = 0.26) which is significant (p-value of 0.026 is smaller than the conventional significance level (α) of 0.10 - in the accounting discipline). 
+This test would compare the observed correlation against what would be expected if there were no relationship between the two variables (i.e., the correlation is purely random). We can again use a t-test.^[Meaning the test statistic follows a t-distribution. It is computed a slightly differently than, for example, a differences-in-means t-test. The formula is: $t_r = r√(n-2) / (1-r2)$] The results present a correlation coefficient of 0.26 and a p-value of 0.026. This implies there is indeed a weak positive correlation (r = 0.26) which is significant (p-value of 0.026 is smaller than the conventional significance level (α) of 0.10 - in the accounting discipline).
 
-All the correlation coefficient tells us, however, is that there is an indication of a linear relation, *not* the magnitude of the relation (see this [wikipedia graph](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient#/media/File:Correlation_examples2.svg)). If we are interested in that, we need to think about a regression model. 
+All the correlation coefficient tells us, however, is that there is an indication of a linear relation, *not* the magnitude of the relation (see this [wikipedia graph](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient#/media/File:Correlation_examples2.svg)). If we are interested in that, we need to think about a regression model.
 
 ### Regression coefficients
 
-A regression expresses relations between an outcome $y$ (also sometimes called response or dependent variable) and one or more predictor variables $x$ (also sometimes called independent variable). 
+A regression expresses relations between an outcome $y$ (also sometimes called response or dependent variable) and one or more predictor variables $x$ (also sometimes called independent variable).
 
 $$y = a + b * x + u$$
 
@@ -359,23 +360,23 @@ $$Profit = a + b * employee\_tenure + u$$
 #| fig-height: 4
 #| fig-width: 7
 
-ggplot(d4, aes(x = employee_tenure, y = profit)) + 
-  geom_jitter() + 
+ggplot(d4, aes(x = employee_tenure, y = profit)) +
+  geom_jitter() +
     geom_smooth(method = "lm", formula = 'y ~ x',
-              color = "cornflowerblue", se = F, alpha = 0.2) + 
+              color = "cornflowerblue", se = F, alpha = 0.2) +
 
   theme(
     axis.text = element_blank(),
     axis.ticks = element_blank(),
     panel.grid.major = element_blank()
-  ) + 
+  ) +
   labs(
     y = "Branch profit",
     x = "Average employee tenure"
   )
 ```
 
-Most data tools these days allow you estimate regressions. @fig-excelreg shows regression output, estimating the line above, for a random sample of branches using excel. Below you find R output  (using the `jtools::` summ function because it creates cleaner summaries).
+Most data tools these days allow you to estimate regressions. @fig-excelreg shows regression output, estimating the line above, for a random sample of branches using excel. Below you find R output  (using the `jtools::` summ function because it creates cleaner summaries).
 
 ![Simple regression](pics/C4/simple_reg.png){#fig-excelreg height="200px"}
 
@@ -384,28 +385,28 @@ m1 <- lm(profit ~ employee_tenure, data = d4)
 summ(m1, confint = TRUE)
 ```
 
-The row labeled `employee_tenure` contains the slope, the $b$ of the regression model above. It is the parameter of interest here. First, note that the t-value and p value in this row are the same as that of the correlation coefficient. That is true for a simple linear regression with just one variable. The coefficient itself has value of 1,301.7. It is a measure of *magnitude*. It means that one additional month of average employee tenure is *associated* with 1,301.7 euros more in branch profits. This is the slope of the line in @fig-emp1. Do not be too excited about the magnitude however. Looking at the confidence interval, we can see that there is a lot of uncertainty about the actual magnitude (The 95% range is from 163 to 2,440). 1,301 is the best guess, but not a great guess. 
+The row labeled `employee_tenure` contains the slope, the $b$ of the regression model above. It is the parameter of interest here. First, note that the t-value and p value in this row are the same as that of the correlation coefficient. That is true for a simple linear regression with just one variable. The coefficient itself has value of 1,301.7. It is a measure of *magnitude*. It means that one additional month of average employee tenure is *associated* with 1,301.7 euros more in branch profits. This is the slope of the line in @fig-emp1. Do not be too excited about the magnitude however. Looking at the confidence interval, we can see that there is a lot of uncertainty about the actual magnitude (The 95% range is from 163 to 2,440). 1,301 is the best guess, but not a great guess.
 
-The intercept (also known as the constant or the y-intercept) is the value of the dependent variable when all independent variables are equal to zero. It simply represents the point where the line intercepts with the y axis and usually does not have an interesting interpretation. In this case for example, do we really care that of a branch with an average tenure of zero months, the average profits are 258K euros?  
+The intercept (also known as the constant or the y-intercept) is the value of the dependent variable when all independent variables are equal to zero. It simply represents the point where the line intercepts with the y axis and usually does not have an interesting interpretation. In this case for example, do we really care that of a branch with an average tenure of zero months, the average profits are 258K euros?
 
 Another feature of fitted regressions is that one can use them for (linear) predictions. If you want to make a prediction about the change in branch profits for let's say a branch with an average employee tenure of 12 months, we simply use the regression formula and plug in the estimated coefficients: 1,301 * 12 + 258,178 = 273,790, i.e., the predicted incremental profit after 12 months is 15,612 Euros
 
 
 ### Isolating associations via multiple regressions
 
-The real use case for linear regression models is not assessing the magnitude of one single variable. It usually is either of two things: For diagnostic analysis it is the ability to estimate a linear association between the outcome $y$ and a variable of interest $x$ while holding the influence of other variables (sometimes called covariates) fixed. For prediction tasks it is the ability to make make predictions taking a multitude of variables into account. This is the domain of multiple linear regression analysis. It is a straight-forward expansion of the one-variable case. 
+The real use case for linear regression models is not assessing the magnitude of one single variable. It usually is either of two things: For diagnostic analysis it is the ability to estimate a linear association between the outcome $y$ and a variable of interest $x$ while holding the influence of other variables (sometimes called covariates) fixed. For prediction tasks it is the ability to make make predictions taking a multitude of variables into account. This is the domain of multiple linear regression analysis. It is a straight-forward expansion of the one-variable case.
 
 $$y = a + b_1 * x_1 + b_2*x_2 + b_3 * x_3 + ... + u$$
 
-We will focus on the reasons for including multiple $x$ variables into regression for diagnostic purposes and cover the prediction case in the next @sec-pred. Generally, there are two reasons for why we would want to include a variable into a regression for diagnostic purposes: 
+We will focus on the reasons for including multiple $x$ variables into regression for diagnostic purposes and cover the prediction case in the next @sec-pred. Generally, there are two reasons for why we would want to include a variable into a regression for diagnostic purposes:
 
-1. If two variables $x_1$ and $x_2$ are related and we want to isolate the association of one with $y$ while holding the other one fixed. 
+1. If two variables $x_1$ and $x_2$ are related and we want to isolate the association of one with $y$ while holding the other one fixed.
 
 2. To take out unmeasured influences out of the error term and thus improve the precision of our coefficient estimates. Remember from @fig-rand1 that regression slopes bounce around more from sample to sample (are less precisely estimated), if there is a lot of unmeasured influences left in the error term. Including big determinants of $y$ into the regression takes them out of $u$ and thus helps against this.^[There is sometimes a trade-off however. If the variables we take out of the error term are highly correlated with our variables of interest, we create a new problem called colinearity.]
 
-Why would one do either of these two steps for diagnostic purposes is best explained by example. Put yourself into the shoes of a business controller at a retail store chain and doing some exploratory analysis you notice that there is considerable variation in retail store performance in a certain region. You want to figure out the reason for that (diagnostic analysis). 
+Why would one do either of these two steps for diagnostic purposes is best explained by example. Put yourself into the shoes of a business controller at a retail store chain and doing some exploratory analysis you notice that there is considerable variation in retail store performance in a certain region. You want to figure out the reason for that (diagnostic analysis).
 
-Before you start throwing data at a regression, you do the smart thing and first come up with a first mental model of what should drive store revenues. It looks like this: 
+Before you start throwing data at a regression, you do the smart thing and first come up with a first mental model of what should drive store revenues. It looks like this:
 
 ```{r}
 #| label: fig-dag-rs
@@ -419,8 +420,8 @@ Before you start throwing data at a regression, you do the smart thing and first
 #   a ~ d,
 #   b ~ d,
 #   outcome = "y",
-#   labels = c(y = "Store revenues", 
-#              a = "Foot Traffic", 
+#   labels = c(y = "Store revenues",
+#              a = "Foot Traffic",
 #              b = "Avg. basket size",
 #              c = "Staffing",
 #              d = "Loc. wealth"),
@@ -436,8 +437,8 @@ dag_sm <- dagify(
   y ~ a  + c,
   c ~ a,
   outcome = "y",
-  labels = c(y = "Store revenues", 
-             a = "Foot Traffic", 
+  labels = c(y = "Store revenues",
+             a = "Foot Traffic",
              c = "Staffing"),
   coords = list(
     x = c(c = 2, d = 1, a = 2, b = 2, y = 3),
@@ -470,25 +471,25 @@ d5$revenues <- d5$revenues * 3
 head(d5)
 ```
 
-revenues is weekly revenues, foot traffic is the number of customers per week. sick calls is how many employees called in sick that week. staff is how much sales personnel was working (not sick) during the week. You think that for your shops the amount of staff is important. But you also know that if a store is busier, you staff more sales personnel. So there is a direct connection. Just looking at the relation between revenues and amount of staff will thus be contaminated by foot traffic. The coefficient might just pick up that stores with more staff are busier stores. You want to know what the importance of staff is, holding foot traffic (how busy the store is) fixed. Stated another way, foot traffic is a confounding variable for estimating the relation between number of staff and revenues. You can see that in @fig-dag-rs. According to your mental model, foot traffic has an arrow going into revenues and an arrow going into staff. It causally influences both you think. Thus you need to hold its influence constant to have a chance to estimate the direct arrow going from staff to revenues. Multiple regression is one approach to do so. 
+revenues is weekly revenues, foot traffic is the number of customers per week. sick calls is how many employees called in sick that week. staff is how much sales personnel was working (not sick) during the week. You think that for your shops the amount of staff is important. But you also know that if a store is busier, you staff more sales personnel. So there is a direct connection. Just looking at the relation between revenues and amount of staff will thus be contaminated by foot traffic. The coefficient might just pick up that stores with more staff are busier stores. You want to know what the importance of staff is, holding foot traffic (how busy the store is) fixed. Stated another way, foot traffic is a confounding variable for estimating the relation between number of staff and revenues. You can see that in @fig-dag-rs. According to your mental model, foot traffic has an arrow going into revenues and an arrow going into staff. It causally influences both you think. Thus you need to hold its influence constant to have a chance to estimate the direct arrow going from staff to revenues. Multiple regression is one approach to do so.
 
-Here is what would happen if we would ignore the confounding influence of foot traffic. We first estimate a simple regression of store revenues on number of staff working. 
+Here is what would happen if we would ignore the confounding influence of foot traffic. We first estimate a simple regression of store revenues on number of staff working.
 
 ```{r}
 m2 <- lm(revenues ~ staff, data = d5)
 summ(m2, confint = TRUE)
 ```
 
-We see a large and significant coefficient on staff working. One more staff working in that week is associated with 2.605 weekly revenues on average. However, your mental model in @fig-dag-rs suggests that this number is incorrect. The number of staff is itself determined by foot traffic, so the 2,605 is likely partially driven by stores with higher foot traffic. We put foot traffic itself into the regression now. 
+We see a large and significant coefficient on staff working. One more staff working in that week is associated with 2.605 weekly revenues on average. However, your mental model in @fig-dag-rs suggests that this number is incorrect. The number of staff is itself determined by foot traffic, so the 2,605 is likely partially driven by stores with higher foot traffic. We put foot traffic itself into the regression now.
 
 ```{r}
 m3 <- lm(revenues ~ staff + foot_traffic, data = d5)
 summ(m3, confint = TRUE)
 ```
 
-All of a sudden the coefficient drops down dramatically to 352€ weekly revenues per staff member. This change is as expected if foot traffic is indeed a confounding influence for the staff variable.^[We simulated this data and the true coefficient on foot traffic is 210€ in weekly revenues per weekly customer and the true coefficient on staff is 360€ in weekly revenues per staff member.] 
+All of a sudden the coefficient drops down dramatically to €352 weekly revenues per staff member. This change is as expected if foot traffic is indeed a confounding influence for the staff variable.^[We simulated this data and the true coefficient on foot traffic is 210€ in weekly revenues per weekly customer and the true coefficient on staff is 360€ in weekly revenues per staff member.]
 
-The main takeaway here is: one big advantage of multiple regression is that it allows you to examine the role and magnitude of individual determinants while holding others fixed. As we saw in this example, it can really matter to do so. If we would not have included foot traffic, we might have gotten the impression that staff members are way more important to store performance than they really are. 
+The main takeaway here is: one big advantage of multiple regression is that it allows you to examine the role and magnitude of individual determinants while holding others fixed. As we saw in this example, it can really matter to do so. If we would not have included foot traffic, we might have gotten the impression that staff members are way more important to store performance than they really are.
 
 But notice, we made the judgment call to include foot traffic based on a mental model. Repeating our call from above, we need mental models to know which variables to include and when not. Notice for example that we have a variable called sick_calls in our dataset. what happens if we include this variable into the our regression model:
 
@@ -497,7 +498,7 @@ m4 <- lm(revenues ~ staff + foot_traffic + sick_calls, data = d5)
 summ(m4, confint = TRUE)
 ```
 
-Things barely change. But that doesn't mean that sick calls do not have an influence. They do! they reduce the number of stuff working in that week and thus affect revenues. But, controlling for staff working, sick calls cannot affect revenues anymore! Your mental model tells you that including this variable into the regression does not add anything. This is a benign example, in some cases adding a variable can distort all the other variables' coefficients. All of this is to say that we need strong theory and mental models to analyse determinants
+Things barely change. But that doesn't mean that sick calls do not have an influence. They do! they reduce the number of staff working in that week and thus affect revenues. But, controlling for staff working, sick calls cannot affect revenues anymore! Your mental model tells you that including this variable into the regression does not add anything. This is a benign example, in some cases adding a variable can distort all the other variables' coefficients. All of this is to say that we need strong theory and mental models to analyse determinants.
 
 ### Some terms to know
 
@@ -511,27 +512,27 @@ Let’s now also take a closer look at some other information in typical regress
 
 - The **confidence intervals** provide a range within which the true population coefficient is likely to lie with a certain level of confidence, often 95%. If the confidence interval does not include zero, it suggests that the coefficient is statistically significant at the specified confidence level. Conversely, if the confidence interval includes zero, the coefficient is not considered statistically significant. The chosen significance level matches the confidence interval: if you decide to use a significance level of 5%, then the corresponding confidence interval is 95% (see regression output). You usually have to specify this explicitly in your statistical package.
 
-- R$^2$. The r-squared is a measure of variation in the outcome $y$ explained by the estimated linear combination of the $x$ variables. It is sometimes used as a measure of model fit or quality. But that is dangerous interpretation. We will say more about the r-squared later. 
+- R$^2$. The r-squared is a measure of variation in the outcome $y$ explained by the estimated linear combination of the $x$ variables. It is sometimes used as a measure of model fit or quality. But that is dangerous interpretation. We will say more about the r-squared later.
 
 
 ### Relative importance of variables
 
-It is tempting to base the relative importance of variables on the coefficients obtained from the regression analysis. And one can do so, but only with extreme caution. 
+It is tempting to base the relative importance of variables on the coefficients obtained from the regression analysis. And one can do so, but only with extreme caution.
 
 First, as our example with staff and foot traffic shows. Any interpretation first and foremost rests on the regression model capturing confounding effects. This also requires that our mental model is not too far off reality and that we can approximate relations in a linear way (e.g., after transformations)
 
-Second, often, the units of measurement usually vary between the variables, making it very hard to to directly compare them. For example, the meaning of a one-unit change in distance is different from a one-unit change in weight. There are ways around this, but in complicated situations the whole idea of comparing coefficients in a table is dangerous and often a big mistake. Be very careful when trying to do this. The reason is the same as with the foot traffic and staff example. In complicated situations a complicated regression equation with many variables is often required to isolate the association between $y$ and just one $x$! All the other variables (called control variables) are in there just to unbias the coefficient on that one $x$. Thus the coefficients on the control variables are not guaranteed to be unconfounded or easily interpretable.^[Some call this the "table 1 fallacy".] If you are sure (based on your mental model) that both coefficients can indeed be interpreted properly, one approach to assess the relative importance of variables is to compare the **standardized coefficients** in a multiple regression model. Standardized coefficients are the estimates obtained when all the variables are standardized to have a mean of zero and a standard deviation of one. By standardizing, the coefficients are expressed in units of standard deviations, which allows for a direct comparison of the effect of each predictor on the dependent variable. As mentioned in @sec-datapat, if you standardize the original data, this can lead to complications. Instead, you can simply take the regression output and multiply the unstandardized coefficient with the standard deviation of the respective variable. 
+Second, often, the units of measurement usually vary between the variables, making it very hard to to directly compare them. For example, the meaning of a one-unit change in distance is different from a one-unit change in weight. There are ways around this, but in complicated situations the whole idea of comparing coefficients in a table is dangerous and often a big mistake. Be very careful when trying to do this. The reason is the same as with the foot traffic and staff example. In complicated situations a complicated regression equation with many variables is often required to isolate the association between $y$ and just one $x$! All the other variables (called control variables) are in there just to unbias the coefficient on that one $x$. Thus the coefficients on the control variables are not guaranteed to be unconfounded or easily interpretable.^[Some call this the "table 1 fallacy".] If you are sure (based on your mental model) that both coefficients can indeed be interpreted properly, one approach to assess the relative importance of variables is to compare the **standardized coefficients** in a multiple regression model. Standardized coefficients are the estimates obtained when all the variables are standardized to have a mean of zero and a standard deviation of one. By standardizing, the coefficients are expressed in units of standard deviations, which allows for a direct comparison of the effect of each predictor on the dependent variable. As mentioned in @sec-datapat, if you standardize the original data, this can lead to complications. Instead, you can simply take the regression output and multiply the unstandardized coefficient with the standard deviation of the respective variable.
 
-Another common approach to assess the relative contribution of each variable to the R-squared (more on the R-squared below) is calculating the **incremental R-squared**. To achieve this, you first run the regression with all independent variables and note down the R-squared (0.4962 in our multiple regression above). To determine the incremental contribution of employee tenure, you exclude this variable from the regression, run it again and note down the new R-squared, which is 0.4247. The difference is the incremental R-squared of employee tenure, that is, 0.4962 - 0.4247 = 0.0715. Repeating this for service quality would yield an incremental R-squared of 0.1316, again ranking the relative importance of service quality higher than employee tenure. We like this approach even less though. Again, the issue is complicated interdependence between variables that make it very difficult to judge whether an lower increase in R-squared is meaningful or not. Often the order of variables matters a lot as a result of that. Also remember the example with revenues being explained by foot traffic, staff working, and sick calls. If you would want to estimate the impact of sick calls, you would have to throw out the staff variable in order to unblock the path between sick calls and store revenues. That will drastically lower the R-squared because staff working in our simulation explains revenues quite well. It explains y much bettern than sick calls. Sick calls has no incremental R-squared to staff working. But for our question of interest, that is irrelevant. Again, the main message is, when comparing R-squared contributions, carefully examine your mental model if the comparisons are apples to apples or even sensible.
+Another common approach to assess the relative contribution of each variable to the R-squared (more on the R-squared below) is calculating the **incremental R-squared**. To achieve this, you first run the regression with all independent variables and note down the R-squared (0.4962 in our multiple regression above). To determine the incremental contribution of employee tenure, you exclude this variable from the regression, run it again and note down the new R-squared, which is 0.4247. The difference is the incremental R-squared of employee tenure, that is, 0.4962 - 0.4247 = 0.0715. Repeating this for service quality would yield an incremental R-squared of 0.1316, again ranking the relative importance of service quality higher than employee tenure. We like this approach even less though. Again, the issue is complicated interdependence between variables that make it very difficult to judge whether an lower increase in R-squared is meaningful or not. Often the order of variables matters a lot as a result of that. Also remember the example with revenues being explained by foot traffic, staff working, and sick calls. If you would want to estimate the impact of sick calls, you would have to throw out the staff variable in order to unblock the path between sick calls and store revenues. That will drastically lower the R-squared because staff working in our simulation explains revenues quite well. It explains y much better than sick calls. Sick calls has no incremental R-squared to staff working. But for our question of interest, that is irrelevant. Again, the main message is, when comparing R-squared contributions, carefully examine your mental model if the comparisons are apples to apples or even sensible.
 
 
 ## What is a “good” (regression) model?
 
-This is almost a philosophical, but nevertheless a very important question. When building a model to answer a business question, you need some criteria to say: "This model is good enough, let's run with it". Some often used criteria for this purpose are dangerous. We recommend to let yourself be guided by theory and out-of-sample prediction accuracy if possible and theory and a very cautious look at measures like the R-squared if not.^[There is also a model F-test, but we ignore that. It is rarely useful for model selection.]  
+This is almost a philosophical, but nevertheless a very important question. When building a model to answer a business question, you need some criteria to say: "This model is good enough, let's run with it". Some often used criteria for this purpose are dangerous. We recommend to let yourself be guided by theory first and out-of-sample prediction accuracy second. Only have a cautious look at measures like the in-sample R-squared.^[There is also a model F-test, but we ignore that. It is rarely useful for model selection.]
 
-The **R-squared**, also known as the coefficient of determination, is a measure that represents the proportion of the variance in the dependent variable that can be explained by the independent variables in a regression model. It "quantifies the goodness-of-fit" of the model *to the sample* by comparing the explained variation to the total variation in the sample. We emphasized *fit to the sample* to already highlight one trap when interpreting an R-squared. It is usually an in-sample measure. One can easily build a bad model with lots and lots of variables fitting noise, which will have a high R-Squared (R$^2$ ranges from 0 to 1). Models that are *overfit* (see @sec-pred) have high R$^2$ that are not indicative of their fit to new samples. The standard R$^2$ increases with the addition of more variables, regardless of their relevance. Therefore, we typically look at the **adjusted R-squared**. The adjusted R-squared is a modified version of the R-squared that takes into account the number of independent variables and the sample size. It can help to penalize overly complex models, making it a more reliable measure of goodness of fit, but even the adjusted R-squared suffers from the in-sample problem. 
+The **R-squared**, also known as the coefficient of determination, is a measure that represents the proportion of the variance in the dependent variable that can be explained by the independent variables in a regression model. It "quantifies the goodness-of-fit" of the model *to the sample* by comparing the explained variation to the total variation in the sample. We emphasized *fit to the sample* to already highlight one trap when interpreting an R-squared. It is usually an in-sample measure. One can easily build a bad model with lots and lots of variables fitting noise, which will have a high R-Squared (R$^2$ ranges from 0 to 1). Models that are *overfit* (see @sec-pred) have high R$^2$ that are not indicative of their fit to new samples. The standard R$^2$ increases with the addition of more variables, regardless of their relevance. Therefore, we typically look at the **adjusted R-squared**. The adjusted R-squared is a modified version of the R-squared that takes into account the number of independent variables and the sample size. It can help to penalize overly complex models, making it a more reliable measure of goodness of fit, but even the adjusted R-squared suffers from the in-sample problem.
 
-R$^2$ is also not a good measure of model quality when the goal is to identify a relation of interest. In that case, we do not need to explain a lot of variation necessarily. On the contrary, if we find a proxy for a determinant of interest that does not explain much of $y$, but which is unconfounded by other things, then we will get a cleaner estimate of the coefficient and a low R$^2$. That is fine, in this case, we care more about the clean estimate of the coefficient. 
+R$^2$ is also not a good measure of model quality when the goal is to identify a relation of interest. In that case, we do not need to explain a lot of variation necessarily. On the contrary, if we find a proxy for a determinant of interest that does not explain much of $y$, but which is unconfounded by other things, then we will get a cleaner estimate of the coefficient and a low R$^2$. That is fine, in this case, we care more about the clean estimate of the coefficient.
 
 So, what is a good model. We believe it depends on the purpose of your analysis. If it is diagnostic analysis, a good model can again only be assessed via theory: your mental models. If the model manages to isolate the variables your care about, blocks confounding influences, etc. it is a good model. If the purpose is prediction, then *out-of-sample* prediction accuracy is the relevant criteria. A model that fits well on data it hasn't seen is a much more believable model. We will spend quite some time in @sec-pred on discussing how to assess this.
 
@@ -554,13 +555,13 @@ d6 <- tibble(
   x = seq(-6, 6, by = 0.1),
   y = inv_logit(x)
 )
-ggplot(d6, aes(x, y)) + 
-  geom_line() + 
+ggplot(d6, aes(x, y)) +
+  geom_line() +
   labs(x = expression(a + b[1]*x[1] + b[2]*x[2]+...))
 ```
 
 
-The only difficulty that the logistic transformation brings about is that it complicates the interpretation of coefficient magnitudes. That is because the S-curve now makes the relation between $y$ and the $x$s non-linear. In logistic regression, the coefficients are expressed in terms of the logarithm of the odds ratio, which describes the change in the odds of the event occurring for a one-unit change in the independent variable. 
+The only difficulty that the logistic transformation brings about is that it complicates the interpretation of coefficient magnitudes. That is because the S-curve now makes the relation between $y$ and $x$ non-linear. In logistic regression, the coefficients are expressed in terms of the logarithm of the odds ratio, which describes the change in the odds of the event occurring for a one-unit change in the independent variable.
 
 To facilitate interpretation, these coefficients can be exponentiated to obtain the odds ratios, which provide a more intuitive understanding of the relationship between the independent variables and the binary outcome. Let's consider a hypothetical example to illustrate logistic regression and its interpretation. Assume we are a broker and send an offer around for a counseling on retirement saving. We  wanted to know whether older customers were more likely to respond to this campaign. Here is some simulated data and the result of throwing the data into a logistic regression:
 
@@ -581,7 +582,7 @@ $$log(odds) = log(p / (1 - p)) = β_0 + β_1 * age$$
 
 where p is the probability of of coming to the counsel meeting, and odds represent the ratio p / (1 - p).
 
-Plugging in the values from our fitted model, we get: 
+Plugging in the values from our fitted model, we get:
 
 $$log(odds) = -18.85 + 0.41 * age$$
 
@@ -589,19 +590,19 @@ Now, let's suppose we want to predict the probability of getting counsel for a 4
 
 $$log(odds) = -18.85 + 0.41 * 40 = -2.45$$
 
-To convert the log odds to a probability, we apply the logistic function: 
+To convert the log odds to a probability, we apply the logistic function:
 
 $$p = 1 / (1 + exp(-log(odds))) = 1 / (1 + exp(2.45)) \sim 0.08$$
 
 So, the probability of passing of a 40 year old responding to the campaign was approximately 8%.
 
-To interpret the coefficients, we can calculate the odds ratio for the independent variable (age) by exponentiating $\beta_1$: 
+To interpret the coefficients, we can calculate the odds ratio for the independent variable (age) by exponentiating $\beta_1$:
 
 $$Odds ratio = exp(β1) = exp(0.41) \sim 1.51$$
 
 The odds ratio of 1.51 indicates that for each year of age, the odds of showing up to the counselling increase by a factor of 1.51, holding all other variables constant. You can use the respective functions in your statistical packages to get at these more intuitive numbers.
 
-For presentations it is often easier though to set all variables $x_2$, $x_3$ etc to their average values, plug in relevant values for the variable of interest and plot the change in probabilities. We often found this to be the most intuitive way of presenting the non-linear nature of the $y$ - $x$ relations in logisitic regressions. As you can see, after a certain age their is a steep increase in the probability of showing up that you would not have expected based on the coefficients. 
+For presentations it is often easier though to set all variables $x_2$, $x_3$ etc to their average values, plug in relevant values for the variable of interest and plot the change in probabilities. We often found this to be the most intuitive way of presenting the non-linear nature of the $y$ - $x$ relations in logisitic regressions. As you can see, after a certain age their is a steep increase in the probability of showing up that you would not have expected based on the coefficients.
 
 ```{r}
 #| message: false
@@ -616,9 +617,9 @@ log_odds <- -18.85 + 0.41 * age_range
 probs <- 1 / (1 + exp(-log_odds))
 ggplot(
   tibble(x = age_range, y = probs),
-  aes(x, y)) + 
-  geom_line(color = "cornflowerblue") + 
-  labs(y = "Probability of getting counsel", 
+  aes(x, y)) +
+  geom_line(color = "cornflowerblue") +
+  labs(y = "Probability of getting counsel",
        x = "Customer age")
 ```
 
