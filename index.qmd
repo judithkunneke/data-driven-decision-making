@@ -5,7 +5,7 @@
 
 This web-book contains the lecture notes for the course **324070--Data-Driven Decision-Making** taught in the Master of Accountancy at Tilburg University. 
 
-This is a living document, we expect to improve on it regularly as the course grows. We (Judith and Harm) want to thank all the wonderful people who have helped us design this course and provided helpful feedback and suggestions. If you stumble on this site and find it useful, or if you have suggestions, we are always happy for feedback.
+This is a living document, we expect to improve on it regularly as the course grows. If you stumble on this site and find it useful, or if you have suggestions, we are always happy for feedback.
 
 Best regards
 
@@ -14,6 +14,6 @@ Dr. Judith Künneke<BR>
 Instructor and course coordinator<BR>
 Office: Koopmans Buidling, K 205
 
-Dr. Harm Schütt<BR>
+Dr. Bjarne Brie<BR>
 Instructor<BR>
-Office: Koopmans Buidling, K 250
+Office: Koopmans Buidling, K 253
