@@ -21,8 +21,6 @@ book:
     - diagnostics.qmd
     - predictions.qmd
     - reporting.qmd
-    - case1.qmd
-    - case4.qmd
     - references.qmd
 
 bibliography: references.bib
