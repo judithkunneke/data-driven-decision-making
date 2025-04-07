@@ -175,10 +175,12 @@ If there are multiple criteria, then it is important to discuss how to weigh the
 
 Typical questions you might want to ask yourself at this stage:
 
+-   How many resources can we spare?
 -   What is affected by the possible alternatives?
 -   Who or what might be impacted?
 -   What do we need to trade off (e.g., costs versus benefits - “We want to cheap, but also top-notch and fast”)?
 -   What cost is more significant for us?
+-   Possible side-effects when implementing the solution?
 
 ### Develop alternatives
 
