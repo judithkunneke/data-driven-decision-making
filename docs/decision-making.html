@@ -282,7 +282,7 @@ Table&nbsp;2.1: Survey results: Are you renewing your service package with us?
 <div aria-describedby="tbl-survey1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div style="all:initial" ;="">
-<div id="bupbotozok" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="fcngvreizi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
   
   
 <table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false" data-bgcolor="#FFFFFF">
@@ -345,7 +345,7 @@ Table&nbsp;2.2: Survey results stratified by service tier: Are you renewing your
 <div aria-describedby="tbl-survey2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div style="all:initial" ;="">
-<div id="nigojcuhku" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="mxwpthzjnp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
   
   
 <table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false" data-bgcolor="#FFFFFF">
@@ -1045,11 +1045,13 @@ Figure&nbsp;2.4: Different types of loss functions
 </ul></li>
 <li>Do the same for Alternative B (e.g., a bigger store) and pick whichever alternative has the highest weighted net benefit. You have effectively chosen the best option on average, factoring in how likely each scenario is.</li>
 </ul></li>
-<li><strong>Maximin/Minimax.</strong> Also called the criterion of pessimism. Maximin is the maximum of a set of minima. According to this rule, we pick the alternative that is expected to yield the largest of a set of minimum possible <strong>gains</strong> (net benefit). You can think of this as answering the question “Which alternative does best in the worst scenarios of each alternative you can think of.” Minimax is the same just phrased in terms of <strong>loss</strong> (very often used in machine learning cause it can be tied directly to loss functions). You pick the option that minimizes the loss across the worst-case scenarios for each alternative. Example:
+<li><strong>Maximin/Minimax.</strong> Also called the criterion of pessimism. Maximin is the maximum of a set of minima. According to this rule, we pick the alternative that is expected to yield the largest of a set of minimum possible <strong>gains</strong> (net benefit). You can think of this as answering the question “Which alternative does best in the worst scenarios of each alternative you can think of.”For each possible alternative (e.g., “launch product” vs.&nbsp;“do not launch product”), list out the outcome/payoff under every possible scenario (e.g., “High demand,” “Low demand”). Then identify the worst payoff (the minimum) for that alternative across all its scenarios. Compare those worst payoffs across alternatives, and pick the alternative whose minimum payoff is highest (“max” of the “min” outcomes). Minimax is the same just phrased in terms of <strong>loss</strong> (very often used in machine learning cause it can be tied directly to loss functions). You pick the option that minimizes the loss across the worst-case scenarios for each alternative. Example:
 <ul>
-<li>Alternative A worst-case gain: + €100.000 (in Low demand)</li>
-<li>Alternative A worst-case gain: - €50.000 (in Low demand)</li>
-<li>If you choose maximin you would pick A because its minimum (the worst) is positive, whereas B is negative.</li>
+<li>Alternative A in low demand: + €100.000</li>
+<li>Alternative A in high demand: + €250.000</li>
+<li>Alternative B in low demand: + €75.000</li>
+<li>Alternative B in high demand: + €280.000</li>
+<li>If you choose maximin you would pick A because its minimum (the worst -&gt; €100.000) across demand scenarios is higher than the worst of B (€75.000).</li>
 </ul></li>
 </ul>
 <p>There are other rules, of course, but these two suffice to illustrate the general problem. For complex and important problems, a scenario analysis is a common way to deal with the sizable uncertainty inherent in any forecast and a sensible decision rule seeks a solution that is robust to different states of the world.</p>
