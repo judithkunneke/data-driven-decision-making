@@ -6,10 +6,10 @@
 
 To answer this question, consider, for example, the four common elements of any control process:
 
-1. Establishing Performance Standards.
-2. Measuring the Actual Performance.
-3. Comparing Actual Performance to the Standards.
-4. Taking Corrective Action.
+1. Establishing performance standards.
+2. Measuring the actual performance.
+3. Comparing actual performance to the standards.
+4. Taking corrective action.
 
 In executing all these elements, decisions have to be made. Ideally, such decisions are based on data. Most firms these days collect data all the time. Valuable data, if used well. However, in its raw form data is useless. You cannot stare at a three-terabyte large table of customer data and expect to come up with better marketing strategies. Raw data needs to be structured and aggregated just the right way in order to yield insights. This is where data analytics comes in. Data analytics takes raw data and then structures and aggregates it to find meaningful data patterns. Those data patterns can be used to make better business decisions.
 
@@ -36,8 +36,8 @@ A controlling department actively involved in setting and monitoring a firm's st
 | Question                                                                                                 | Decision                                                                   |
 |------------------------------------|------------------------------------|
 | What would be the operating profitability of opening a typical store in France?                          | Whether to expand operations to France?                                    |
-| How would our revenues and costs be affected if Russia invades Ukraine?                              | How much effort to allocate to contingency planning?                         |
-| What are reasonable benchmarks for the cost allocation of overhead?                                      | How to best allocate costs for controlling purposes?                        |
+| How would our revenues and costs be affected if US import tariffs are raised?                              | How much effort to allocate to contingency planning?                         |
+| What are reasonable drivers for the cost allocation of overhead?                                      | How to best allocate costs for controlling purposes?                        |
 | How would our most profitable customer segment react if we serve them exclusively via an online channel? | Whether to change a part of the business strategy?                          |
 | What is the most "at risk" driver of the net margin of our blockbuster product?                         | Whether profitability of the main product is "safe" enough or needs action? |
 
@@ -49,8 +49,7 @@ For many of the decisions listed in @tbl-exampleqs, the question asked is just o
 
 ## Summary: What this course teaches you
 
-In today's economy, most firms collect large amounts of data that have the potential to greatly increase decision-making quality inside firms. To properly digest and leverage data, a firm needs employees that are not only well
--versed in data analytics (being able to find meaningful patterns in the raw data) but also draw the right conclusions from the patterns and formulate adequate decisions, and report the conclusions and decisions adequately. In this course, we will cover all of these aspects.
+In today's economy, most firms collect large amounts of data that have the potential to greatly increase decision-making quality inside firms. To properly digest and leverage data, a firm needs employees that are not only well-versed in data analytics (being able to find meaningful patterns in the raw data) but also draw the right conclusions from the patterns and formulate adequate decisions, and report the conclusions and decisions adequately. In this course, we will cover all of these aspects.
 <!-- project costing -->
 
 <!--     Prognose von zukünftigen Kostenentwicklungen bei Projekten -->
