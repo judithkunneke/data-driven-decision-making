@@ -516,7 +516,7 @@ Once you have decided on a weighting scheme of different alternatives, considere
 -   **Maximin/Minimax.** Also called the criterion of pessimism. Maximin is the maximum of a set of minima. According to this rule, we pick the alternative that is expected to yield the largest of a set of minimum possible **gains** (net benefit). You can think of this as answering the question "Which alternative does best in the worst scenarios of each alternative you can think of." Minimax is the same just phrased in terms of **loss** (very often used in machine learning cause it can be tied directly to loss functions). You pick the option that minimizes the loss across the worst-case scenarios for each alternative. Example:
     - Alternative A worst-case gain: + €100.000 (in Low demand)
     - Alternative A worst-case gain: - €50.000 (in Low demand)
-    - If you choose maximin you would pick A because its minimum (the worst) is positive, where is B is negative.
+    - If you choose maximin you would pick A because its minimum (the worst) is positive, whereas B is negative.
 
 
 There are other rules, of course, but these two suffice to illustrate the general problem. For complex and important problems, a scenario analysis is a common way to deal with the sizable uncertainty inherent in any forecast and a sensible decision rule seeks a solution that is robust to different states of the world.
