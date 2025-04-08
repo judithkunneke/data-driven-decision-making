@@ -16,7 +16,7 @@ In executing all these elements, decisions have to be made. Ideally, such decisi
 
 ### From data analytics to better decisions
 
-However, data analytics is just one part of two. It is one thing to find regular patterns in the data. But it is a different skill set that helps you determine whether these are patterns that contain new insights---or how to make sensible decisions based on the patterns. For that, you need expert knowledge in the domain that the decision problem arose. And this is why we have this course.
+However, data analytics is just one part of two. It is one thing to find regular patterns in the data. But it is a different skill set that helps you determine whether these are patterns that contain new insights - or how to make sensible decisions based on the patterns. For that, you need expert knowledge in the domain that the decision problem arose. And this is why we have this course.
 
 Our course is tailored to management accounting and related questions, for which you need a unique combination of analysis techniques and accounting expert knowledge in order to come up with good decisions. It is of course not the only area where data analytics is useful. In fact, most business analytics books use examples like analyzing marketing campaign effectiveness or supply chain efficiency. This is another reason why we decided a course like this should be part of the curriculum.
 
