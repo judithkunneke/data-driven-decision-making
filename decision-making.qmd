@@ -62,7 +62,8 @@ If you google "business decision-making" then you will at some point stumble upo
 
 Sometimes the problem is clear. Designing a new sales forecasting model or optimizing inventory are problems that are usually handed to you. However, sometimes we first need to realize that there is a problem in the first place (e.g., production quality is slowly decreasing). This does not always happen automatically. Well-designed monitoring systems that collect data and measure developments across multiple dimensions often throw the first warning signs that something needs to be looked at. (And somebody had to come up with the idea that it might be a sensible business precaution to install such a monitoring system.)
 
-### Identify the problem
+### Identify the problem {#sec:identify-problem}
+
 
 To us, this is the most important step. Essentially, here we clarify what we want to know. Define what the current situation looks like. Then define the ideal outcome we are looking for. Or in Controlling terms: compare the actual performance to the performance standards. Describe the difference and then try to figure out what is causing the difference. The root-cause analysis will give you a path towards the problem. 
 
