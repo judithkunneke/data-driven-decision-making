@@ -133,7 +133,7 @@ Before jumping into the creation of visualizations, there are two questions rela
 
 <font size="0.6">Source: https://hbr.org/2016/06/visualizations-that-really-work </font>
 
-The first question is quite easy to answer given the title of our course – the nature of our information is based on data. We are not exploring concepts or ideas that we want to visualize, but we want to use data.
+The first question is quite easy to answer given the title of our course - the nature of our information is based on data. We are not exploring concepts or ideas that we want to visualize, but we want to use data.
 
 The second question gets at the purpose of the visualization: do you want to provide information (declarative) or try to figure something out (exploratory)? Currently, we are still in the phase of figuring out things with the help of data visualization, so by putting the answers to the two questions together, we find ourselves in the bottom right corner, the visual discovery. Only at a later stage, we want to communicate information (such as the solution to the case), being in the everyday dataviz quadrant.
 
@@ -559,27 +559,77 @@ Statistical techniques are essential for exploring data patterns because they pr
 Measures of central tendency are statistical measures that describe the central or typical value of a set of data. They are often used to summarize large datasets and provide insights into the characteristics of the data. The three most common measures of central tendency are mean, median, and mode.
 
 The **mean** ($x̄$) is the arithmetic average of a set of numbers. It is calculated by adding up all the values in a set and dividing the sum by the number of values. The mean is sensitive to outliers in the data, which can greatly influence its value. For example, if we have a dataset of 5, 10, 15, 20, and 25, the mean would be (5+10+15+20+25)/5 = 15.
-The mean function in Excel is AVERAGE. For example, if you want to find the mean of a range of numbers in cells A1 through A10, you would enter the formula =AVERAGE(A1:A10) in a cell.
 
 The **median** is the middle value in a set of numbers, arranged in ascending or descending order. It is less sensitive to outliers than the mean and provides a better representation of the typical value in a dataset. If the dataset has an odd number of values, the median is the middle value. For example, if we have an uneven dataset of 5, 10, 15, 20, and 25, the median is 15. If the dataset has an even number of values, the median is the average of the two middle values. For example, if the dataset is 4, 6, 8, 10, 12, 14, we would first order the values as 4, 6, 8, 10, 12, 14. The two middle values are 8 and 10, so we would take their average: Median = (8 + 10)/2 = 9.
-The median function in Excel is MEDIAN. For example, if you want to find the median of a range of numbers in cells A1 through A10, you would enter the formula "=MEDIAN(A1:A10)" in a cell.
 
 The **mode** is the value that occurs most frequently in a set of numbers. It is useful for identifying the most common value in a dataset. For example, if we have a dataset of 5, 10, 10, 15, 20, and 25, the mode would be 10.
-Excel does not have a built-in mode function, but you can use a combination of functions to find the mode. For example, if you want to find the mode of a range of numbers in cells A1 through A10, you could use the following formula: "=MODE.MULT(A1:A10)". This will return an array of all modes in the range.
 
 #####	Measures of variation (range, variance, standard deviation)
 Measures of variation are statistical measures that describe the spread or dispersion of a set of data. They are used to determine how much the individual values in a dataset vary from the central tendency. There are several measures of variation, including range, variance, and standard deviation.
 
 The **range** is the difference between the highest and lowest values in a set of data. It provides a simple measure of the variability in a dataset but can be heavily influenced by outliers. For example, if we have a dataset of 5, 10, 15, 20, and 25, the range would be 25-5 = 20.
-The range function in Excel is simply the difference between the maximum and minimum values in a range. For example, if you want to find the range of a range of numbers in cells A1 through A10, you would subtract the minimum value from the maximum value: "=MAX(A1:A10)-MIN(A1:A10)".
 
 The **variance** ($s^2$) measures how spread out the data is from the mean. It is calculated by taking the average of the squared differences between each value and the mean of the dataset. The variance is useful for identifying the degree of variability in the data but is not easily interpretable due to its squared units. But it provides a more precise measure of variability than the range and is less sensitive to outliers. For example, if we have a dataset of 5, 10, 15, 20, and 25, the mean is (5+10+15+20+25)/5 = 15. The differences between each value and the mean are -10, -5, 0, 5, and 10. Squaring these differences gives us 100, 25, 0, 25, and 100. The variance is the average of these squared differences, which is (100+25+0+25+100)/5 = 50.
-The variance function in Excel is VAR. For example, if you want to find the variance of a range of numbers in cells A1 through A10, you would enter the formula "=VAR(A1:A10)" in a cell.
 
 The **standard deviation** ($s$) is the square root of the variance. It is a commonly used measure of variation because it is expressed in the same units as the data (and hence more interpretable measure of dispersion than the variance) and provides a measure of how spread out the data is relative to the mean. For example, if we have a dataset of 5, 10, 15, 20, and 25, the variance is 50. The standard deviation is the square root of 50, which is approximately 7.07.
-The standard deviation function in Excel is STDEV. For example, if you want to find the standard deviation of a range of numbers in cells A1 through A10, you would enter the formula "=STDEV(A1:A10)" in a cell.
 
-In summary, measures of variation such as range, variance, and standard deviation are important tools for identifying patterns in data. They provide valuable insights into the spread or dispersion of a dataset and can be used to detect potential patterns in the data.
+Measures of variation (range, variance, standard deviation) do more than just describe data spread; they have practical relevance for data-driven decision-making:
+
+- Risk and uncertainty: A high variance or standard deviation in sales forecasts, for example, alerts you to potential volatility. This helps a business decide whether to keep a buffer of inventory, expand safety stock, or take out insurance on price fluctuations.
+
+- Reliability of averages: If the mean is 50 but the standard deviation is large, it means your data values are scattered widely around that mean. A “typical” value is then less representative. Managers can’t blindly rely on the average if performance swings wildly.
+
+- Resource allocation: When project costs, labor hours, or production output vary substantially, the business may adopt more conservative budgeting or scheduling. Understanding variation helps allocate resources more effectively and anticipate spikes or dips.
+
+- Identifying patterns and outliers: While the average might mask interesting details, measures of variation show you whether data points are clustered or spread out. A suddenly larger-than-usual spread can flag data quality issues or changing market conditions that warrant deeper investigation.
+
+- Planning and forecasting: Stable (low-variance) processes can be forecasted more reliably. Where the standard deviation is large, you know to proceed with caution—or invest in better predictive methods.
+
+By integrating measures of variation into your initial data exploration, you gain a clearer picture of how much confidence (or uncertainty) you should place in averages, projections, and other core metrics. Below you find the standard R code to compute mean, median, mode, range, variance, and standard deviation of a variable.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "R codes"
+#| fig-height: 5
+#| fig-width: 8
+#| fig-format: svg
+# Example R codes to display mean, median, mode, range, variance, standard deviation of a variable
+
+# x <- c(4, 7, 9, 3, 5, 6, 4, 9, 7)
+
+# Mean
+# mean(x)
+
+# Median
+# median(x)
+
+# Mode (most frequent value)
+# mode_value <- names(sort(table(x), decreasing = TRUE))[1]
+# mode_value
+
+# Range (returns min and max)
+# range(x)
+
+# Range as a single number (max - min)
+# diff(range(x))
+
+# Variance
+# var(x)
+
+# Standard Deviation
+# sd(x)
+
+# Minimum
+# min(x)
+
+# Maximum
+# max(x)
+
+# Summary of all basic stats
+# summary(x)
+
+```
 
 #####	Skewness and Kurtosis
 Skewness and kurtosis are two additional statistical measures that are often used to describe the shape and distribution of data.
@@ -590,83 +640,103 @@ Skewness and kurtosis are two additional statistical measures that are often use
 
 <font size="0.6">Source: https://www.biologyforlife.com/skew.html </font>
 
-Skewness is often measured using the coefficient of skewness, which is calculated as: (coefficient of skewness) = (3 * (mean - median)) / standard deviation. For example: Let's consider a dataset with the following 9 data points: 2, 4, 4, 4, 6, 6, 6, 8, 10
-
-1. Calculate the mean (μ) of the dataset:
-μ = (2 + 4 + 4 + 4 + 6 + 6 + 6 + 8 + 10) / 9 ≈ 5.33
-
-2. Calculate the median of the dataset:
-Since the dataset is ordered, the median is the middle value: Median = 6
-
-3. Calculate the standard deviation (σ) of the dataset:
-σ ≈ 2.29 (calculated using standard deviation formula)
-
-4. Compute the skewness using the formula:
-Skewness = (3 * (mean - median)) / standard deviation
-Skewness = (3 * (5.33 - 6)) / 2.29 ≈ -0.88
+Skewness is often measured using the coefficient of skewness, whose calculation we leave to our favorite program.  
 
 If the coefficient of skewness is positive, the dataset is positively skewed, while if it is negative, the dataset is negatively skewed. If it is zero, the dataset is normally distributed.  A rule of thumb states the following:
-•	If skewness is less than −1 or greater than +1, the distribution is highly skewed.
-•	If skewness is between −1 and −.5 or between +.5 and +1, the distribution is moderately skewed.
-•	If skewness is between −.5 and +.5, the distribution is approximately symmetrical.
 
-The skewness function in Excel is SKEW. For example, if you want to find the skewness of a range of numbers in cells A1 through A10, you would enter the formula "=SKEW(A1:A10)" in a cell.
+-   If skewness is less than −1 or greater than +1, the distribution is highly skewed.
+-   If skewness is between −1 and −.5 or between +.5 and +1, the distribution is moderately skewed.
+-   If skewness is between −.5 and +.5, the distribution is approximately symmetrical.
 
 **Kurtosis** measures the degree to which a dataset is peaked or flat compared to a normal distribution. A distribution with a high kurtosis value has a sharp peak and fat tails, meaning there are more extreme values in the tails of the distribution. A distribution with a low kurtosis value has a flatter peak and thinner tails. The calculation is a little more complicated, so let’s save some space and rely on our programs to calculate it.
 
 A normal distribution has a kurtosis of 3. If the coefficient of kurtosis is greater than 3, the dataset has positive kurtosis (more peaked), while if it is less than 3, the dataset has negative kurtosis (more flat).
 
-In summary, skewness and kurtosis are measures that help describe the shape and distribution of a dataset. They provide additional information beyond measures of central tendency and variation, and can help identify patterns and anomalies in the data.
-The kurtosis function in Excel is KURT. For example, if you want to find the kurtosis of a range of numbers in cells A1 through A10, you would enter the formula "=KURT(A1:A10)" in a cell. Note that Excel's KURT function returns the excess kurtosis, which is the kurtosis minus 3. Therefore, to get the actual kurtosis value, you need to add 3 to the result of the KURT function.
+In summary, skewness and kurtosis highlight how a dataset’s shape deviates from a perfect bell curve. These details can also reveal extremes that basic averages overlook. For example, a strong right skew might mean most sales are moderate but occasionally spike, something you should look into. A high kurtosis indicates heavier tails, alerting you to a higher likelihood of rare, for example, costly events. Below the R code as well.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "R codes"
+#| fig-height: 5
+#| fig-width: 8
+#| fig-format: svg
+# Example R codes to display skewness and kurtosis of a variable
+
+# x <- c(4, 7, 9, 3, 5, 6, 4, 9, 7)
+
+# Install the e1071 package if not already installed
+# install.packages("e1071")
+
+# Load the e1071 package
+# library(e1071)
+
+# Skewness (measure of asymmetry)
+# skewness(x)
+
+# Kurtosis (measure of the "tailedness")
+# kurtosis(x)
+
+```
 
 ![Kurtosis](pics/C2/kurtosis.png){#fig-c2-radar-static fig-cap="Kurtosis" height="300px"}
 
 <font size="0.6">Source: https://www.freecodecamp.org/news/skewness-and-kurtosis-in-statistics-explained/ </font>
 
-As you can see from the figures, measures of central tendency and variation are typically related to visualizations such as histograms or scatters with lines and markers (additional options in Excel).
+As you can see from the figures, measures of central tendency and variation are typically related to visualizations such as histograms or scatters with lines and markers. 
 
 #####	Outliers {#sec-outlier}
 Outliers are data points that are significantly different from the other data points in a dataset. As outliers can have a significant impact on the results of statistical tests and models, we would also like to briefly mention statistical techniques to identify such outliers.
 
-The **Z-score** is a standardized measure that represents the number of standard deviations a data point is away from the mean of the dataset. A high absolute value of the Z-score indicates that the data point is far from the mean, which can be considered an outlier. To detect outliers using the Z-score method, follow these steps:
-
-1. Calculate the mean (μ) and standard deviation (σ) of the dataset.
-Let's consider a dataset with the following 10 data points: 23, 25, 26, 28, 29, 31, 32, 34, 50, 55
-μ = (23 + 25 + 26 + 28 + 29 + 31 + 32 + 34 + 50 + 55) / 10 = 33.3
-σ ≈ 9.68 (calculated using standard deviation formula)
-
-2. Compute the Z-score for each data point using the formula: Z = (X - μ) / σ, where X is the data point.
-Z(23) ≈ (23 - 33.3) / 9.68 ≈ -1.06
-...
-Z(55) ≈ (55 - 33.3) / 9.68 ≈ 2.24
-
-3. Identify outliers based on a chosen threshold for the Z-score, usually |Z| > 2 or |Z| > 3.
-Using Z| > 2, data point 55 has a Z-score of 2.24, which is greater than 2, so it could be considered an outlier.
+The **Z-score** is a standardized measure that represents the number of standard deviations a data point is away from the mean of the dataset. A high absolute value of the Z-score indicates that the data point is far from the mean, which can be considered an outlier. To detect outliers using the Z-score method, the typical threshold for the Z-score is usually |Z| > 2 or |Z| > 3.
 
 Using the Z-score method assumes that the data is normally distributed. Outliers are identified based on their distance from the mean in terms of standard deviations. However, this method can be sensitive to extreme values, which might affect the mean and standard deviation calculations.
 
 The **interquartile range (IQR)** is a measure of statistical dispersion that represents the difference between the first quartile (Q1, 25th percentile) and the third quartile (Q3, 75th percentile) of the data. The IQR is less sensitive to extreme values than the mean and standard deviation, making it a more robust method for detecting outliers.
 
-1. Calculate the first quartile (Q1) and the third quartile (Q3) of the dataset.
-Let's consider a dataset with the following 10 data points: 23, 25, 26, 28, 29, 31, 32, 34, 50, 55
-Q1 (25th percentile) = 26
-Q3 (75th percentile) = 34
-
-2. Compute the interquartile range (IQR) using the formula: IQR = Q3 - Q1.
-IQR = Q3 - Q1 = 34 - 26 = 8
-
-3. Define the lower and upper bounds for outliers: Lower Bound = Q1 - k * IQR and Upper Bound = Q3 + k * IQR, where k is a constant (typically 1.5 or 3).
-Lower Bound = Q1 - k * IQR = 26 - 1.5 * 8 = 14
-Upper Bound = Q3 + k * IQR = 34 + 1.5 * 8 = 46
-
-4. Identify data points that fall below the lower bound or above the upper bound as outliers.
-Data points 50 and 55 are above the upper bound (46), so they can be considered outliers.
-
 The IQR method does not rely on the assumption of a normal distribution and is more robust to extreme values than the Z-score method. However, it might not be as effective in detecting outliers in datasets with skewed distributions. Therefore, using multiple methods to detect outliers can give a more complete picture.
 
-####	Correlation analysis
+See the R codes for the Z-score and IQR below.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "R codes"
+#| fig-height: 5
+#| fig-width: 8
+#| fig-format: svg
+# Example R codes to display Z-score and IQR of a variable
+
+# x <- c(4, 7, 9, 3, 5, 6, 4, 9, 7)
+
+# Z-scores
+# z_scores <- (x - mean(x)) / sd(x)
+# z_scores
+
+# Compute quartiles
+# Q1 <- quantile(x, 0.25)
+# Q3 <- quantile(x, 0.75)
+
+# Compute IQR
+# IQR_value <- IQR(x)
+
+# Compute lower and upper bounds
+# lower_bound <- Q1 - 1.5 * IQR_value
+# upper_bound <- Q3 + 1.5 * IQR_value
+
+# Identify outliers
+# outliers <- x[x < lower_bound | x > upper_bound]
+
+# View results
+# IQR_value
+# lower_bound
+# upper_bound
+# outliers
+
+```
+
+####	Correlation analysis {#sec-corranal}
 While correlations can be depicted visually, a correlation can also be measured statistically, quantifying the strength and direction of the relationship between two variables. The most widely used correlation coefficient is the Pearson correlation coefficient, also known as Pearson's r.
-The Pearson correlation function in Excel is CORREL. For example, if you want to find the Pearson correlation coefficient between two variables in cells A2 through A20 and B2 through B20, you would enter the formula "=CORREL(A2:A20,B2:B20)" in a cell.
 
 ![Correlation coefficient](pics/C2/corrcoeff.png){#tbl-summary tbl-cap="Overview revenues and profits" height="450px"}
 
@@ -683,107 +753,98 @@ Further, correlations help business analysts to generate hypotheses about the un
 
 An example is the correlation between advertising spending and sales revenue. A company might want to know whether its advertising efforts are related to increased sales. To test this correlation, the company could collect data on its advertising spending and its sales revenue over a period of time, such as a quarter or a year. The company could then use the Pearson correlation coefficient to calculate the strength and direction of the correlation between the two variables. If there is a strong positive correlation between advertising spending and sales revenue, the company can conclude that advertising efforts and sales move together. On the other hand, if there is no or a weak correlation, the company may need to rethink its advertising strategy or explore other factors that may be affecting sales revenue.
 
-**Caution**: again, as stated above, correlation is not causation (and never ever write in your exams, assignment, or reports that one variable affects/impacts/influences/or increases another variable when you refer to correlations :))! While advertising spending and sales might move in the same direction, this does not automatically imply that the increase in sales is caused by the increase in advertising spending. Consider the following famous example on the correlation between ice cream sales and drowning deaths. Both variables tend to increase during the summer months, leading to a correlation between the two. However, this correlation is spurious, as there is no causal relationship between the two variables. In reality, the correlation is likely driven by a third variable, such as warmer weather. Warmer weather may lead to increased ice cream sales, as people seek cold treats to cool down, and may also lead to increased swimming and water activities, which could increase the risk of drowning deaths. Therefore, while the correlation between ice cream sales and drowning deaths may seem to suggest a causal relationship, it is actually spurious and driven by a third variable.
+**CAUTION!!!**: Again, as stated above, correlation is not causation (and never ever write in your exams, assignment, or reports that one variable affects/impacts/influences/or increases another variable when you refer to correlations :))! While advertising spending and sales might move in the same direction, this does not automatically imply that the increase in sales is caused by the increase in advertising spending. Consider the following famous example on the correlation between ice cream sales and drowning deaths. Both variables tend to increase during the summer months, leading to a correlation between the two. However, this correlation is spurious, as there is no causal relationship between the two variables. In reality, the correlation is likely driven by a third variable, such as warmer weather. Warmer weather may lead to increased ice cream sales, as people seek cold treats to cool down, and may also lead to increased swimming and water activities, which could increase the risk of drowning deaths. Therefore, while the correlation between ice cream sales and drowning deaths may seem to suggest a causal relationship, it is actually spurious and driven by a third variable.
 
-An example of spurious correlation in the business context could be the correlation between heating expenses and sales numbers. While there may be some anecdotal evidence to suggest that a comfortable office temperature can improve employee productivity, that does not imply that there is a structural causal relationship between the two variables. If the business analyst were to find a correlation between heating expenses and sales, this would likely be spurious. The correlation may be due to a third variable, such as seasonality: in the winter, employees might be less likely to take holidays, which may imply longer presence at the office (which increases heating expenses) and simultaneously imply more working hours--hence the increase in sales. So we need to be cautious and avoid drawing causal conclusions based on a potentially spurious correlation. It is essential to carefully consider the underlying data and any potential confounding variables before making any changes to office temperature or other policies that may impact sales; more advanced econometric analyses are required to determine causality.
+An example of spurious correlation in the business context could be the correlation between heating expenses and sales numbers. While there may be some anecdotal evidence to suggest that a comfortable office temperature can improve employee productivity, that does not imply that there is a structural causal relationship between the two variables. If the business analyst were to find a correlation between heating expenses and sales, this would likely be spurious. The correlation may be due to a third variable, such as seasonality: in the winter, employees might be less likely to take holidays, which may imply longer presence at the office (which increases heating expenses) and simultaneously imply more working hours - hence the increase in sales. So we need to be cautious and avoid drawing causal conclusions based on a potentially spurious correlation. It is essential to carefully consider the underlying data and any potential confounding variables before making any changes to office temperature or other policies that may impact sales; more advanced econometric analyses are required to determine causality.
 
 ##	Data challenges {#sec-chall}
 It would be great if the data would come in a form that we can directly analyze. However, this is, unfortunately, literally never the case. Below we describe some of the common challenges we experience while preparing our data for analysis. The techniques explained earlier are actually helpful in figuring out several data issues. We also provide a couple of typical solutions to these issues. Disclaimer: please note that each of these solutions comes with its own challenges; challenges that go beyond this chapter and course.
 
-###	Predictive validity
+###	Predictive validity {#sec-predval}
 Measurement is a notable challenge when it comes to having data available that accurately represents the desired underlying construct. When we say something is valid, we make a judgment about the extent to which relevant evidence supports that inference as being true or correct. This issue can be better understood through the predictive validity framework, which emphasizes the importance of a measure's ability to predict relevant outcomes or behaviors.
 
 ![Predictive validity framework](pics/C2/pvf.png){#fig-c2-radar-static fig-cap="Predictive validity framework" height="200px"}
 
-Let’s look at the example above. At the conceptual level, the study investigates in how far a company’s environmental performance predicts firm value. Now at the operational level, the measurement level, the study uses annual emissions as proxy for environmental performance. Emissions are oftentimes used because that is relatively easy to measure, certainly in regulated industries. But is this the concept you want to get at? Are environmental concerns not broader than emissions?
+Let’s look at the example above. At the conceptual level, the study investigates in how far a company’s environmental performance predicts firm value. Now at the operational level, the measurement level, the study uses annual emissions as proxy for environmental performance. Emissions are oftentimes used because that is relatively easy to measure, certainly in regulated industries. But is this the concept you want to get at? Are environmental concerns not broader than emissions? And if this is mostly measured in regulated industries, what does this say about the generalizability if you only cover those industries?
+
 This is why when working with data, business analysts and researchers often encounter difficulties in finding suitable proxies for their desired constructs. This is because the data might have been collected for purposes unrelated to the research objectives, making it hard to ensure that the available data truly aligns with the target construct. Consequently, the proxy may lack predictive validity, reducing the overall quality of the analysis.
 
 What to do about it? To enhance the predictive validity of your variables, various strategies help to ensure that the variables are accurate, reliable, and relevant to the desired construct.
-Firstly, carefully selecting variables is essential. This involves reviewing internal and external data sources, industry benchmarks, and best practices to identify variables that have a strong association with the construct of interest. This helps to establish a sound theoretical and practical foundation for the variables used in the analysis.
-Another approach is using multiple proxies for each construct, capturing different aspects of the construct and reducing measurement error.
 
-Furthermore, validating the chosen variables is important. By ensuring that the variables have both convergent validity (measures of the same construct are highly correlated) and discriminant validity (measures of different constructs are not highly correlated), business analysts can enhance the overall predictive validity of their analysis.
-
-Proper measurement is also essential for increasing predictive validity. Analysts should use established and validated measurement tools, or, if necessary, develop and validate their own instruments. This may involve piloting the measurement process, establishing internal consistency, and assessing the stability of the measures over time.
-
-Sample selection plays a vital role in enhancing the generalizability of the analysis. A well-chosen, representative, and diverse sample of data points can help ensure that the relationships observed between variables are robust and applicable to the wider business context, thus increasing predictive validity.
-
-Moreover, controlling for confounding variables is crucial. Analysts should identify potential confounding variables and account for them in their analysis or models. By controlling for these factors, analysts can reduce the likelihood of spurious relationships (see 3.5.3.2) and increase the predictive validity of their chosen variables. We will return to this topic in Chapter 4.
-
-Lastly, regularly re-evaluating and updating the chosen variables is essential to maintain their relevance and predictive validity. This may involve incorporating new findings from industry research, revising measurement tools, or re-assessing the relationships between variables in light of changes in the business environment.
+-   Select variables carefully: Review internal/external data, industry benchmarks, and best practices to find variables strongly linked to the underlying construct.
+-   Use multiple proxies: Capturing different facets of the same concept reduces measurement error.
+-   Asses validity of measures: Check convergent validity (similar measures of the same underlying concept correlate) and discriminant validity (unrelated measures of different concepts should not correlate).
+-   Develop or adopt reliable instruments: Use established measurers, or develop tools which should be tested for internal consistency and stability over time.
+-   Choose a representative sample: Robust, diverse data can help ensure that the relationships observed between variables are robust and applicable to the wider business context.
+-   Control confounding variables: Identifying and accounting for confounding variables reduces spurious relationships (see @sec-corranal) and increase validity (more details in @sec-diag).
+-   Reassess regularly: Update measures as new research emerges or business environments shift.
 
 ###	Structured and unstructured data
 Structured and unstructured data can pose challenges because unstructured data often requires additional preprocessing and transformation to extract useful information. This can be time-consuming and necessitate specialized tools or techniques, such as natural language processing or image recognition. High dimensionality in (un-) structured data can also make it difficult to identify patterns or trends, requiring dimensionality reduction techniques. High dimensionality in data refers to a situation where there are a large number of variables or features in the data. It can occur in both structured and unstructured data, but it is particularly challenging in structured data where each row represents a record or observation, and each column represents a variable or feature.
 
-For example, in a dataset containing information about customer purchases, each customer may have a large number of attributes such as age, gender, income, location, shopping habits, and so on. If each of these attributes is represented as a separate column, the resulting dataset can have a high number of columns, or dimensions, making it highly dimensional.
+For example, in a dataset containing information about customer purchases, each customer may have a large number of attributes such as age, gender, income, shopping habits, time stamp of each shop visit, amount spent per shopping trip, and so on. If each of these attributes is represented as a separate column, the resulting dataset can have a high number of columns, or dimensions, making it highly dimensional.
 
 Dealing with challenges posed by structured and unstructured data, particularly preprocessing and transformation of unstructured data, can be addressed through a variety of methods. While it can be time-consuming and require specialized tools or techniques, a systematic approach can help make the process more efficient and effective.
 
-Firstly, for unstructured data, it is essential to identify the specific information that needs to be extracted to address the business question. By narrowing down the focus, you can ensure that the preprocessing and transformation efforts are targeted and relevant.
-
-Next, leveraging specialized tools and techniques is necessary to effectively work with unstructured data. For textual data, natural language processing (NLP) tools can be used to extract relevant information from text. For image data, image recognition techniques, such as convolutional neural networks, can be employed to classify, detect objects, or segment images. Similarly, for audio data, signal processing tools and techniques can be used to extract relevant features.
-
-To tackle high dimensionality, dimensionality reduction techniques can be applied. For structured data, methods such as principal component analysis (PCA) or feature selection techniques like forward or backward selection can be used. For unstructured data, approaches like topic modeling for text data or autoencoders for image data can help reduce dimensionality.
+-   Narrow the focus: Identify exactly which information needs to be extracted from unstructured data, ensuring targeted and relevant preprocessing efforts.
+-   Use specialized tools: Employ natural language processing (NLP) for text, image recognition for visual data, or signal processing for audio to extract key features effectively.
+-   Reduce dimensionality: Apply techniques like principal component analysis (PCA) or feature selection to structured data, and use topic modeling or autoencoders for unstructured data to handle high-dimensional datasets.
 
 ###	Data sources
 Problems in identifying patterns in data can arise from data sources because they may contain inconsistent, incomplete, and outdated information, or may not be accessible. Data collected from different sources or systems might have different formats, units, timeframes, or representations. Inconsistencies across data sources can complicate data integration and can make it difficult to use datasets for analysis and pattern identification. Data sources may not contain all the necessary information, thus only delivering incomplete data, and requiring additional data acquisition or integration of multiple sources to get a complete picture. Furthermore, data sources may be outdated or not up-to-date, making it difficult to identify current trends or patterns. In addition, gaining access to relevant data sources can be challenging due to privacy concerns, legal restrictions, or organizational barriers. Think of GDPR concerns not allowing you to use personnel data.
 
-How to deal with it? Firstly, data cleaning and preprocessing are essential steps before conducting any analysis (see next section).
+How to deal with it? 
 
-Secondly, ensuring the accuracy and reliability of the data through validation and verification is important. Cross-checking data sources, reviewing data collection methods, and confirming the data's authenticity can help reduce the risk of errors and improve the quality of the analysis.
-
-Combining multiple data sources can help address issues of incomplete or inaccessible data. By aggregating data from different sources, you can create a more comprehensive dataset that may reveal patterns that were previously hidden. It's important to carefully assess the compatibility and quality of the different data sources before combining them.
-Updating your data sources regularly can help mitigate the issue of outdated information.
-
-By incorporating the most recent data available, you can ensure that your analysis remains relevant and accurate. This may involve subscribing to data feeds, setting up automated data updates, or maintaining a schedule for manual data updates.
-
-When dealing with inaccessible data, it may be necessary to explore alternative data sources or proxy variables. These alternatives can sometimes provide insights into the desired patterns, even if they are not the original variables of interest. It's essential to evaluate the suitability and validity (see point 3.6.1) of these alternatives in the context of your analysis.
+-   Clean and preprocess first: Conduct thorough data cleaning (e.g., removing duplicates, correcting errors) before any analysis to ensure higher-quality results.
+-   Validate and verify data: Cross-check sources, review data collection methods, and confirm authenticity to reduce errors and improve reliability.
+-   Combine multiple sources: Merge datasets to fill gaps and uncover hidden patterns. Always check compatibility and quality before merging.
+-   Keep data up-to-date: Regularly refresh sources - via automated feeds or scheduled updates - to ensure analyses remain accurate.
+-   Explore alternatives for inaccessible data: Use proxy variables or alternative datasets if original sources are not available, but confirm they are valid and relevant to your analysis context (see also @sec-predval).
 
 ###	Data cleaning and formatting
 Data cleaning and formatting can lead to problems in pattern identification because poor data quality can significantly impact the analysis process and insights derived. For example, handling different character encodings or converting between formats can be problematic, leading to unreadable text. Or ensuring the accuracy and consistency of data values may require additional validation checks or business rules. Time-consuming and labor-intensive data cleaning efforts may also divert resources from the actual analysis, potentially delaying the identification of valuable patterns.
 
-What can you do about it? Firstly, establish a consistent data formatting and encoding policy across your organization or project. By enforcing standard formats and encodings, you can reduce the likelihood of encountering issues related to unreadable text or inconsistent data values. This can simplify the data cleaning process and reduce the risk of errors during data transformation.
+What can you do about it? 
 
-Secondly, automate data cleaning and validation processes wherever possible. By using scripts or tools to automatically detect and correct inconsistencies, missing values, or errors in the data, you can save time and resources that would otherwise be spent on manual data cleaning efforts. Automation can also help ensure that the data is cleaned and validated in a consistent manner, reducing the risk of human error.
-
-Additionally, prioritize data cleaning and validation tasks based on their potential impact on pattern identification. Focus on addressing issues that are most likely to have a significant effect on the analysis results, while deferring less critical tasks if time or resources are limited. This approach can help ensure that the most valuable patterns are identified, even if some data quality issues remain unresolved.
-
-Collaborate with data providers or stakeholders to address data quality issues at the source. By working together to establish clear data quality standards, guidelines, and expectations, you can minimize the occurrence of errors and inconsistencies in the data. This proactive approach can help reduce the need for extensive data-cleaning efforts and enable quicker pattern identification.
-
-Finally, invest in training and capacity building for your team in the areas of data quality management, data cleaning, and data validation. By enhancing your team's skills and expertise in these areas, you can improve the efficiency and effectiveness of your data cleaning and formatting efforts. This can help ensure that your team is better equipped to identify patterns and derive valuable insights from the data.
+-   Standardize formats and encodings: Establish a consistent data formatting and encoding policy to prevent unreadable text or mismatched data values, simplifying the cleaning process and reducing errors during transformation.
+-   Automate data cleaning: Use scripts or specialized tools to detect and fix inconsistencies, missing values, or errors. Automation saves time and minimizes human error, making data preparation more efficient.
+-   Focus on high-impact issues: Prioritize critical data problems that significantly influence pattern identification. Address these first to protect key insights, and defer lower-priority items if resources are limited.
+-   Collaborate with stakeholders: Work with data providers and other parties to define clear data quality standards. Tackling errors at the source accelerates pattern discovery and avoids time-consuming downstream fixes.
+-   Invest in training: Equip your team with skills in data quality, cleaning, and validation. Building in-house expertise boosts efficiency, enabling quicker and more accurate insights from your data.
 
 ###	Noisy data
-Noisy data refers to data that contains irrelevant, random, or erroneous information, which can distort the true underlying patterns, relationships, or signal in the dataset. Noisy data can arise due to various reasons, such as measurement errors, data entry mistakes, data corruption, or natural variability in the data-generating process. In the context of statistical analysis, noisy data can have a detrimental impact on the performance, accuracy, and interpretability of models and algorithms. There are several types of noise that can affect data:
+Noisy data refers to data that contains irrelevant, random, or erroneous information, which can distort the true underlying patterns, relationships, or signal in the dataset. Noisy data can arise due to various reasons, such as measurement errors, data entry mistakes, data corruption, or natural variability in the data-generating process. In the context of statistical analysis, noisy data can have a detrimental impact on the performance, accuracy, and interpretability of models and algorithms. There are generally **two types of noise** that can affect data:
 
 **Random noise:** This is the result of random fluctuations or errors in the data collection or recording process.
 
-**Systematic noise:** This occurs when there is a consistent error or bias introduced into the data due to a flaw in the data collection or measurement process.
+**Systematic noise:** This occurs when there is a consistent error or bias introduced into the data, often due to a flawed or biased measurement. 
 
-**Outliers:** Outliers are data points that deviate significantly from the overall pattern or distribution of the data. They can be considered as a form of noise when they result from errors or anomalies in the data collection process.
+**Sources of noise**
+
+**Measurement error** is a type of error that can occur when the measurement instrument used to collect the data is imperfect or when the measurement process is not accurate. Measurement error can cause outliers in the data because it can lead to values that are significantly different from the true value of the variable being measured. Measurement error in customer satisfaction data can occur due to errors in the survey process, such as asking unclear or biased questions, or due to errors in the data entry process. 
+
+**Data entry errors** are mistakes that occur during the process of entering data into a computer or database. Data entry errors can cause inaccurate values or outliers in the data because they can lead to values that are significantly different from the actual value of the variable being measured. For example, suppose that the accountant incorrectly records sales transactions and types €200 instead of €100.
 
 Dealing with noisy data often requires additional preprocessing steps.
-One approach to managing noisy data is applying smoothing techniques such as moving averages, which help reduce the impact of random variations in the data.
 
-Outlier detection is another important aspect of handling noisy data. Identifying and dealing with outliers, which are data points that deviate significantly from the norm, can help minimize their impact on pattern identification. Visual methods such as box plots or various statistical methods, such as the Z-score or the IQR method, can be used to detect outliers.
-
-Outliers can be caused by measurement errors, data entry errors, sampling problems, or naturally occurring variability. Outliers can have a significant impact on the regression analysis, as they can pull the regression line towards them, resulting in inaccurate estimates of the relationship between the variables.
-
-**Measurement error** is a type of error that can occur when the measurement instrument used to collect the data is imperfect or when the measurement process is not accurate. Measurement error can cause outliers in the data because it can lead to values that are significantly different from the true value of the variable being measured. Measurement error in customer satisfaction data can occur due to errors in the survey process, such as asking unclear or biased questions, or due to errors in the data entry process. For example, if a respondent mistakenly selects the wrong answer on a customer satisfaction survey, this could result in an outlier in the data.
-
-**Data entry errors** are mistakes that occur during the process of entering data into a computer or database. Data entry errors can cause outliers in the data because they can lead to values that are significantly different from the actual value of the variable being measured. For example, suppose that the accountant incorrectly records sales transactions and types €200 instead of €100.
-
-If the outliers are due to measurement errors, data entry errors, or sampling error, then it may be appropriate to remove them from the dataset. In that case, the data points do not belong into the data. You can use the z-Score or IQR (see section 222) to identify and delete the outlier.
-
-However, things are different when considering data points which are extreme, but real. Sometimes outliers occur naturally, and are part of the population you are investigating. In this case, you should not remove the outlier, but handle it differently.
-
-A common approach to do so is the transformation of the variables. This can be done by applying a mathematical function to the data that changes the scale or distribution of the data. For example, a log transformation of the respective variable can be created and used in the analysis to reduce the impact of outliers in positively skewed data.
-
-Alternatively, winsorizing is a technique that involves replacing the outliers with the nearest values that are within a certain percentile range. For example, if the 99th percentile is used, any values above the 99th percentile are replaced with the value at the 99th percentile. This can be done on both ends of the distribution to deal with outliers in both tails.
-
-Lastly, validating the results of the analysis using multiple methods or independent data sources can help ensure that the patterns identified are not merely artifacts of noisy data. By cross-validating the findings or comparing them to results from other studies or sources, you can increase confidence in the patterns and trends identified in the presence of noisy data.
+-   One approach to managing noisy data is applying smoothing techniques such as moving averages, which help reduce the impact of random variations in the data.
+-   Outlier detection is another important aspect of handling noisy data (see previous sections for identification methods). If the outliers are due to measurement errors, data entry errors, or sampling error, then it may be appropriate to remove them from the dataset. In that case, the data points do not belong into the data. However, things are different when considering data points which are extreme, but real. Sometimes **outliers occur naturally**, and are part of the population you are investigating. In this case, you should not remove the outlier, but handle it differently. A common approach to do so is the transformation of the variables. This can be done by applying a mathematical function to the data that changes the scale or distribution of the data. For example, a log transformation of the respective variable can be created and used in the analysis to reduce the impact of outliers in positively skewed data. Alternatively, winsorizing is a technique that involves replacing the outliers with the nearest values that are within a certain percentile range. For example, if the 99th percentile is used, any values above the 99th percentile are replaced with the value at the 99th percentile. This can be done on both ends of the distribution to deal with outliers in both tails.
+- Lastly, validating the results of the analysis using multiple methods or independent data sources can help ensure that the patterns identified are not merely artifacts of noisy data. By cross-validating the findings or comparing them to results from other studies or sources, you can increase confidence in the patterns and trends identified in the presence of noisy data.
 
 ###	Normalization and scaling
-Normalization and scaling are related terms, often used interchangeably, but they do have some subtle differences in meaning. Both refer to the process of transforming data to fit within a specific range or distribution. More specifically, while normalization changes the shape of the distribution of the data, scaling changes the range of the data. This can be particularly useful in regression analysis because it can help to prevent variables with larger scales from dominating the analysis and can improve the accuracy and stability of the regression model. Typical approaches for normalization are log transformations or Box-Cox transformations; for scaling, we often use min-max scaling or the Z-score normalization (yes, confusing wording!).
+Normalization and scaling are related terms, often used interchangeably, but they do have some subtle differences in meaning. Both refer to the process of transforming data to fit within a specific range or distribution. More specifically, while normalization changes the shape of the distribution of the data, scaling changes the range of the data. 
+
+Imagine you have a dataset of monthly sales amounts ranging from €500 to €10,000, and the distribution is heavily skewed by a few very large values:
+
+-   Normalization example (Log transform): Taking the log of each sales figure (e.g., log10(sales)) reduces the impact of extremely high values and pulls the distribution closer to a normal (bell-shaped) curve. The shape of the data changes: high sales numbers come down in scale more than smaller ones do, thus reducing skew.
+
+-   Scaling example (Min-max scaling): Transform each sales value so the minimum becomes 0 and the maximum becomes 1, using a formula like
+
+    Scaled value = x−min(x) / max(x)−min(x) 
+
+Now every data point fits in the range [0, 1], but the overall shape - including how skewed the distribution is - remains the same; you have only adjusted the range.
+
+This can be particularly useful in regression analysis because it can help to prevent variables with larger scales from dominating the analysis and can improve the accuracy and stability of the regression model. Typical approaches for normalization are log transformations or Box-Cox transformations; for scaling, we often use min-max scaling or the Z-score normalization. 
 
 However, but exactly for that reason, normalization and scaling of variables can also create a problem for identifying data patterns as it changes the underlying values of the data, which can obscure the original relationships between the variables.  For example, if two variables are highly correlated in their original scale, but one variable is changed to a much smaller scale, the correlation between the variables may appear weaker than it actually is. This can lead to misinterpretation of the data patterns and incorrect conclusions about the relationship between the variables.
 
