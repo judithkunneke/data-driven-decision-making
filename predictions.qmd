@@ -35,7 +35,7 @@ source("hhs-ggtheme.R")
 ## Learning goals
 
 1. Learn how to do principled data-based forecasting for decision making
-2. Evaluate a prediction models quality based on standard metrics and theory
+2. Evaluate prediction models quality based on standard metrics and theory
 
 ## Scope of this chapter
 
@@ -45,7 +45,7 @@ After introducing the basic concepts about the sources of prediction errors, we 
 
 ## What is predictive analysis?
 
-Predictive analysis is asking questions, such as "What will happen?", "What is the most likely response, given a set of conditions?", etc. It encompasses a huge and growing field of prediction and forecasting models---from classic time-series models to the most complex large language models. In this chapter we will focus mostly on the core concepts behind data-driven predictions. We will explain what exactly the issues are that make extrapolating from a historical sample to (yet) unseen data so difficult. These issues are quite broad and but provide a good foundation not only for designing useful predictive analyses, but also for a basic understanding of modern AI models behind driverless cars, generative Art, or generative text models, such as ChatGPT. At their heart, all of these applications are prediction models. 
+Predictive analysis is asking questions, such as "What will happen?", "What is the most likely response, given a set of conditions?", etc. It encompasses a huge and growing field of prediction and forecasting models---from classic time-series models to the most complex large language models. In this chapter we will focus mostly on the core concepts behind data-driven predictions. We will explain what exactly the issues are that make extrapolating from a historical sample to (yet) unseen data so difficult. These issues are quite broad  but provide a good foundation not only for designing useful predictive analyses, but also for a basic understanding of modern AI models behind driverless cars, generative art, or generative text models, such as ChatGPT. At their heart, all of these applications are prediction models. 
 
 It is important to understand that predictive analysis has a different goal than diagnostic analysis. Thus it also has different criteria to assess model quality. In @sec-diag, we stressed that diagnostic model quality can ultimately only be assessed via theory (your mental model). That is because diagnostic analysis asks "Why?" questions. Predictive analysis is less strict. You can easily have a prediction model that provides quite accurate forecasts without being even close to modelling causal relations. For example, the developers of the by now infamous early "Google Flu Trends" model, which predicted flu outbreaks using Google search terms, reported weeding out highly predictive but unrelated search terms related to basketball [@ginsberg2009detecting]. Basketball terms were highly predictive of flu outbreaks, because the main US basketball season is March, which is also the main flu season. So basketball search terms were just predicting season, not causally related to flu outbreaks itself. [See also the @lazer2014parable discussion of GFT as a parable for traps utilizing big data.]. Still, while weeding out search terms to basketball helps making the model more robust, a predictive model does not need to isolate causal relations. Consider a somewhat trivial example similar to the one used in @sec-diag (@fig-dag-rs). Imagine we are interest in predicting next week's retail store sales and have as inputs the number of staff and number of purchases in the previous week. If more store staff is associated with more purchases, including both number of purchases and number of staff is fine for prediction purposes. But you would not include number of purchases into your model if you would run a diagnostic analysis of the importance of the number of staff for sales. That is because part of the expected effect of staff on sales is via more purchases. Again, the point here is that models for predictive purposes and diagnostic purposes have different but equally important goals. Thus, they need to be designed based on different criteria. 
 
@@ -116,11 +116,11 @@ for(i in 2:100){
 new_gif
 ```
 
-For @fig-overfit, we simulated five samples of the form $y = -200 + 10 * x + u$ with the same x variables and $u$ drawn from a $N(0, (x + 30)^2)$ distribution. Each model we fit with two types of models. A classic linear one $y = a + b *x$ and a polynomial one $y = a + b *x + c * x^2$. Since we know the true relation, we know that the polynomial version has an unnecessary variable in there $x^2$. Usually, we do not know that, however. We never know for sure what the real world dynamics look like. That is why we used simulations here; to make the following points: Notice how the (wrong) polynomial regression always has the same or better $R^2$ than the (correct) linear model. This is overfitting. Even though the polynomial version is wrong. It fits the sample it got trained on better. Why does overfitting arise? This is because the additional variable starts fitting the noise part of the sample. The x values are always the same in each sample, the only thing that changes, and that gets picked up by $x^2$ to a bigger or smaller extend is the unmeasured influences in the error term $u$. And since these change from sample to simple, $x^2$ picking up the sample $u$ is bad news for out-of-sample predictions! 
+For @fig-overfit, we simulated five samples of the form $y = -200 + 10 * x + u$ with the same x variables and $u$ drawn from a $N(0, (x + 30)^2)$ distribution. Each model we fit with two types of models. A classic linear one $y = a + b *x$ and a polynomial one $y = a + b *x + c * x^2$. Since we know the true relation, we know that the polynomial version has an unnecessary variable in there $x^2$. Usually, we do not know that, however. We never know for sure what the real world dynamics look like. That is why we used simulations here; to make the following points: Notice how the (wrong) polynomial regression always has the same or better $R^2$ than the (correct) linear model. This is overfitting. Even though the polynomial version is wrong. It fits the sample it got trained on better. Why does overfitting arise? This is because the additional variable starts fitting the noise part of the sample. The x values are always the same in each sample, the only thing that changes, and that gets picked up by $x^2$ to a bigger or smaller extend is the unmeasured influences in the error term $u$. And since these change from sample to sample, $x^2$ picking up the sample $u$ is bad news for out-of-sample predictions! 
 
 Overfitting is a serious issue (also for diagnostic models, btw). Notice how especially the fitted lines from the really curved samples with high $R^2$ are off. These will very likely be a terrible fit for the other samples. *Overfitted models will likely fit the sample they got trained on better than less overfit models, but they will predict new data worse*. And, since the theme is prediction, we really only care about how good a model fits new data. 
 
-To illustrate the severity of the issue, we computed a common prediction error metric, the mean squared error (MSE) for each of the five samples. The MSE is simply the average of all aquared prediction errors: $(y-y_{predicted})^2$. In the @tbl-mse1, you see the difference in in-sample MSE between the polynomial model and linear model. In the last column, we also report the average difference in *out-of-sample MSE* for the other samples. The logic behind these out-of-sample averages is illustrated in @fig-overfit2. For each of the five samples and each model (poly or linear), we fitted to model to a sample (say sample 2 in row 2). We then used the fitted model to make predictions for each observation in the other four samples (for row 2, samples 1, 3, 4, and 5).
+To illustrate the severity of the issue, we computed a common prediction error metric, the mean squared error (MSE) for each of the five samples. The MSE is simply the average of all squared prediction errors: $(y-y_{predicted})^2$. In the @tbl-mse1, you see the difference in in-sample MSE between the polynomial model and linear model. In the last column, we also report the average difference in *out-of-sample MSE* for the other samples. The logic behind these out-of-sample averages is illustrated in @fig-overfit2. For each of the five samples and each model (poly or linear), we fitted the model to a sample (say sample 2 in row 2). We then used the fitted model to make predictions for each observation in the other four samples (for row 2, samples 1, 3, 4, and 5).
 
 ```{r}
 #| message: false
@@ -258,7 +258,7 @@ A nice feature of MSE as an error metric is that it can be easily decomposed int
 $$MSE = \mathbb{E}\left[(y -\hat m (x, D))^2\right] = Var(y - \hat m (x, D)) + \left(\mathbb{E}\left[y - \hat m (x, D)\right]\right)^2$$
 $$MSE = \mathbb{E}\left[(y -  \hat m (x, D))^2\right]  = Var(\hat m (x, D)) + Bias(\hat m (x, D))^2$$
 
-There are two sources of errors according to this formula. One is variance, and this is the term that is affected by overfitting. Variance reflects errors arising from sensitivity to small fluctuations in the sample used to fit the modes. The second term, Bias, reflects systematic errors, such as those arising from an *underfitted* model (one that misses a systematic determinant and thus makes a systematic error). If it helps, you can think of the bias variance trade-off as an overfitting/underfitting trade-off. Sometimes it is better to have simpler models that are likely to underfit or make a systematic mistake (a bit of Bias), than complex models that might be prone to large overfitting (high variance). 
+There are two sources of errors according to this formula. One is variance, and this is the term that is affected by overfitting. Variance reflects errors arising from sensitivity to small fluctuations in the sample used to fit the models. The second term, Bias, reflects systematic errors, such as those arising from an *underfitted* model (one that misses a systematic determinant and thus makes a systematic error). If it helps, you can think of the bias variance trade-off as an overfitting/underfitting trade-off. Sometimes it is better to have simpler models that are likely to underfit or make a systematic mistake (a bit of Bias), than complex models that might be prone to large overfitting (high variance). 
 
 This trade-off is quite general, irrespective of the error metric. And there often is no clear ex-ante guideline when to expect that a certain model will have a better trade-off than another. For that reason, we often have to evaluate different models and simply choose the one that seems to have the better bias variance trade-off in our particular setting. To do so, we need to discuss how to assess prediction performance in a principled way next.
 
@@ -321,7 +321,7 @@ collect_metrics(fit_rs_1)
 
 We get outputs for three metrics: accuracy, brier_class, and roc_auc (ROC area under the curve). These are default error metrics to judge the performance of classification problems (We will discuss what that means in the next section). Tidymodels automatically chose to report those because we told it we are fitting a classification model. 
 
-The mean column shows the average of both metrics across the five 294-observation folds, we generated with cross-validation. The average accuracy is 83.8%, which means we got 84% of labels correct. That is not as great as it sounds though. Accuracy is a tricky error metric whenever you have a disbalance in labels. We do have much
+The mean column shows the average of both metrics across the five 294-observation folds, we generated with cross-validation. The average accuracy is 83.8%, which means we got 84% of labels correct. That is not as great as it sounds though. Accuracy is a tricky error metric whenever you have a disbalance in labels.
 
 The std_err column shows you the standard error across the five folds. It is an indication of the variation of both metrics across the five folds, which is going to be important when comparing different models. In fact, the distribution of our outcome variable in the full dataset is like this
 
@@ -348,7 +348,7 @@ We get a very similar accuracy score and a slightly higher roc_auc. Now, does th
 
 ### Common error metrics
 
-Mean squared error, accuracy, roc_auc, are all different error metrics. Which on to use depends on the learning problem and the data. In machine learning lingua, the type of analysis we just did is called a *classification* problem. We tried to classify observations into one of two groups, those the left the organization and those that did not. When your have an outcome variable that is binary or categorical (e.g, "delayed", "on-time", "cancelled") you usually have a classification problem. For those, measures like accuracy and roc_auc are commonly used. Learning problems involving continuous outcomes are often called *regression* problems. For those error metrics like MSE or mean absolue error (MAE) are often appropriate. 
+Mean squared error, accuracy, roc_auc, are all different error metrics. Which on to use depends on the learning problem and the data. In machine learning lingua, the type of analysis we just did is called a *classification* problem. We tried to classify observations into one of two groups, those that left the organization and those that did not. When you have an outcome variable that is binary or categorical (e.g, "delayed", "on-time", "cancelled") you usually have a classification problem. For those, measures like accuracy and roc_auc are commonly used. Learning problems involving continuous outcomes are often called *regression* problems. For those error metrics like MSE or mean absolue error (MAE) are often appropriate. 
 
 **Accuracy**. We already discussed accuracy as a classification error metric and some of its issues. Another one is that often, not all classification errors are equal. Is it worse for us to label people who left the firm as staying or people who stayed as leaving? Often it makes sense to decompose accuracy based on the type of misclassification. 
 
@@ -463,7 +463,7 @@ A good prediction model thus has a curve that is as high as possible. Compare fo
 
 The roc_auc is simply a summary measure of ROC curve graphs. It measures the area under the curve. Since the graph is usually plotted on the x and y axis from 0 to 1, the maximum area under the graph can also only be 1. The higher the curve is, the closer the area under the curve will be to 1. So higher values are better. When we compare the cross-validated average roc_auc of the simple model (0.647, SE: 0.0135) and the model including DistanceHome and BusinessTravel (0.673, SE: 0.0136) then the expanded model seems to do a better job out-of-sample too. Is this difference ($0.673 - 0.647 = 0.026$) meaningful though? Looking at the standard errors of both cross-validation tables (0.0135 and 0.0136), it is borderline, as it is not too implausible to get such a difference also from sampling variation (rather than a true difference in predictive ability).
 
-We spend quite some time on ROC because it also allowed us to introduce some important terms and thinking related to classification problems. Turning to regression problems that deal with continuous outcomes, things become about easier.
+We spend quite some time on ROC because it also allowed us to introduce some important terms and thinking related to classification problems. Turning to regression problems that deal with continuous outcomes, things become a bit easier.
 
 **Mean squared error (MSE)**. MSE is a standard error metric for continuous outcomes that---because of squaring the errors---penalizes large errors more severely than small ones. 
 
@@ -577,7 +577,7 @@ repair_dta |>
   theme(panel.grid.major.x = element_blank())
 ```
 
-We can see substantial variation. Most repairs take less than 20 hours, but there are a rare few that seem to take forever. Let us see whether we can predict repair time with a model. We start by building a tidymodels workflow. First, we prepare the data. First, we will put 20% of the sample away for later.
+We can see substantial variation. Most repairs take less than 20 hours, but there are a rare few that seem to take forever. Let us see whether we can predict repair time with a model. We start by building a tidymodels workflow. We start by preparing the data. But, before we do that, we will put 20% of the sample away for later.
 
 ### Building a model testing pipeline
 
@@ -588,7 +588,7 @@ repair_test  <- testing(splits)
 repair_other <- training(splits)
 splits
 ```
-It is good practice to keep a part of your sample away for a final evaluation at the end. Imagine fitting and examining multiple models and specifications on a training set. Even using cross-validation to estimate out-of-sample performance of the models, decide on preprocessing steps, and so on. Even then, you still want hold part of the data back. So that when you are done, you have a fresh out-of-sample comparison that you did not use for model tuning and selection. This is most important when you have more advance models that require you to tune model parameters, like a penalty parameter.  
+It is good practice to keep a part of your sample away for a final evaluation at the end. Imagine fitting and examining multiple models and specifications on a training set. Even when using cross-validation to estimate out-of-sample performance of the models, decide on preprocessing steps, and so on, you still want to hold part of the data back. So that when you are done, you have a fresh out-of-sample comparison that you did not use for model tuning and selection. This is most important when you have more advanced models that require you to tune model parameters, like a penalty parameter.  
 
 Next we prepare our cross validation folds.
 
@@ -620,7 +620,7 @@ summary(base_processing)
 ```
 
 
-Building on the base processing, we define six different model specifications. The six models are a compbination of three different regression equations and two model types
+Building on the base processing, we define six different model specifications. The six models are a combination of three different regression equations and two model types
 
 ```{r}
 # We want to fit classic regressions for now:
@@ -649,7 +649,7 @@ regspec3
 ```
 ### Testing the model candidates
 
-Next we create a so called workflow set. This set captures basically all the combinations of pre-processing recipes and models families that we want to evaluate. 
+Next we create a so called workflow set. This set captures basically all the combinations of pre-processing recipes and model families that we want to evaluate. 
 
 ```{r}
 set1 <- 
@@ -671,7 +671,7 @@ collect_metrics(wf_rs_fits)
 `collect_metrics` shows us cross-validated performance of our 3 x 2 model combinations: 3 regression equations and 2 model families (classic regression versus poisson regression). The default error metrics are ok here. We believe that in this setting, large prediction errors are more severe in terms of cost they produce. Thus, a linear regression is fine and the RMSE a measure in alignment with this logic. 
 
 A few observations:
-- The errors RMSE of 17.8 to 16.9 hours seems quite big. Being of by 16 hours on average is basically being of by more than two working days on average. It looks like adding the predictors, especially how long ago an item was purchased seem to help predictions. 
+- The errors RMSE of 17.8 to 16.9 hours seems quite big. Being of by 16 hours on average is basically being of by more than two working days on average. It looks like adding the predictors, especially how long ago an item was purchased seems to help predictions. 
 - Poisson regressions seem to be working slightly better. This could be because hours to repair is basically count data, which is what poisson regressions are designed for. 
 
 ```{r}
@@ -726,11 +726,11 @@ chosen_wf_pred |>
   labs(y = "predicted time_to_repair_hrs", color = NULL)
 ```
 
-RMSE, MAE, and the plot all show us that this is a bad model. RMSE of 16 hours and MAE of 10 hours is probably too much (we will later do a cost analysis). The graph also tells us that we a doing a bad job at getting the really long jobs correct (A perfect prediction model would have all points lined up on the blue line). And we also see that our dummy variables does not capture the variance in the data well. 
+RMSE, MAE, and the plot all show us that this is a bad model. RMSE of 16 hours and MAE of 10 hours is probably too much (we will later do a cost analysis). The graph also tells us that we are doing a bad job at getting the really long jobs correct (A perfect prediction model would have all points lined up on the blue line). And we also see that our dummy variables do not capture the variation in the data well. 
 
 ### A better model with a problem
 
-Let us try another model, which as its main new input is employee_id. We have the suspicion that time_to_repair might also depend a lot on how able the employee is. We also show a bunch of other steps like taking the square root of the price, just to show you that things like this are also possible.
+Let us try another model, which has as its main input is employee_id. We have the suspicion that time_to_repair might also depend a lot on the employee's ability. We also show a bunch of other steps like taking the square root of the price, just to show you that things like this are also possible.
 
 ```{r}
 set.seed(123)
@@ -795,7 +795,7 @@ That is a drastically better model. We still don't get the large times fully rig
 
 ### Making a decision
 
-This is a problem for us. Why? Because it is mainly employee id that gave us this increase in predictive power. We cannot use employee effects to predict and estimate the staffing costs! We do not know the new employees that we will hire to staff the repair counters. Maybe we could collect new data to analyse what it is about the employees that drive time efficiency. But we would still then need to either assume we can hire employees with the right traits or predict what traits new employers would come with. This seems too involved and brittle for our staffing cost problem. We build this problem specifically this way to illustrate the issue that sometimes, you can figure out who to make better predictions, but you cannot use that information for various reasons. Often there is variation that you just cannot predict, even if you knew how. And we still need to make a decision on whether to use one of the models to inform our staffing costs. And if so, how to proceed. 
+This is a problem for us. Why? Because it is mainly employee id that gave us this increase in predictive power. We cannot use employee effects to predict and estimate the staffing costs! We do not know the new employees that we will hire to staff the repair counters. Maybe we could collect new data to analyse what it is about the employees that drive time efficiency. But we would then still have to assume that either we can hire employees with the right traits or we can predict what traits new employers would come with. This seems too involved and brittle for our staffing cost problem. We specifically built this problem this way to illustrate the issues that can arise. Sometimes, you can figure out how to make better predictions for a particular outcome variable, but you cannot use that information for various reasons. Also, often there exists variation that you just cannot predict, even if you knew how. And we still need to make a decision on whether to use one of the models to inform our staffing costs. And if so, how to proceed. 
 
 Based on our model we could use estimates of the typical type of cadence of different types of items, busyness, etc. to predict the average amount of repair time in a store. From this we could deduce how many FTEs we need. We also know, however, that we have a fairly big error rate (ca. 10 hours) for each. These errors do not simply add up though. In fact, if our tendency to underestimate or overestimate time is random, they might cancel out to a large extent (we already saw though, we have a tendency to underestimate the big time killers). To examine the aggregate error, we can run a prediction simulation to see what the error for the sum of expected time_to_repair is. 
 
@@ -826,7 +826,7 @@ wf3_pred <-
   bind_cols(repair_test2)
 ```
 
-And now, we are going to create a few *bootstrap* samples from the 20% test sample predictions. Each time we will sum up the predictions and the true time_to_repair values. We then look at the variation the man absolute error across all bootstrapped samples.
+And now, we are going to create a few *bootstrap* samples from the 20% test sample predictions. Each time we will sum up the predictions and the true time_to_repair values. We then look at the variation in the mean absolute error across all bootstrapped samples.
 
 ```{r}
 set.seed(47)

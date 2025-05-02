@@ -109,7 +109,7 @@ print(folds)
 
 ## Deciding on the preprocessing and model steps
 
-Because number of renovations is a positive integer number, classic and poisson regressions are natural starting point for a predictive analysis. We define both model classes for use later. 
+Because the number of renovations is a positive integer number, classic and poisson regressions are natural starting point for a predictive analysis. We define both model classes for use later. 
 
 Next, we define our different models. These are a combination of 1) outcome variable, 2) predictors (think x-variables) to use and 3) pre-processing (transformation) steps to be applied to the outcome or predictor variables. Such pre-processing steps could be turning a factor variable into dummy variables, adding squared terms of a particular x variable as an additional predictor, changing the scale of some predictor, and so on. 
 
