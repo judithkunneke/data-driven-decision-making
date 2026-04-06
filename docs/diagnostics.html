@@ -382,6 +382,117 @@ Figure&nbsp;4.2: Mental model
 </div>
 <p>We then we draw some other influences at random, pack them into an error term <span class="math inline">\(u\)</span> and compute a <span class="math inline">\(y\)</span> variable according to the equation above <span class="math inline">\(y = 1 + 2 * x + u\)</span>. We do this 20 times, but we always use the same <span class="math inline">\(x\)</span> values above. Importantly, this means that the true slope for all 20 samples is 2. If you need an example, think of 20 surveys where each time 50 people were surveyed about how happy they are (<span class="math inline">\(y\)</span> = happiness). The survey firm tried very hard to always get the same <span class="math inline">\(x\)</span> distribution (say x is age of the respondents), but it can obviously never find exactly the same type of people. Because people of the same age are still very different, the error term <span class="math inline">\(u\)</span> will always differ quite a bit among these 20 surveys. <a href="#fig-rand1" class="quarto-xref">Figure&nbsp;<span>4.3</span></a> shows how much the <em>sample</em> relation (the slope) between x and y varies between the 20 surveys:</p>
 <div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Cannot get dimensions of plot table. Plot region might not be fixed
+Caused by error:
+! &lt;gganim&gt; object properties are invalid:
+- @labels must be &lt;ggplot2::labels&gt;, not &lt;list&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Caused by error:
+! &lt;gganim&gt; object properties are invalid:
+- @labels must be &lt;ggplot2::labels&gt;, not &lt;list&gt;</code></pre>
+</div>
 <div class="cell-output-display">
 <div id="fig-rand1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -398,6 +509,117 @@ Figure&nbsp;4.3: Imprecisely estimated relations as a function of unmeasured inf
 <p>Remember the slope underlying the relation between x and y for all 20 samples is 2! All the variation you see here in slope (some are even negative!) is due to the unmeasured influences in <span class="math inline">\(u\)</span>. Remember we always used the same x values. If you pay careful attention, you can see that the dots in the plot only move up and down. The <span class="math inline">\(x\)</span> values are fixed. It is thus the changing amounts of <span class="math inline">\(u\)</span> that are added to x to arrive a <span class="math inline">\(y\)</span> that camouflage the true relation. This is what people mean when they say a relation can be due to chance.</p>
 <p>The “chance” of chance patterns is thus higher when there is a lot of unexplained variation of the outcome of interest left. The best remedy against this is: more data. In <a href="#fig-rand2" class="quarto-xref">Figure&nbsp;<span>4.4</span></a>, we start with a sample of 50 observations and increase it step by step by 10 observations up to a maximum of 500 observations.</p>
 <div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Cannot get dimensions of plot table. Plot region might not be fixed
+Caused by error:
+! &lt;gganim&gt; object properties are invalid:
+- @labels must be &lt;ggplot2::labels&gt;, not &lt;list&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Failed to plot frame
+Caused by error:
+! &lt;gganim&gt; object properties are invalid:
+- @labels must be &lt;ggplot2::labels&gt;, not &lt;list&gt;</code></pre>
+</div>
 <div class="cell-output-display">
 <div id="fig-rand2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -458,7 +680,7 @@ Figure&nbsp;4.5: Hypothesis testing: how likely is it to see certain slopes, giv
 </ul>
 <p>To determine whether this correlation is “not by chance,” the company could perform a statistical test to determine if the observed correlation coefficient is statistically significant (using the <code>correlation::</code> R package).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">correlation</span>(d4[, <span class="fu">c</span>(<span class="st">"profit"</span>, <span class="st">"employee_tenure"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">correlation</span>(d4[, <span class="fu">c</span>(<span class="st">"profit"</span>, <span class="st">"employee_tenure"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
@@ -545,8 +767,8 @@ Figure&nbsp;4.7: Simple regression
 </figure>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(profit <span class="sc">~</span> employee_tenure, <span class="at">data =</span> d4)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m1, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(profit <span class="sc">~</span> employee_tenure, <span class="at">data =</span> d4)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m1, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>MODEL INFO:
 Observations: 75
@@ -661,8 +883,8 @@ Figure&nbsp;4.8: DAG of a simple model of store revenues
 <p>revenues is weekly revenues, foot traffic is the number of customers per week. sick calls is how many employees called in sick that week. staff is how much sales personnel was working (not sick) during the week. You think that for your shops the amount of staff is important. But you also know that if a store is busier, you staff more sales personnel. So there is a direct connection. Just looking at the relation between revenues and amount of staff will thus be contaminated by foot traffic. The coefficient might just pick up that stores with more staff are busier stores. You want to know what the importance of staff is, holding foot traffic (how busy the store is) fixed. Stated another way, foot traffic is a confounding variable for estimating the relation between number of staff and revenues. You can see that in <a href="#fig-dag-rs" class="quarto-xref">Figure&nbsp;<span>4.8</span></a>. According to your mental model, foot traffic has an arrow going into revenues and an arrow going into staff. It causally influences both (you think). Thus you need to hold its influence constant to have a chance to estimate the direct arrow going from staff to revenues. Multiple regression is one approach to do so.</p>
 <p>Here is what would happen if we would ignore the confounding influence of foot traffic. We first estimate a simple regression of store revenues on number of staff working.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(revenues <span class="sc">~</span> staff, <span class="at">data =</span> d5)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m2, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(revenues <span class="sc">~</span> staff, <span class="at">data =</span> d5)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m2, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>MODEL INFO:
 Observations: 28
@@ -685,8 +907,8 @@ staff                2604.77   1163.11    4046.44     3.71   0.00
 </div>
 <p>We see a large and significant coefficient on staff working. One more staff working in that week is associated with 2.605 weekly revenues on average. However, your mental model in <a href="#fig-dag-rs" class="quarto-xref">Figure&nbsp;<span>4.8</span></a> suggests that this number is incorrect. The number of staff is itself determined by foot traffic, so the 2,605 is likely partially driven by stores with higher foot traffic. We put foot traffic itself into the regression now.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(revenues <span class="sc">~</span> staff <span class="sc">+</span> foot_traffic, <span class="at">data =</span> d5)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m3, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(revenues <span class="sc">~</span> staff <span class="sc">+</span> foot_traffic, <span class="at">data =</span> d5)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m3, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>MODEL INFO:
 Observations: 28
@@ -712,8 +934,8 @@ foot_traffic         209.98   207.12    212.84   151.31   0.00
 <p>The main takeaway here is: one big advantage of multiple regression is that it allows you to examine the role and magnitude of individual determinants while holding others fixed. As we saw in this example, it can really matter to do so. If we would not have included foot traffic, we might have gotten the impression that staff members are way more important to store performance than they really are.</p>
 <p>But notice, we made the judgment call to include foot traffic based on a mental model. Repeating our call from above, we need mental models to know which variables to include and when not. Notice for example that we have a variable called sick_calls in our dataset. what happens if we include this variable into the our regression model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(revenues <span class="sc">~</span> staff <span class="sc">+</span> foot_traffic <span class="sc">+</span> sick_calls, <span class="at">data =</span> d5)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m4, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(revenues <span class="sc">~</span> staff <span class="sc">+</span> foot_traffic <span class="sc">+</span> sick_calls, <span class="at">data =</span> d5)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m4, <span class="at">confint =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>MODEL INFO:
 Observations: 28
@@ -785,16 +1007,16 @@ Figure&nbsp;4.9: The form of the logistic function squashing the linear model in
 <p>The only difficulty that the logistic transformation brings about is that it complicates the interpretation of coefficient magnitudes. That is because the S-curve now makes the relation between <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span> non-linear. In logistic regression, the coefficients are expressed in terms of the logarithm of the odds ratio, which describes the change in the odds of the event occurring for a one-unit change in the independent variable.</p>
 <p>To facilitate interpretation, these coefficients can be exponentiated to obtain the odds ratios, which provide a more intuitive understanding of the relationship between the independent variables and the binary outcome. Let’s consider a hypothetical example to illustrate logistic regression and its interpretation. Assume we are a broker and send an offer around for a counseling on retirement saving. We wanted to know whether older customers were more likely to respond to this campaign. Here is some simulated data and the result of throwing the data into a logistic regression:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">0374</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># simulating an x variable with 100 random obs ofage between 24 and 58</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">24</span><span class="sc">:</span><span class="dv">58</span>, <span class="at">size =</span> <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># simulating some probabilities</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">inv_logit</span>(<span class="sc">-</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="fl">1.3</span>))</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># turning probabilities into a binary 1, 0 variable</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">ifelse</span>(y <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># estimating a model</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>m5 <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">0374</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># simulating an x variable with 100 random obs ofage between 24 and 58</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">24</span><span class="sc">:</span><span class="dv">58</span>, <span class="at">size =</span> <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># simulating some probabilities</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">inv_logit</span>(<span class="sc">-</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="fl">1.3</span>))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># turning probabilities into a binary 1, 0 variable</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">ifelse</span>(y <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># estimating a model</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>m5 <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(m5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>MODEL INFO:
 Observations: 100
